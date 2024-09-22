@@ -1,0 +1,6 @@
+@WonderPlane.Server_HostAddress = http://localhost:5106
+
+GET {{WonderPlane.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
