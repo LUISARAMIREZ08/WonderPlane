@@ -19,7 +19,12 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 //Registrando el DBContext
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentityCore<User>()
+builder.Services.AddIdentityCore<User>(options => 
+    {
+        options.Password.RequireDigit = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+    })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddApiEndpoints();
 
