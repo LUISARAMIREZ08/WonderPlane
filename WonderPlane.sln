@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WonderPlane.Server", "WonderPlane.Server\WonderPlane.Server.csproj", "{DDCE4046-A66C-4DBB-BFBB-163BF1BEBC39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WonderPlane.Server", "WonderPlane.Server\WonderPlane.Server.csproj", "{DDCE4046-A66C-4DBB-BFBB-163BF1BEBC39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WonderPlane.Client", "WonderPlane.Client\WonderPlane.Client.csproj", "{894E9BA4-3FDC-4D92-ACB6-236142A46C8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WonderPlane.Client", "WonderPlane.Client\WonderPlane.Client.csproj", "{894E9BA4-3FDC-4D92-ACB6-236142A46C8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WonderPlane.Shared", "WonderPlane.Shared\WonderPlane.Shared.csproj", "{4485F1BB-13BA-45A2-BE2F-4C6B8C2AE73B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WonderPlane.Shared", "WonderPlane.Shared\WonderPlane.Shared.csproj", "{4485F1BB-13BA-45A2-BE2F-4C6B8C2AE73B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

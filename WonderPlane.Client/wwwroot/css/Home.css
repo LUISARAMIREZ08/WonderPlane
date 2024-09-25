@@ -1,0 +1,190 @@
+.Home-container {
+    background-color: azure;
+    width: 100%;
+    margin-top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.Home-container1 {
+    background-image: url(../img/img9.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 980px;
+    width: 100%;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+    .Home-container1 h1 {
+        font-size: 80px;
+    }
+
+    .Home-container1 p {
+        font-size: 20px;
+        width: 80%; /* Para que el texto no sea demasiado ancho en pantallas grandes */
+        max-width: 900px;
+    }
+
+    .Home-container1 .button-discover {
+        color: white;
+        border-radius: 50px;
+        font-size: 20px;
+        background-color: #f1c40f;
+        padding: 15px 25px;
+    }
+
+        .Home-container1 .button-discover a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .Home-container1 .button-discover:hover {
+            background-color: #f39c12;
+            transition: 0.3s;
+            font-size: 22px;
+        }
+
+.Home-container2 {
+    background-image: url(../img/img13.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 900px;
+    width: 100%;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.Home-container3 {
+    background-image: url(../img/img14.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 900px;
+    width: 100%;
+    margin-top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+    .Home-container3 h1 {
+        font-size: 60px;
+    }
+
+.Home-container4 {
+    background-image: url(../img/img7.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 900px;
+    width: 100%;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: end;
+    color: white;
+    padding-right: 20px;
+    text-align: center;
+    padding: 20px;
+}
+
+    .Home-container4 h1 {
+        font-size: 60px;
+    }
+
+    .Home-container4 p {
+        font-size: 20px;
+        width: 80%; /* Ajuste del ancho del texto */
+        max-width: 700px;
+        text-align: center;
+    }
+
+/* Responsividad para dispositivos móviles */
+@media (max-width: 768px) {
+    .Home-container1 h1,
+    .Home-container3 h1,
+    .Home-container4 h1 {
+        font-size: 40px; /* Ajuste de tamaño de fuente para móviles */
+    }
+
+    .Home-container1 p,
+    .Home-container4 p {
+        font-size: 16px; /* Ajuste de tamaño de texto para móviles */
+        width: 90%; /* Ajuste del ancho del texto para móviles */
+    }
+
+    .Home-container3 {
+        text-align: center; /* Ajuste de alineación de texto para móviles */
+        display:flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .Home-container3 h1 {
+        font-size: 35px; /* Tamaño reducido del texto en el carrusel */
+    }
+
+    .Home-container1,
+    .Home-container2,
+    .Home-container3,
+    .Home-container4 {
+        height: 500px; /* Ajuste de altura para dispositivos móviles */
+        padding: 20px; /* Espaciado adicional para móviles */
+    }
+
+        .Home-container4 p {
+            width: 90%;
+        }
+}
+
+/* Responsividad para pantallas muy pequeñas */
+@media (max-width: 440px) {
+
+    .Home-container1,
+    .Home-container2,
+    .Home-container3,
+    .Home-container4 {
+        width:100%;
+    }
+    .Home-container1 h1,
+    .Home-container3 h1,
+    .Home-container4 h1 {
+        font-size: 20px;
+        text-align:center;
+    }
+
+    .Home-container4 {
+        text-align: center;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        background-color:red;
+    }
+
+    .Home-container1 p,
+    .Home-container4 p {
+        font-size: 14px;
+    }
+
+    .Home-container1 .button-discover {
+        font-size: 18px;
+        padding: 10px 20px;
+    }
+}

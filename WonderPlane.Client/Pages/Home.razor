@@ -1,7 +1,39 @@
 ﻿@page "/"
+@using WonderPlane.Client.Components
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="Home-container">
+   <div class="Home-container1">
+       <h1 class="poppins-regular">Bienvenido a WonderPlane</h1>
+        <p class="poppins-light">WonderPlane es una web para gestionar tus tiquetes y poder conquistar 
+            otros mundos, animate a descubrir el universo con nosotros.</p>
 
-Welcome to your new app.
+       <div class="button-discover">
+            <a href="#" class="poppins-light">Descubrir</a>
+       </div>
+   </div>
+
+   <div class="Home-container2">
+        <!--<h1>Busqueda rápida</h1>-->
+       <FastSearch/>
+   </div>
+
+    <div class="Home-container3">
+
+        <h1 class="poppins-light">Destinos populares</h1>
+        <!--Aquí va el componente carousel-->
+        
+       
+    </div>
+
+    <div class="Home-container4">
+        <h1 class="poppins-regular">¿Por qué usar WonderPlane?</h1>
+        <p class="poppins-light">
+            Con WonderPlane, descubre vuelos personalizados, compra fácil y rápido, y recibe recomendaciones a tu medida. 
+            Todo lo que necesitas para volar está a un clic de distancia. ¡Viaja mejor con WonderPlane!
+        </p>
+    </div>
+</div>
+
+
