@@ -1,15 +1,16 @@
-using WonderPlane.Server.models;
+using WonderPlane.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace WonderPlane.Server.Models;
 
-public class ApplicationDBContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<User>
 {
-    public DbSet<User> Users { get; set; }
+    // public DbSet<User> Users { get; set; }
     public DbSet<Forum> Forums { get; set; }
     public DbSet<Message> Messages { get; set; }
 
-    public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
 
@@ -34,14 +35,16 @@ public class ApplicationDBContext : DbContext
             .HasForeignKey(m => m.ForumId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        modelBuilder.Entity<User>()
-            .Property(u => u.Role)
-            .HasConversion<string>();
+        // modelBuilder.Entity<User>()
+        //     .Property(u => u.Role)
+        //     .HasConversion<string>();
 
         modelBuilder.Entity<User>()
             .Property(u => u.Gender)
             .HasConversion<string>();
 
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.HasDefaultSchema("WonderPlane");
     }
 }
