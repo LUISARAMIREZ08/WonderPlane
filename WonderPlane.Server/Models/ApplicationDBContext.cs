@@ -16,6 +16,24 @@ public class ApplicationDBContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         
+        modelBuilder.Entity<Forum>()
+            .HasOne(f => f.User)
+            .WithMany(u => u.Forums)
+            .HasForeignKey(f => f.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<Message>()
+            .HasOne(m => m.User)
+            .WithMany(u => u.Messages)
+            .HasForeignKey(m => m.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<Message>()
+            .HasOne(m => m.Forum)
+            .WithMany(f => f.Messages)
+            .HasForeignKey(m => m.ForumId)
+            .OnDelete(DeleteBehavior.NoAction);
+
         modelBuilder.Entity<User>()
             .Property(u => u.Role)
             .HasConversion<string>();

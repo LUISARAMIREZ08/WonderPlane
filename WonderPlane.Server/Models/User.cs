@@ -5,7 +5,7 @@ namespace WonderPlane.Server.models;
 public class User
 {   
     [Key]
-    public long Id { get; set; }
+    public int Id { get; set; }
 
     [StringLength(50)]
     public required string UserName { get; set; }
@@ -35,6 +35,8 @@ public class User
     public UserRole Role { get; set; }
 
     public ICollection<Forum> Forums { get; } = new List<Forum>();
+
+    public ICollection<Message> Messages { get; } = new List<Message>();
 }
 
 

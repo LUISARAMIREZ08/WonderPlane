@@ -12,7 +12,7 @@ using WonderPlane.Server.Models;
 namespace WonderPlane.Server.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240924234309_FirstMigration")]
+    [Migration("20240925033854_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -27,11 +27,11 @@ namespace WonderPlane.Server.Migrations
 
             modelBuilder.Entity("WonderPlane.Server.models.Forum", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -46,8 +46,8 @@ namespace WonderPlane.Server.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -58,11 +58,11 @@ namespace WonderPlane.Server.Migrations
 
             modelBuilder.Entity("WonderPlane.Server.models.Message", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -72,23 +72,28 @@ namespace WonderPlane.Server.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("ForumId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("ForumId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ForumId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.models.User", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
@@ -143,7 +148,7 @@ namespace WonderPlane.Server.Migrations
                     b.HasOne("WonderPlane.Server.models.User", "User")
                         .WithMany("Forums")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -154,10 +159,18 @@ namespace WonderPlane.Server.Migrations
                     b.HasOne("WonderPlane.Server.models.Forum", "Forum")
                         .WithMany("Messages")
                         .HasForeignKey("ForumId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("WonderPlane.Server.models.User", "User")
+                        .WithMany("Messages")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Forum");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.models.Forum", b =>
@@ -168,6 +181,8 @@ namespace WonderPlane.Server.Migrations
             modelBuilder.Entity("WonderPlane.Server.models.User", b =>
                 {
                     b.Navigation("Forums");
+
+                    b.Navigation("Messages");
                 });
 #pragma warning restore 612, 618
         }
