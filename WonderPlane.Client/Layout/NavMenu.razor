@@ -1,9 +1,26 @@
-﻿<MudNavMenu>
-    <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
-    <MudNavLink Href="/servers" Match="NavLinkMatch.Prefix">Servers</MudNavLink>
-    <MudNavGroup Title="Settings" Expanded="true">
-        <MudNavLink Href="/users" Match="NavLinkMatch.Prefix">Users</MudNavLink>
-        <MudNavLink Href="/security" Match="NavLinkMatch.Prefix">Security</MudNavLink>
-    </MudNavGroup>
-    <MudNavLink Href="/about" Match="NavLinkMatch.Prefix">About</MudNavLink>
-</MudNavMenu>
+
+<nav class="navbar poppins-regular">
+    <div class="navbar-logo">
+        <img src="img/logo.png" alt="Logo" />
+        WonderPlane
+    </div>
+    <div class="navbar-menu" id="navbarMenu">
+        <a href="#home">Buscar vuelos</a>
+        <a href="#about">Iniciar sesión</a>
+        <a href="#services">Registrarse</a>
+    </div>
+    <button class="hamburger" id="hamburger">
+        &#9776;
+    </button>
+</nav>
+
+<script>
+    // Script para manejar la visibilidad del menú en móviles
+    const hamburger = document.getElementById('hamburger');
+    const navbarMenu = document.getElementById('navbarMenu');
+
+    hamburger.addEventListener('click', () => {
+        navbarMenu.classList.toggle('active');
+    });
+</script>
+
