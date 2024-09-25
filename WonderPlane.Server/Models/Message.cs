@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace WonderPlane.Server.models;
+namespace WonderPlane.Server.Models;
 
 public class Message
 {   
@@ -13,10 +13,10 @@ public class Message
     [DataType(DataType.Date, ErrorMessage = "Invalid Date")]
     public required DateTime Date { get; set; }
 
-    public int ForumId { get; set; }
-    public Forum Forum { get; set; }
+    public int? ForumId { get; set; }
+    public Forum Forum { get; set; } = null!;
 
-    public int UserId { get; set; }
-    public User User { get; set; }
+    public string? UserId { get; set; }
+    public User User { get; set; } = null!;
 
 }
