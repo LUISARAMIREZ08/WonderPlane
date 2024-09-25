@@ -1,0 +1,81 @@
+﻿@page "/register2"
+@using System.ComponentModel.DataAnnotations
+
+<EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+
+    <DataAnnotationsValidator />
+<div class="container-principal">
+    <div class="container-img">
+        <img src="images/register.svg"/>
+    </div>
+    <div class="container-formulario">
+
+        <div class="container-header">
+            <img src="images/logo4.svg" />
+            <ul>
+                <li>
+                    <a>¿ya tienes una cuenta?</a>
+                    <a class="ingreso" href="login"> Ingresa aqui</a>
+                </li>
+            </ul>   
+        </div>
+
+        <div class="subtitle-register">
+            <h1>Register</h1>
+        </div>
+        <div class="container-formularios">
+
+            <div class="container-form-1">
+                <MudTextField Label="First name" 
+                              @bind-Value="model.Username" For="@(() => model.Username)" />
+                <MudTextField Label="First name" 
+                              @bind-Value="model.Username" For="@(() => model.Username)" />
+                <MudTextField Label="First name" 
+                              @bind-Value="model.Username" For="@(() => model.Username)" />
+                <MudTextField Label="First name"
+                              @bind-Value="model.Username" For="@(() => model.Username)" />
+                <MudTextField Label="First name" 
+                              @bind-Value="model.Username" For="@(() => model.Username)" />
+                <MudTextField Label="First name" 
+                              @bind-Value="model.Username" For="@(() => model.Username)" />
+
+            </div>
+            <div class="container-form-2">
+                <MudTextField Label="First name" 
+                              @bind-Value="model.Username" For="@(() => model.Username)" />
+                <MudTextField Label="First name" 
+                              @bind-Value="model.Username" For="@(() => model.Username)" />
+                <MudTextField Label="First name" 
+                              @bind-Value="model.Username" For="@(() => model.Username)" />
+                <MudTextField Label="First name" 
+                              @bind-Value="model.Username" For="@(() => model.Username)" />
+                <MudTextField Label="First name" 
+                              @bind-Value="model.Username" For="@(() => model.Username)" />
+                <MudTextField Label="First name" 
+                              @bind-Value="model.Username" For="@(() => model.Username)" />
+            </div>
+
+        </div>
+    </div>
+</div>
+</EditForm>
+
+
+@code {
+    RegisterAccountForm model = new RegisterAccountForm();
+    bool success;
+
+    public class RegisterAccountForm
+    {
+        [Required]
+        public string Username { get; set; }
+
+    }
+
+    private void OnValidSubmit(EditContext context)
+    {
+        success = true;
+        StateHasChanged();
+    }
+
+}
