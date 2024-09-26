@@ -16,7 +16,7 @@ public class Forum
     [DataType(DataType.Date)]
     public DateTime PublicationDate { get; set; }
 
-    public string? UserId { get; set; }
+    public int? UserId { get; set; }
     public User User { get; set; } = null!;
 
     public ICollection<Message> Messages { get; } = new List<Message>();
