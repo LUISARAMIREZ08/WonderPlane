@@ -31,7 +31,7 @@ public class User
 
     public byte[]? Image { get; set; }
 
-    public UserRole? Role { get; set; }
+    public UserRole Role { get; set; }
 
     public ICollection<Forum> Forums { get; } = new List<Forum>();
     public ICollection<Message> Messages { get; } = new List<Message>();
