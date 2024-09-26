@@ -6,24 +6,24 @@ public class User
     public int Id { get; set; }
 
     [StringLength(50)]
-    public string? UserName { get; set; }
+    public required string UserName { get; set; }
 
     [StringLength(50)]
-    public string? Name { get; set; }
+    public required string Name { get; set; }
 
     [StringLength(50)]
-    public string? LastName { get; set; }
+    public required string LastName { get; set; }
 
     [DataType(DataType.Date)]
-    public DateTime BirthDate { get; set; }
+    public required DateTime BirthDate { get; set; }
 
-    public UserGender Gender { get; set; }
+    public required UserGender Gender { get; set; }
 
     [StringLength(10)]
-    public string? PhoneNumber { get; set; }
+    public required string PhoneNumber { get; set; }
 
     [EmailAddress]
-    public string? Email { get; set; }
+    public required string Email { get; set; }
 
     public byte[]? PasswordHash { get; set; }
 
@@ -31,7 +31,7 @@ public class User
 
     public byte[]? Image { get; set; }
 
-    public UserRole Role { get; set; }
+    public UserRole? Role { get; set; }
 
     public ICollection<Forum> Forums { get; } = new List<Forum>();
     public ICollection<Message> Messages { get; } = new List<Message>();
