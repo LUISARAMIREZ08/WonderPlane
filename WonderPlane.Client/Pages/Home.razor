@@ -14,25 +14,143 @@
        </div>
    </div>
 
-   <div class="Home-container2">
-        <!--<h1>Busqueda rápida</h1>-->
-       <FastSearch/>
-   </div>
+    <div class="Home-container2">
+        
+        <div class="slider-images poppins-light">
+            <!--<h1 class="poppins-light">Los mejores lugares</h1>-->
+            <MudCarousel Class="mud-width-full slider" Style="height:800px;" ShowArrows="@arrows" ShowBullets="@bullets" EnableSwipeGesture="@enableSwipeGesture" AutoCycle="@autocycle" TData="object">
+                <MudCarouselItem Transition="transition" Color="@Color.Primary">
+                    <div class="d-flex" style="height:100%">
+                        <div class="slide-element1">
+                            <h1>"¡Aprovecha nuestras ofertas exclusivas!"</h1>
+                            <p>"No pierdas la oportunidad de volar a tus destinos soñados con descuentos de hasta el 50%. Solo por tiempo limitado, consigue los mejores precios en nuestros vuelos seleccionados. ¡Viaja más por menos con WonderPlane!"</p>
+                        </div>
+                    </div>
+                </MudCarouselItem>
+                <MudCarouselItem Transition="transition" Color="@Color.Secondary">
+                    <div class="d-flex" style="height:100%">
+                        <div class="slide-element2">
+                            <h1>"Conquista nuevos horizontes"</h1>
+                            <p>"Explora el mundo con nuestros vuelos internacionales. Conéctate con culturas fascinantes y destinos exóticos con la comodidad y seguridad que WonderPlane te ofrece. ¡Tu próxima aventura está a solo un clic de distancia!"</p>
+                        </div>
+                    </div>
+                </MudCarouselItem>
+                <MudCarouselItem Transition="transition" Color="@Color.Info">
+                    <div class="d-flex" style="height:100%">
+                        <div class="slide-element3">
+                            <h1>"Descubre Colombia con nosotros"</h1>
+                            <p>"Desde las playas caribeñas hasta las montañas de los Andes, Colombia tiene todo para ofrecer. Aprovecha nuestros tiquetes aéreos nacionales y conoce cada rincón del país con WonderPlane."</p>
+                        </div>
+                    </div>
+                </MudCarouselItem>
+            </MudCarousel>
+
+
+            @code {
+                private bool arrows = true;
+                private bool bullets = true;
+                private bool enableSwipeGesture = true;
+                private bool autocycle = true;
+                private Transition transition = Transition.Slide;
+            }
+           
+        </div>
+    </div>
 
     <div class="Home-container3">
-
-        <h1 class="poppins-light">Destinos populares</h1>
-        <!--Aquí va el componente carousel-->
-        
-       
+        <FastSearch />
     </div>
 
     <div class="Home-container4">
-        <h1 class="poppins-regular">¿Por qué usar WonderPlane?</h1>
-        <p class="poppins-light">
-            Con WonderPlane, descubre vuelos personalizados, compra fácil y rápido, y recibe recomendaciones a tu medida. 
-            Todo lo que necesitas para volar está a un clic de distancia. ¡Viaja mejor con WonderPlane!
-        </p>
+
+        <h1 class="poppins-light">Viaja comodo con nosotros</h1>
+        <div class="cards-container">
+            <MudCard Class="card">
+                <MudCardMedia Image="img/img22.jpg" Height="250" />
+                <MudCardContent>
+                    <MudText><h5>Guía de Equipaje</h5></MudText>
+                    <MudText><p>Consulta las políticas de equipaje para asegurarte de que llevas todo lo que necesitas sin complicaciones. Conoce los límites de peso, dimensiones permitidas y consejos para empaquetar tus pertenencias.</p></MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Text" Color="Color.Info">Ver más</MudButton>
+                </MudCardActions>
+            </MudCard>
+            <MudCard Class="card">
+                <MudCardMedia Image="img/img23.jpg" Height="250" />
+                <MudCardContent>
+                    <MudText><h5>Restricciones de Viaje</h5></MudText>
+                    <MudText><p>Infórmate sobre las restricciones y requisitos de viaje actualizados en los destinos más populares. Conoce sobre documentos necesarios, pruebas de salud y normativas locales para viajar sin contratiempos.</p></MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Text" Color="Color.Info">Ver más</MudButton>
+                </MudCardActions>
+            </MudCard>
+            <MudCard Class="card">
+                <MudCardMedia Image="img/img11.jpg" Height="250" />
+                <MudCardContent>
+                    <MudText><h5>Cuidados y Seguridad</h5></MudText>
+                    <MudText><p>Descubre las mejores prácticas para garantizar tu seguridad durante el viaje. Desde recomendaciones de salud hasta precauciones a tener en cuenta al explorar nuevos destinos, viaja tranquilo y preparado.</p></MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Text" Color="Color.Info">Ver más</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </div>
+    </div>
+
+    <div class="Home-container5">
+        <img class="about-main-img" src="img/img24.jpg" alt="Alternate Text" />
+        <div class="about">
+            <h5 class="poppins-semibold" style="color:dodgerblue;">Sobre Nosotros</h5>
+            <h1 class="poppins-bold">Nosotros proveemos la forma más fácil para gestionar tus tiquetes de vuelo.</h1>
+            <p class="poppins-regular">WonderPlane es una plataforma de reservas de vuelos que te permite encontrar y comprar tiquetes aéreos de forma rápida y segura. Con una interfaz intuitiva y amigable, podrás buscar vuelos, comparar precios y reservar tus tiquetes en pocos minutos. ¡Descubre una nueva forma de volar con WonderPlane!</p>
+            <div class="about-images">
+                <img src="img/img25.jpg" alt="Alternate Text" />
+                <img src="img/img26.jpg" alt="Alternate Text" />
+            </div>
+            <div class="about-button"><a href="#">Ver más</a></div>
+        </div>
+    </div>
+
+    <div class="Home-container6">
+
+        <div class="services poppins-regular">
+            <div class="services-component">
+                <div class="services-item">
+                    <span class="material-symbols-outlined">price_check</span>
+                </div>
+                <div class="services-item-info">
+                    <h4>Mejores precios</h4>
+                    <p>¡Aprovecha las tarifas más competitivas del mercado! Te ofrecemos las mejores ofertas para que tu viaje sea no solo inolvidable, sino también asequible.</p>
+                </div>
+            </div>
+            <div class="services-component">
+                <div class="services-item">
+                    <span class="material-symbols-outlined">support_agent</span>
+                </div>
+                <div class="services-item-info">
+                    <h4>Mejor servicio</h4>
+                    <p>Nuestro compromiso es ofrecerte una experiencia de viaje excepcional. Desde la reserva hasta el aterrizaje, nuestro equipo de expertos está a tu disposición para garantizar tu satisfacción.</p>
+                </div>
+            </div>
+            <div class="services-component">
+                <div class="services-item">
+                    <span class="material-symbols-outlined">autorenew</span>
+                </div>
+                <div class="services-item-info">
+                    <h4>Devoluciones</h4>
+                    <p>Sabemos que los planes pueden cambiar. Por eso, te ofrecemos políticas flexibles para cambios y cancelaciones, para que puedas ajustar tu itinerario sin preocupaciones.</p>
+                </div>
+            </div>
+           
+        </div>
+        <div class="why-text">
+            <h1 class="poppins-regular">¿Por qué usar WonderPlane?</h1>
+            <p class="poppins-light">
+                Con WonderPlane, descubre vuelos personalizados, compra fácil y rápido, y recibe recomendaciones a tu medida.
+                Todo lo que necesitas para volar está a un clic de distancia. ¡Viaja mejor con WonderPlane!
+            </p>
+        </div>
     </div>
 </div>
 
