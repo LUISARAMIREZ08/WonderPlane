@@ -1,5 +1,8 @@
 using WonderPlane.Server.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
+using System.Text;
+
 
 namespace WonderPlane.Server.Controllers;
 
@@ -14,7 +17,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    [Route("server/users")]
+    [Route("account/[controller]")]
     public IActionResult GetAll()
     {
         var users = _context.Users.ToList();

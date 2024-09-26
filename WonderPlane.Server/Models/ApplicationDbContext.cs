@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace WonderPlane.Server.Models;
 
-public class ApplicationDbContext : IdentityDbContext<User>
+public class ApplicationDbContext : DbContext
 {
-    // public DbSet<User> Users { get; set; }
+    public DbSet<User> Users { get; set; }
     public DbSet<Forum> Forums { get; set; }
     public DbSet<Message> Messages { get; set; }
 
@@ -35,9 +35,9 @@ public class ApplicationDbContext : IdentityDbContext<User>
             .HasForeignKey(m => m.ForumId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        // modelBuilder.Entity<User>()
-        //     .Property(u => u.Role)
-        //     .HasConversion<string>();
+        modelBuilder.Entity<User>()
+            .Property(u => u.Role)
+            .HasConversion<string>();
 
         modelBuilder.Entity<User>()
             .Property(u => u.Gender)

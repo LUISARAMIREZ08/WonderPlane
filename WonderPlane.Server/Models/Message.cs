@@ -16,7 +16,7 @@ public class Message
     public int? ForumId { get; set; }
     public Forum Forum { get; set; } = null!;
 
-    public string? UserId { get; set; }
+    public int? UserId { get; set; }
     public User User { get; set; } = null!;
 
 }
