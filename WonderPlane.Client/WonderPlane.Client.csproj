@@ -12,4 +12,8 @@
     <PackageReference Include="MudBlazor" Version="7.8.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WonderPlane.Shared\WonderPlane.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

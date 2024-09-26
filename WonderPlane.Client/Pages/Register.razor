@@ -1,5 +1,10 @@
 ﻿@page "/register"
-@using System.ComponentModel.DataAnnotations
+@using WonderPlane.Shared;
+@using WonderPlane.Client.Servicios;
+@using System.ComponentModel.DataAnnotations;
+
+@inject IUserService UserService; 
+@inject NavigationManager navigation;
 
 <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
 
@@ -53,9 +58,6 @@
                             <MudTextField Label="Password" Variant="Variant.Outlined" HelperTextOnFocus="true" HelperText="Repeat the password" Class="mt-3" Margin="Margin.Dense"
                                           ShrinkLabel @bind-Value="model.Password2" For="@(() => model.Password2)" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
                     </div>
-                    
-                    
-                    
                     
                         <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
                             <ActivatorContent>
@@ -111,6 +113,22 @@
 
 
 @code {
+    UserDTO newUser = new UserDTO(); 
+    private string? registrationError;
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            var userId = await UserService.CreateUser(newUser);
+            navigation.NavigateTo("/login"); // Redirigir o mostrar mensaje de éxito
+        }
+        catch (ApplicationException ex)
+        {
+            registrationError = ex.Message; // Manejo del error
+        }
+    } 
+
     RegisterAccountForm model = new RegisterAccountForm();
     bool success;
 
@@ -192,4 +210,5 @@
         _files.Add(file);
         //TODO upload the files to the server
     }
+
 }

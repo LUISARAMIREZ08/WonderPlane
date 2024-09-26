@@ -7,9 +7,10 @@
     padding-right: 15%;
     padding-top: 50px;
     padding-bottom: 50px;
-    background-color: #9BDFFF;
+    
     height: 100%;
     width: 100%;
+    background-image: url('images/register.svg');
 }
 
 .container-secundario {

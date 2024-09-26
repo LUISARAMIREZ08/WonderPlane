@@ -1,7 +1,12 @@
 ﻿@page "/register2"
 @using System.ComponentModel.DataAnnotations
+@using WonderPlane.Shared;
+@using WonderPlane.Client.Servicios;
 
-<EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+@inject IUserService UserService;
+@inject NavigationManager navigation;
+
+<EditForm Model="@newUser" OnValidSubmit="HandleValidSubmit">
 
     <DataAnnotationsValidator />
 <div class="container-principal">
@@ -26,33 +31,14 @@
         <div class="container-formularios">
 
             <div class="container-form-1">
-                <MudTextField Label="First name" 
-                              @bind-Value="model.Username" For="@(() => model.Username)" />
-                <MudTextField Label="First name" 
-                              @bind-Value="model.Username" For="@(() => model.Username)" />
-                <MudTextField Label="First name" 
-                              @bind-Value="model.Username" For="@(() => model.Username)" />
-                <MudTextField Label="First name"
-                              @bind-Value="model.Username" For="@(() => model.Username)" />
-                <MudTextField Label="First name" 
-                              @bind-Value="model.Username" For="@(() => model.Username)" />
-                <MudTextField Label="First name" 
-                              @bind-Value="model.Username" For="@(() => model.Username)" />
+                    <MudTextField Label="Id"
+                                  @bind-Value="newUser.Id" />
+                    <MudTextField Label="First name"
+                                  @bind-Value="newUser.Name" />
+                    <MudTextField Label="Last name" 
+                                  @bind-Value="newUser.LastName" />
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" Type="submit">Register</MudButton>
 
-            </div>
-            <div class="container-form-2">
-                <MudTextField Label="First name" 
-                              @bind-Value="model.Username" For="@(() => model.Username)" />
-                <MudTextField Label="First name" 
-                              @bind-Value="model.Username" For="@(() => model.Username)" />
-                <MudTextField Label="First name" 
-                              @bind-Value="model.Username" For="@(() => model.Username)" />
-                <MudTextField Label="First name" 
-                              @bind-Value="model.Username" For="@(() => model.Username)" />
-                <MudTextField Label="First name" 
-                              @bind-Value="model.Username" For="@(() => model.Username)" />
-                <MudTextField Label="First name" 
-                              @bind-Value="model.Username" For="@(() => model.Username)" />
             </div>
 
         </div>
@@ -62,20 +48,20 @@
 
 
 @code {
-    RegisterAccountForm model = new RegisterAccountForm();
-    bool success;
+    UserDTO newUser = new UserDTO();
+    private string? registrationError;
 
-    public class RegisterAccountForm
+    private async Task HandleValidSubmit()
     {
-        [Required]
-        public string Username { get; set; }
-
-    }
-
-    private void OnValidSubmit(EditContext context)
-    {
-        success = true;
-        StateHasChanged();
+        try
+        {
+            var userId = await UserService.CreateUser(newUser);
+            navigation.NavigateTo("/login"); // Redirigir o mostrar mensaje de éxito
+        }
+        catch (ApplicationException ex)
+        {
+            registrationError = ex.Message; // Manejo del error
+        }
     }
 
 }
