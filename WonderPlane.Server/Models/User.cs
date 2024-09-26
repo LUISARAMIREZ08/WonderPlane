@@ -1,40 +1,50 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
-
 namespace WonderPlane.Server.Models;
-
-public class User : IdentityUser
-{   
-
-    [StringLength(50)]
-    public string? Name { get; set; }
+public class User
+{
+    [Key]
+    public int Id { get; set; }
 
     [StringLength(50)]
-    public string? LastName { get; set; }
+    public required string UserName { get; set; }
+
+    [StringLength(50)]
+    public required string Name { get; set; }
+
+    [StringLength(50)]
+    public required string LastName { get; set; }
 
     [DataType(DataType.Date)]
-    public DateTime? BirthDate { get; set; }
+    public required DateTime BirthDate { get; set; }
 
-    public UserGender? Gender { get; set; }
+    public required UserGender Gender { get; set; }
+
+    [StringLength(10)]
+    public required string PhoneNumber { get; set; }
+
+    [EmailAddress]
+    public required string Email { get; set; }
+
+    public byte[]? PasswordHash { get; set; }
+
+    public byte[]? PasswordSalt { get; set; }
 
     public byte[]? Image { get; set; }
 
-    public ICollection<Forum>? Forums { get; } = new List<Forum>();
+    public UserRole? Role { get; set; }
 
-    public ICollection<Message>? Messages { get; } = new List<Message>();
+    public ICollection<Forum> Forums { get; } = new List<Forum>();
+    public ICollection<Message> Messages { get; } = new List<Message>();
 }
-
-
 public enum UserGender
 {
     Male,
     Female,
     Other
 }
-
-// public enum UserRole
-// {
-//     Admin,
-//     RegisteredUser,
-//     Root
-// }
+public enum UserRole
+{
+    Admin,
+    RegisteredUser,
+    Root
+}
