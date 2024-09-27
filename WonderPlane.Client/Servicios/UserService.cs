@@ -3,44 +3,29 @@ using System.Net.Http.Json;
 
 namespace WonderPlane.Client.Servicios
 {
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
         private readonly HttpClient _http;
-        
+
         public UserService(HttpClient http)
         {
             _http = http;
         }
 
-        public async Task<List<UserDTO>> GetUsers()
+        public async Task<RegisterDTO> CreateUser(RegisterDTO user)
         {
-            var result = await _http.GetFromJsonAsync<ResponseAPI<List<UserDTO>>>("api/User");
-            if (result!.EsCorrecto)
-            {
-                return result.Valor!;
-            }
-            else {
-                throw new ApplicationException(result.Mensaje);
-            }
-        }
+            var result = await _http.PostAsJsonAsync("api/register", user);
 
-        public async Task<UserDTO> GetUser(int id)
-        {
-            var result = await _http.GetFromJsonAsync<ResponseAPI<UserDTO>>($"api/User/{id}");
-            if (result!.EsCorrecto)
+            if (!result.IsSuccessStatusCode)
             {
-                return result.Valor!;
+                throw new ApplicationException($"Error al registrar usuario: {result.ReasonPhrase}");
             }
-            else
-            {
-                throw new ApplicationException(result.Mensaje);
-            }
-        }
 
-        public async Task<int> CreateUser(UserDTO user)
-        {
-            var result = await _http.PostAsJsonAsync("/register", user);
-            var response = await result.Content.ReadFromJsonAsync<ResponseAPI<int>>();
+            var jsonResponse = await result.Content.ReadAsStringAsync();
+            Console.WriteLine($"Respuesta del servidor: {jsonResponse}"); // Aquí se imprime la respuesta del servidor
+
+            // Intenta deserializar la respuesta
+            var response = await result.Content.ReadFromJsonAsync<ResponseAPI<RegisterDTO>>();
             if (response!.EsCorrecto)
             {
                 return response.Valor!;
@@ -51,14 +36,5 @@ namespace WonderPlane.Client.Servicios
             }
         }
 
-        public Task<UserDTO> UpdateUser(UserDTO user)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<UserDTO> DeleteUser(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

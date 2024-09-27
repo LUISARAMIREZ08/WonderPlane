@@ -2,11 +2,12 @@
 @using WonderPlane.Shared;
 @using WonderPlane.Client.Servicios;
 @using System.ComponentModel.DataAnnotations;
+@using System.Text.RegularExpressions
 
 @inject IUserService UserService; 
 @inject NavigationManager navigation;
 
-<EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+<EditForm Model="newUser" OnValidSubmit="OnValidSubmit">
 
     <DataAnnotationsValidator />
     <div class="container-principal">
@@ -21,6 +22,7 @@
             </div>
 
             <div class ="subtitle-register">
+
                 <h1>Registrarse</h1>
                 <ul>
                     <li>
@@ -35,31 +37,31 @@
                 <div class="register-container-1">
 
                     <div class="button">
-                            <MudTextField Label="Nombres" InputStyle="color: #FF5733" Variant="Variant.Outlined" HelperTextOnFocus="true" HelperText="Max. 8 characters" Margin="Margin.Dense"
-                                          ShrinkLabel @bind-Value="model.name" For="@(() => model.name)" />
+                            <MudTextField Label="Usuario" InputStyle="color: #FF5733" Variant="Variant.Outlined" HelperTextOnFocus="true" HelperText="Max. 8 characters" Margin="Margin.Dense"
+                                          ShrinkLabel @bind-Value="newUser.UserName" For="@(() => newUser.UserName)" />
                     </div>
 
-                        <div class="button">
-                            <MudTextField Label="DNI" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                          ShrinkLabel @bind-Value="model.DNI" For="@(() => model.DNI)" />
-                    </div>
-
-                        <div class="button">
-                            <MudTextField Label="Lugar de Nacimiento" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                          ShrinkLabel @bind-Value="model.PlaceOfBirth" For="@(() => model.PlaceOfBirth)" />
-                    </div>
-
-                        <div class="button">
-                            <MudTextField Label="Email" Class="mt-3" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                          ShrinkLabel @bind-Value="model.Email" For="@(() => model.Email)" />
-                    </div>
-                    
                     <div class="button">
-                            <MudTextField Label="Password" Variant="Variant.Outlined" HelperTextOnFocus="true" HelperText="Repeat the password" Class="mt-3" Margin="Margin.Dense"
-                                          ShrinkLabel @bind-Value="model.Password2" For="@(() => model.Password2)" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
+                            <MudTextField Label="DNI" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                          ShrinkLabel @bind-Value="newUser.Name" For="@(() => newUser.Name)" />
                     </div>
+
+                    <div class="button">
+                            <MudTextField Label="Lugar de Nacimiento" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                          ShrinkLabel @bind-Value="newUser.LastName" For="@(() => newUser.LastName)" />
+                    </div>
+
+                    <div class="button">
+                            <MudTextField Label="Email" Class="mt-3" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                          ShrinkLabel @bind-Value="newUser.Email" For="@(() => newUser.Email)" />
+                    </div>
+
+                        <div class="mb-3">
+                            <MudTextField Label="Contraseña" Variant="Variant.Outlined" HelperTextOnFocus="true" HelperText="Repeat the password" Class="mt-3" Margin="Margin.Dense"
+                                          ShrinkLabel @bind-Value="newUser.Password" For="@(() => newUser.Password)" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
+                        </div>
                     
-                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
+                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Style="width:35vh">
                             <ActivatorContent>
                                 <MudButton Style="width:35vh" Variant="Variant.Filled"
                                            Color="Color.Info"
@@ -72,39 +74,38 @@
 
                 <div class="register-container-2">
 
-                        <div class="button">
-                            <MudTextField Label="Apellidos" Variant="Variant.Outlined" HelperTextOnFocus="true" HelperText="Max. 8 characters" Margin="Margin.Dense"
-                                          ShrinkLabel @bind-Value="model.lastname" For="@(() => model.lastname)" />
-                    </div>
+                        
 
-                        <div class="button">
-                            <MudTextField Label="Género" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                          ShrinkLabel @bind-Value="model.gender" For="@(() => model.gender)" />
-                    </div>
-
-                        <div class="button">
+                    <div class="button">
                             <MudTextField Label="Dirección" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                          ShrinkLabel @bind-Value="model.address" For="@(() => model.address)" />
+                                          ShrinkLabel @bind-Value="newUser.PhoneNumber" For="@(() => newUser.PhoneNumber)" />
                     </div>
 
-                        <div class="button">
-                            <MudTextField Label="Confirm Password" Variant="Variant.Outlined" HelperTextOnFocus="true" HelperText="Repeat the password" Class="mt-3" Margin="Margin.Dense"
-                                          ShrinkLabel @bind-Value="model.Password2" For="@(() => model.Password2)" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
+
+                    <div class="button">
+                            <MudDatePicker Style="height:7vh" @bind-Value="newUser.BirthDate" Label="Fecha de Nacimiento" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
                     </div>
 
+
                         <div class="button">
-                            <MudTextField Style="height:7vh" T="DateTime?" Format="yyyy-MM-dd" Label="Fecha de Nacimiento" Variant="Variant.Outlined" InputType="InputType.Date" Required="true" />
-                    </div>
+                            <label class="form-label">Genero</label>
+                            <InputSelect class="form-control" @bind-Value="newUser.Gender">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </InputSelect>
+                            <ValidationMessage For="@(() => newUser.Gender)"></ValidationMessage>
+                        </div>
+
+                        <div class="button">
+                            <MudButton Variant="Variant.Filled" Color="Color.Info" Style="width:35vh" Type="submit">
+                                @btnTexto
+                            </MudButton>
+                        </div>
                     
                 </div>
                 
             </div>
-        </MudItem >
-
-        <MudItem Style="padding-top:14px">
-            <MudImage Src="images/logo2.svg" Fluid="true"/>
-
-        </MudItem>
+            </MudItem>
         </div>
                 
     </div>
@@ -113,76 +114,40 @@
 
 
 @code {
-    UserDTO newUser = new UserDTO(); 
-    private string? registrationError;
+    
 
-    private async Task HandleValidSubmit()
+    RegisterDTO newUser = new RegisterDTO
+        {
+            UserName = string.Empty,
+            Name = string.Empty,
+            LastName = string.Empty,
+            BirthDate = DateTime.Today,
+            Email = string.Empty,
+            Password = string.Empty,
+            Gender = string.Empty,
+            PhoneNumber = string.Empty,
+        };
+    string btnTexto = "Registrar";
+
+
+    private async Task OnValidSubmit()
     {
         try
         {
-            var userId = await UserService.CreateUser(newUser);
-            navigation.NavigateTo("/login"); // Redirigir o mostrar mensaje de éxito
+            // Llamada al servicio para registrar al nuevo usuario
+            await UserService.CreateUser(newUser);
+
+            // Redirigir si el registro es exitoso
+            navigation.NavigateTo("/home");
         }
         catch (ApplicationException ex)
         {
-            registrationError = ex.Message; // Manejo del error
+            // Manejar el error, por ejemplo, mostrando un mensaje
+            Console.WriteLine($"Error al registrar usuario: {ex.Message}");
         }
-    } 
-
-    RegisterAccountForm model = new RegisterAccountForm();
-    bool success;
-
-    public class RegisterAccountForm
-    {
-        [Required]
-        [StringLength(8, ErrorMessage = "Name length can't be more than 8.")]
-        public string name { get; set; }
-
-        [Required]
-        [StringLength(8, ErrorMessage = "Lastname length can't be more than 8.")]
-        public string lastname { get; set; }
-
-        [Required]
-        [StringLength(8, ErrorMessage = "Lastname length can't be more than 8.")]
-        public string Username { get; set; }
-
-        [Required]
-        public string DNI { get; set; }
-
-        [Required]
-        public string birthdate { get; set; }
-
-        [Required]
-        public string PlaceOfBirth { get; set; }
-
-        [Required]
-        public string gender { get; set; }
-
-        [Required]
-        public string address { get; set; }
-
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-
-        [Required]
-        [StringLength(30, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
-        public string Password { get; set; }
-
-        [Required]
-        [Compare(nameof(Password))]
-        public string Password2 { get; set; }
-
     }
 
-    private void OnValidSubmit(EditContext context)
-    {
-        success = true;
-        StateHasChanged();
-    }
-
-
-    public string Password { get; set; } 
+    public string Password { get; set; }
 
     bool isShow;
     InputType PasswordInput = InputType.Password;

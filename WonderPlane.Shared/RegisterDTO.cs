@@ -1,7 +1,6 @@
-﻿using WonderPlane.Server.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace WonderPlane.Server.DTOs;
+namespace WonderPlane.Shared;
 
 public class RegisterDTO
 {
@@ -17,7 +16,7 @@ public class RegisterDTO
     [DataType(DataType.Date)]
     public required DateTime BirthDate { get; set; }
 
-    public required UserGender Gender { get; set; }
+    public required string Gender { get; set; }
 
     [StringLength(50)]
     public required string PhoneNumber { get; set; }
@@ -25,6 +24,7 @@ public class RegisterDTO
     [EmailAddress]
     public required string Email { get; set; }
 
+    [Required]
     [StringLength(50)]
     public required string Password { get; set; }
-}   
+}

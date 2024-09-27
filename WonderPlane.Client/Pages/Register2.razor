@@ -1,67 +1,141 @@
 ﻿@page "/register2"
-@using System.ComponentModel.DataAnnotations
 @using WonderPlane.Shared;
 @using WonderPlane.Client.Servicios;
+@using System.ComponentModel.DataAnnotations;
 
 @inject IUserService UserService;
 @inject NavigationManager navigation;
+@inject HttpClient Http;
 
-<EditForm Model="@newUser" OnValidSubmit="HandleValidSubmit">
+<EditForm Model="newUser" OnValidSubmit="OnValidSubmit">
 
-    <DataAnnotationsValidator />
-<div class="container-principal">
-    <div class="container-img">
-        <img src="images/register.svg"/>
-    </div>
-    <div class="container-formulario">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div class="container-principal">
+        <div class="container-secundario">
+            <div class="header-container">
+                <img src="images/logo4.svg" alt="logo" />
+            </div>
+            <div class="subtitle-register">
+                <h1>Registrarse</h1>
+            </div>
+            <div class="register-container">
+                <div class="register-container-1">
+                    <div class="input">
+                        <label class="form-label">Nombre Completo</label>
+                        <InputText class="form-control" @bind-Value="newUser.Name"></InputText>
+                        <ValidationMessage For="@(() => newUser.Name)"></ValidationMessage>
+                    </div>
 
-        <div class="container-header">
-            <img src="images/logo4.svg" />
+                    <div class="input">
+                        <label class="form-label">Apellido</label>
+                        <InputText class="form-control" @bind-Value="newUser.LastName"></InputText>
+                        <ValidationMessage For="@(() => newUser.LastName)"></ValidationMessage>
+                    </div>
+                    <div class="input">
+                        <label class="form-label">Usuario</label>
+                        <InputText class="form-control" @bind-Value="newUser.UserName"></InputText>
+                        <ValidationMessage For="@(() => newUser.UserName)"></ValidationMessage>
+                    </div>
+                    <div class="input">
+                        <label class="form-label">Fecha de nacimiento</label>
+                        <InputDate class="form-control" @bind-Value="newUser.BirthDate"></InputDate>
+                        <ValidationMessage For="@(() => newUser.BirthDate)"></ValidationMessage>
+                    </div>
+                </div>
+                <div class="register-container-2">
+                    <div class="input">
+                        <label class="form-label">Email</label>
+                        <InputText class="form-control" @bind-Value="newUser.Email"></InputText>
+                        <ValidationMessage For="@(() => newUser.Email)"></ValidationMessage>
+                    </div>
+                    <div class="input">
+                        <label class="form-label">Numero de telefono</label>
+                        <InputText class="form-control" @bind-Value="newUser.PhoneNumber"></InputText>
+                        <ValidationMessage For="@(() => newUser.PhoneNumber)"></ValidationMessage>
+                    </div>
+
+                    <div class="input">
+                        <label class="form-label">Genero</label>
+                        <InputSelect class="form-control" @bind-Value="newUser.Gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => newUser.Gender)"></ValidationMessage>
+                    </div>
+                    <div class="input">
+                        <label for="password">Contraseña</label>
+                        <InputText class="form-control" @bind-Value="newUser.Password" InputType="password"></InputText>
+                        <ValidationMessage For="@(() => newUser.Password)"></ValidationMessage>
+                    </div>
+                     
+                </div>
+                
+            </div>
+            <button class="register" type="submit">
+                Registrar
+            </button>
             <ul>
                 <li>
-                    <a>¿ya tienes una cuenta?</a>
+                    <a>¿Ya tienes una cuenta?</a>
                     <a class="ingreso" href="login"> Ingresa aqui</a>
                 </li>
-            </ul>   
-        </div>
-
-        <div class="subtitle-register">
-            <h1>Register</h1>
-        </div>
-        <div class="container-formularios">
-
-            <div class="container-form-1">
-                    <MudTextField Label="Id"
-                                  @bind-Value="newUser.Id" />
-                    <MudTextField Label="First name"
-                                  @bind-Value="newUser.Name" />
-                    <MudTextField Label="Last name" 
-                                  @bind-Value="newUser.LastName" />
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" Type="submit">Register</MudButton>
-
-            </div>
-
+            </ul>
         </div>
     </div>
-</div>
 </EditForm>
 
 
 @code {
-    UserDTO newUser = new UserDTO();
-    private string? registrationError;
-
-    private async Task HandleValidSubmit()
-    {
-        try
+    RegisterDTO newUser = new RegisterDTO
         {
-            var userId = await UserService.CreateUser(newUser);
-            navigation.NavigateTo("/login"); // Redirigir o mostrar mensaje de éxito
+            UserName = string.Empty,
+            Name = string.Empty,
+            LastName = string.Empty,
+            BirthDate = DateTime.Now,
+            Email = string.Empty,
+            Password = string.Empty,
+            Gender = string.Empty,
+            PhoneNumber = string.Empty,
+        };
+
+    private async Task OnValidSubmit()
+    {
+    try
+        {
+            // Llamada al servicio para registrar al nuevo usuario
+            await UserService.CreateUser(newUser);
+
+            // Redirigir si el registro es exitoso
+            navigation.NavigateTo("/home");
         }
         catch (ApplicationException ex)
         {
-            registrationError = ex.Message; // Manejo del error
+            // Manejar el error, por ejemplo, mostrando un mensaje
+            Console.WriteLine($"Error al registrar usuario: {ex.Message}");
         }
     }
+
+    public string Password { get; set; }
+
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestclick()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
 
 }

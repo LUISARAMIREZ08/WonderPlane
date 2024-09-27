@@ -1,9 +1,10 @@
 using WonderPlane.Server.Models;
-using WonderPlane.Server.DTOs;
+using WonderPlane.Shared;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 
 
@@ -28,9 +29,9 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<User>> Register(RegisterDTO registerDTO)
+    public async Task<ActionResult<ResponseAPI<User>>> Register(RegisterDTO registerDTO)
     {
-        if (await UserExists(registerDTO.Email)) return BadRequest("Email is already used");
+        if (await UserExists(registerDTO.Email)) return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "Email is already used" });
 
         var hmac = new HMACSHA512();
 
@@ -40,7 +41,7 @@ public class UserController : ControllerBase
             Name = registerDTO.Name,
             LastName = registerDTO.LastName,
             BirthDate = registerDTO.BirthDate,
-            Gender = registerDTO.Gender,
+            Gender = (UserGender)Enum.Parse(typeof(UserGender), registerDTO.Gender),
             PhoneNumber = registerDTO.PhoneNumber,
             Email = registerDTO.Email.ToLower(),
             Role = UserRole.RegisteredUser,
@@ -51,7 +52,7 @@ public class UserController : ControllerBase
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
-        return user;
+        return Ok(new ResponseAPI<User> { EsCorrecto = true, Valor = user });
     }
 
     private async Task<bool> UserExists(string Email)
