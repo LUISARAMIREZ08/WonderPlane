@@ -123,12 +123,11 @@
             // Llamada al servicio para registrar al nuevo usuario
             await UserService.CreateUser(newUser);
 
-            // Redirigir si el registro es exitoso
             navigation.NavigateTo("/home");
         }
         catch (ApplicationException ex)
         {
-            // Manejar el error, por ejemplo, mostrando un mensaje
+            
             Console.WriteLine($"Error al registrar usuario: {ex.Message}");
         }
     }
