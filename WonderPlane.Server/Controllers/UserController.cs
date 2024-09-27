@@ -42,7 +42,7 @@ public class UserController : ControllerBase
             Name = registerDTO.Name,
             LastName = registerDTO.LastName,
             BirthDate = registerDTO.BirthDate,
-            Gender = (UserGender)Enum.Parse(typeof(UserGender), registerDTO.Gender),
+            Gender = UserGender.Other,
             PhoneNumber = registerDTO.PhoneNumber,
             Email = registerDTO.Email.ToLower(),
             Address = registerDTO.Address,

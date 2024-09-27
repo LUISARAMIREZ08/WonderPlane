@@ -12,7 +12,7 @@ namespace WonderPlane.Client.Servicios
             _http = http;
         }
 
-        public async Task<RegisterDTO> CreateUser(RegisterDTO user)
+        public async Task<string> CreateUser(RegisterDTO user)
         {
             var result = await _http.PostAsJsonAsync("api/register", user);
 
@@ -23,18 +23,8 @@ namespace WonderPlane.Client.Servicios
 
             var jsonResponse = await result.Content.ReadAsStringAsync();
             Console.WriteLine($"Respuesta del servidor: {jsonResponse}"); // Aquí se imprime la respuesta del servidor
-
-            // Intenta deserializar la respuesta
-            var response = await result.Content.ReadFromJsonAsync<ResponseAPI<RegisterDTO>>();
-            if (response!.EsCorrecto)
-            {
-                return response.Valor!;
-            }
-            else
-            {
-                throw new ApplicationException(response.Mensaje);
-            }
-
+            return "pepe";
+            
         }
 
     }

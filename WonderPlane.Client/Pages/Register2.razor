@@ -112,23 +112,23 @@
             Address = string.Empty,
             Country = string.Empty,
             Password = string.Empty,
-            Gender = string.Empty,
+            Gender = UserGender.Other,
             PhoneNumber = string.Empty,
         };
 
     private async Task OnValidSubmit()
     {
-    try
+        try
         {
             // Llamada al servicio para registrar al nuevo usuario
             await UserService.CreateUser(newUser);
-
-            navigation.NavigateTo("/home");
+            Console.Write("hola niños");
+            navigation.NavigateTo("/login");
         }
         catch (ApplicationException ex)
         {
             
-            Console.WriteLine($"Error al registrar usuario: {ex.Message}");
+            Console.WriteLine($"Error al registrar usuario: {ex.Message}");           
         }
     }
     private List<string> countries = new List<string>(); // Lista de países

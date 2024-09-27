@@ -4,7 +4,7 @@ namespace WonderPlane.Client.Servicios
 {
     public interface IUserService
     {
-        Task<RegisterDTO> CreateUser(RegisterDTO user);
+        Task<string> CreateUser(RegisterDTO user);
 
 
     }
