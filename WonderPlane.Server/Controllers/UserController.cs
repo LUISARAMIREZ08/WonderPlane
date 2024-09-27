@@ -1,11 +1,15 @@
 using WonderPlane.Server.Models;
+using WonderPlane.Server.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+
 
 
 namespace WonderPlane.Server.Controllers;
 
+[Route("api")]
 [ApiController]
 public class UserController : ControllerBase
 {
@@ -16,8 +20,7 @@ public class UserController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
-    [Route("account/[controller]")]
+    [HttpGet("users")]
     public IActionResult GetAll()
     {
         var users = _context.Users.ToList();
@@ -25,31 +28,23 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<User>> Register(
-        string username, 
-        string name,
-        string lastname,
-        DateTime birthday,
-        UserGender gender,
-        string phonenumber,
-        string email,
-        string password,
-        UserRole role
-        )
+    public async Task<ActionResult<User>> Register(RegisterDTO registerDTO)
     {
+        if (await UserExists(registerDTO.Email)) return BadRequest("Email is already used");
+
         var hmac = new HMACSHA512();
 
         var user = new User
         {
-            UserName = username,
-            Name = name,
-            LastName = lastname,
-            BirthDate = birthday,
-            Gender = gender,
-            PhoneNumber = phonenumber,
-            Email = email,
-            Role = role,
-            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password)),
+            UserName = registerDTO.UserName.ToLower(),
+            Name = registerDTO.Name,
+            LastName = registerDTO.LastName,
+            BirthDate = registerDTO.BirthDate,
+            Gender = registerDTO.Gender,
+            PhoneNumber = registerDTO.PhoneNumber,
+            Email = registerDTO.Email.ToLower(),
+            Role = UserRole.RegisteredUser,
+            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
             PasswordSalt = hmac.Key,
 
         };
@@ -57,6 +52,11 @@ public class UserController : ControllerBase
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
         return user;
+    }
+
+    private async Task<bool> UserExists(string Email)
+    {
+        return await _context.Users.AnyAsync(x => x.Email == Email.ToLower());
     }
 
 }
