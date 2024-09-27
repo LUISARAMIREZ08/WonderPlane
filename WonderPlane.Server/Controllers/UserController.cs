@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using WonderPlane.Server.Services;
+using Microsoft.AspNetCore.Authorization;
 
 
 
@@ -20,6 +22,7 @@ public class UserController : ControllerBase
         _context = context;
     }
 
+    [Authorize(Roles = "RegisteredUser")]
     [HttpGet("users")]
     public IActionResult GetAll()
     {
@@ -28,7 +31,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<User>> Register(RegisterDTO registerDTO)
+    public async Task<ActionResult<string>> Register(RegisterDTO registerDTO, TokenProvider tokenProvider)
     {
         if (await UserExists(registerDTO.Email)) return BadRequest("Email is already used");
 
@@ -51,8 +54,30 @@ public class UserController : ControllerBase
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
-        return user;
+
+        string token = tokenProvider.Create(user);
+
+        return token;
     }
+
+    [HttpPost("login")]
+    public async Task<ActionResult<string>> Login(LoginDTO loginDTO, TokenProvider tokenProvider)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == loginDTO.Email.ToLower());
+
+        if (user == null) return Unauthorized("Invalid email");
+
+        using var hmac = new HMACSHA512(user.PasswordSalt!);
+
+        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
+
+        if (!computedHash.SequenceEqual(user.PasswordHash!))
+            return Unauthorized("Invalid password");
+
+        string token = tokenProvider.Create(user);
+        
+        return token;
+    }   
 
     private async Task<bool> UserExists(string Email)
     {
