@@ -60,16 +60,7 @@
                             <MudTextField Label="Contraseña" Variant="Variant.Outlined" HelperTextOnFocus="true" HelperText="Repeat the password" Class="mt-3" Margin="Margin.Dense"
                                           ShrinkLabel @bind-Value="newUser.Password" For="@(() => newUser.Password)" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
                         </div>
-                    
-                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Style="width:35vh">
-                            <ActivatorContent>
-                                <MudButton Style="width:35vh" Variant="Variant.Filled"
-                                           Color="Color.Info"
-                                           StartIcon="@Icons.Material.Filled.CloudUpload">
-                                    Upload Image
-                                </MudButton>
-                            </ActivatorContent>
-                        </MudFileUpload>
+
                 </div>
 
                 <div class="register-container-2">

@@ -35,6 +35,7 @@ public class UserController : ControllerBase
 
         var hmac = new HMACSHA512();
 
+
         var user = new User
         {
             UserName = registerDTO.UserName.ToLower(),

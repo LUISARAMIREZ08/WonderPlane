@@ -63,6 +63,7 @@
                         <InputSelect class="form-control" @bind-Value="newUser.Gender">
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
+                            <option value="Other">Other</option>
                         </InputSelect>
                         <ValidationMessage For="@(() => newUser.Gender)"></ValidationMessage>
                     </div>
@@ -74,24 +75,13 @@
                     <div class="input">
                         <label class="form-label">Lugar de nacimiento</label>
                         <InputSelect class="form-control" @bind-Value="newUser.Country">
-                            <option value = "" > Seleccione un país</option>
+                            <option value = ""> Seleccione un país</option>
                             @foreach (var country in countries)
                     {
-                                < option value = "@country" > @country </ option >
+                                <option value="@country">@country</option>
                             }
                         </InputSelect>
                         <ValidationMessage For = "@(() => selectedCountry)" ></ValidationMessage >
-                    </div >
-                    <div class="input">
-                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
-                            <ActivatorContent>
-                                <MudButton Variant="Variant.Filled"
-                                           Color="Color.Primary"
-                                           StartIcon="@Icons.Material.Filled.CloudUpload">
-                                    Sube una Imagene de Perfil
-                                </MudButton>
-                            </ActivatorContent>
-                        </MudFileUpload>
                     </div>
                     
          
