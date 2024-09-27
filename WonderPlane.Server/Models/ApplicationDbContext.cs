@@ -40,8 +40,7 @@ public class ApplicationDbContext : DbContext
             .HasConversion<string>();
 
         modelBuilder.Entity<User>()
-            .Property(u => u.Gender)
-            .HasConversion<string>();
+           .Property(u => u.Gender);
 
         base.OnModelCreating(modelBuilder);
 

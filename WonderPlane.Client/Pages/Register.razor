@@ -1,0 +1,172 @@
+﻿@page "/register"
+@using WonderPlane.Shared;
+@using WonderPlane.Client.Servicios;
+@using System.ComponentModel.DataAnnotations;
+@using System.Text.RegularExpressions
+
+@inject IUserService UserService; 
+@inject NavigationManager navigation;
+
+<EditForm Model="newUser" OnValidSubmit="OnValidSubmit">
+
+    <DataAnnotationsValidator />
+    <div class="container-principal">
+
+        <div class="container-secundario">
+        
+        <MudItem xs="12" sm="12">
+            <div class="header-container">
+                
+                <img src="images/logo4.svg" alt="logo" />
+                
+            </div>
+
+            <div class ="subtitle-register">
+
+                <h1>Registrarse</h1>
+                <ul>
+                    <li>
+                        <a>¿ya tienes una cuenta?</a>
+                        <a class="ingreso" href="login"> Ingresa aqui</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="register-container">
+                
+                <div class="register-container-1">
+
+                    <div class="button">
+                            <MudTextField Label="Usuario" InputStyle="color: #FF5733" Variant="Variant.Outlined" HelperTextOnFocus="true" HelperText="Max. 8 characters" Margin="Margin.Dense"
+                                          ShrinkLabel @bind-Value="newUser.UserName" For="@(() => newUser.UserName)" />
+                    </div>
+
+                    <div class="button">
+                            <MudTextField Label="DNI" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                          ShrinkLabel @bind-Value="newUser.Name" For="@(() => newUser.Name)" />
+                    </div>
+
+                    <div class="button">
+                            <MudTextField Label="Lugar de Nacimiento" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                          ShrinkLabel @bind-Value="newUser.LastName" For="@(() => newUser.LastName)" />
+                    </div>
+
+                    <div class="button">
+                            <MudTextField Label="Email" Class="mt-3" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                          ShrinkLabel @bind-Value="newUser.Email" For="@(() => newUser.Email)" />
+                    </div>
+
+                        <div class="mb-3">
+                            <MudTextField Label="Contraseña" Variant="Variant.Outlined" HelperTextOnFocus="true" HelperText="Repeat the password" Class="mt-3" Margin="Margin.Dense"
+                                          ShrinkLabel @bind-Value="newUser.Password" For="@(() => newUser.Password)" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
+                        </div>
+
+                </div>
+
+                <div class="register-container-2">
+
+                        
+
+                    <div class="button">
+                            <MudTextField Label="Dirección" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                          ShrinkLabel @bind-Value="newUser.PhoneNumber" For="@(() => newUser.PhoneNumber)" />
+                    </div>
+
+
+                    <div class="button">
+                            <MudDatePicker Style="height:7vh" @bind-Value="newUser.BirthDate" Label="Fecha de Nacimiento" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    </div>
+
+
+                        <div class="button">
+                            <label class="form-label">Genero</label>
+                            <InputSelect class="form-control" @bind-Value="newUser.Gender">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </InputSelect>
+                            <ValidationMessage For="@(() => newUser.Gender)"></ValidationMessage>
+                        </div>
+
+                        <div class="button">
+                            <MudButton Variant="Variant.Filled" Color="Color.Info" Style="width:35vh" Type="submit">
+                                @btnTexto
+                            </MudButton>
+                        </div>
+                    
+                </div>
+                
+            </div>
+            </MudItem>
+        </div>
+                
+    </div>
+
+</EditForm>
+
+
+@code {
+    
+
+    RegisterDTO newUser = new RegisterDTO
+        {
+            UserName = string.Empty,
+            Name = string.Empty,
+            LastName = string.Empty,
+            BirthDate = DateTime.Today,
+            Email = string.Empty,
+            Address = string.Empty,
+            Country = string.Empty,
+            Password = string.Empty,
+            Gender = UserGender.Other,
+            PhoneNumber = string.Empty,
+        };
+    string btnTexto = "Registrar";
+
+
+    private async Task OnValidSubmit()
+    {
+        try
+        {
+            // Llamada al servicio para registrar al nuevo usuario
+            await UserService.CreateUser(newUser);
+
+            // Redirigir si el registro es exitoso
+            navigation.NavigateTo("/home");
+        }
+        catch (ApplicationException ex)
+        {
+            // Manejar el error, por ejemplo, mostrando un mensaje
+            Console.WriteLine($"Error al registrar usuario: {ex.Message}");
+        }
+    }
+
+    public string Password { get; set; }
+
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestclick()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
+    IList<IBrowserFile> _files = new List<IBrowserFile>();
+    private void UploadFiles(IBrowserFile file)
+    {
+        _files.Add(file);
+        //TODO upload the files to the server
+    }
+
+}
