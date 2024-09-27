@@ -23,6 +23,10 @@ public class RegisterDTO
 
     [EmailAddress]
     public required string Email { get; set; }
+    [StringLength(50)]
+    public required string Address { get; set; }
+    [StringLength(50)]
+    public required string Country { get; set; }
 
     [Required]
     [StringLength(50)]

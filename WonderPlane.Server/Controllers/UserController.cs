@@ -44,6 +44,8 @@ public class UserController : ControllerBase
             Gender = (UserGender)Enum.Parse(typeof(UserGender), registerDTO.Gender),
             PhoneNumber = registerDTO.PhoneNumber,
             Email = registerDTO.Email.ToLower(),
+            Address = registerDTO.Address,
+            Country = registerDTO.Country,
             Role = UserRole.RegisteredUser,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
             PasswordSalt = hmac.Key,

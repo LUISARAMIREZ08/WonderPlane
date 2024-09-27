@@ -24,7 +24,10 @@ public class User
 
     [EmailAddress]
     public required string Email { get; set; }
-
+    [StringLength(50)]
+    public required string Address { get; set; }
+    [StringLength(50)]
+    public required string Country { get; set; }
     public byte[]? PasswordHash { get; set; }
 
     public byte[]? PasswordSalt { get; set; }
