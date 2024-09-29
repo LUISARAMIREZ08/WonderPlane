@@ -17,10 +17,12 @@ namespace WonderPlane.Server.Controllers;
 public class UserController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+    private readonly TokenProvider tokenProvider;
 
-    public UserController(ApplicationDbContext context)
+    public UserController(ApplicationDbContext context, TokenProvider tokenProvider)
     {
         _context = context;
+        this.tokenProvider = tokenProvider;
     }
 
     [Authorize(Roles = "RegisteredUser")]
@@ -32,12 +34,12 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<ResponseAPI<User>>> Register(RegisterDTO registerDTO)
+    public async Task<ActionResult<ResponseAPI<User>>> Register(RegisterDTO registerDTO, TokenProvider tokenProvider)
     {
-        if (await UserExists(registerDTO.Email)) return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "Email is already used" });
+        if (await UserExists(registerDTO.Email))
+            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "Email is already used" });
 
         var hmac = new HMACSHA512();
-
 
         var user = new User
         {
@@ -52,8 +54,7 @@ public class UserController : ControllerBase
             Country = registerDTO.Country,
             Role = UserRole.RegisteredUser,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
-            PasswordSalt = hmac.Key,
-
+            PasswordSalt = hmac.Key
         };
 
         _context.Users.Add(user);
@@ -61,8 +62,16 @@ public class UserController : ControllerBase
 
         string token = tokenProvider.Create(user);
 
-        return token;
+        var response = new ResponseAPI<User>
+        {
+            EsCorrecto = true,
+            Mensaje = "User registered successfully",
+            Data = user
+        };
+
+        return Ok(response);
     }
+
 
     [HttpPost("login")]
     public async Task<ActionResult<string>> Login(LoginDTO loginDTO, TokenProvider tokenProvider)

@@ -2,11 +2,13 @@
 @using WonderPlane.Shared;
 @using WonderPlane.Client.Servicios;
 @using System.ComponentModel.DataAnnotations;
+@using MudBlazor
 
 @inject IUserService UserService;
 @inject NavigationManager navigation;
 @inject HttpClient Http;
 @inject CountryService CountryService
+@inject ISnackbar Snackbar
 
 <EditForm Model="newUser" OnValidSubmit="OnValidSubmit">
 
@@ -45,6 +47,16 @@
                     <div class="input">
                         <MudTextField @bind-Value="newUser.Password" Label="Password" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" Margin="Margin.Dense" />
                     </div>
+                     @* <div class="input">
+                        <label class="form-label">Seleccionar Imagen de Perfil</label>
+                        <InputFile OnChange="OnFileSelected"></InputFile>
+                        <div style="margin-top: 10px;">
+                            @if (!string.IsNullOrEmpty(newUser.Image))
+                            {
+                                <img src="@newUser.Image" alt="Imagen de perfil" style="width: 100px; height: 100px; border-radius: 50%;" />
+                            }
+                        </div> 
+                    </div> *@
                 </div>
                 <div class="register-container-2">
                     <div class="input">
@@ -75,16 +87,14 @@
                     <div class="input">
                         <label class="form-label">Lugar de nacimiento</label>
                         <InputSelect class="form-control" @bind-Value="newUser.Country">
-                            <option value = ""> Seleccione un país</option>
+                            <option value=""> Seleccione un país</option>
                             @foreach (var country in countries)
-                    {
+                            {
                                 <option value="@country">@country</option>
                             }
                         </InputSelect>
-                        <ValidationMessage For = "@(() => selectedCountry)" ></ValidationMessage >
+                        <ValidationMessage For="@(() => selectedCountry)"></ValidationMessage>
                     </div>
-                    
-         
                 </div>
             </div>
             <button class="register" type="submit">
@@ -93,13 +103,12 @@
             <ul>
                 <li>
                     <a>¿Ya tienes una cuenta?</a>
-                    <a class="ingreso" href="login"> Ingresa aqui</a>
+                    <a class="ingreso" href="/"> Ingresa aqui</a>
                 </li>
             </ul>
         </div>
     </div>
 </EditForm>
-
 
 @code {
     RegisterDTO newUser = new RegisterDTO
@@ -116,23 +125,9 @@
             PhoneNumber = string.Empty,
         };
 
-    private async Task OnValidSubmit()
-    {
-        try
-        {
-            // Llamada al servicio para registrar al nuevo usuario
-            await UserService.CreateUser(newUser);
-            Console.Write("hola niños");
-            navigation.NavigateTo("/login");
-        }
-        catch (ApplicationException ex)
-        {
-            
-            Console.WriteLine($"Error al registrar usuario: {ex.Message}");           
-        }
-    }
     private List<string> countries = new List<string>(); // Lista de países
     private string selectedCountry = ""; // País seleccionado
+    private bool isImageUploading = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -140,7 +135,36 @@
         countries = await CountryService.GetCountriesAsync();
     }
 
-    public string Password { get; set; }
+    private async Task OnValidSubmit()
+    {
+        if (isImageUploading)
+        {
+            Snackbar.Add("Por favor espera mientras se sube la imagen.", Severity.Warning);
+            return;
+        }
+
+        try
+        {
+            // Llamada al servicio para registrar al nuevo usuario
+            await UserService.CreateUser(newUser);
+
+            // Mostrar el mensaje de éxito usando Snackbar
+            Snackbar.Add("Registro realizado con éxito.", Severity.Success);
+
+            // Esperar unos segundos y redirigir
+            await Task.Delay(3000);
+            navigation.NavigateTo("/login");
+        }
+        catch (ApplicationException ex)
+        {
+            // Console.WriteLine($"Error al registrar usuario: {ex.Message}");
+            Snackbar.Add($"Error al registrar usuario: {ex.Message}", Severity.Error);
+        }
+    }
+
+    
+
+    public required string Password { get; set; }
 
     bool isShow;
     InputType PasswordInput = InputType.Password;
@@ -148,7 +172,7 @@
 
     void ButtonTestclick()
     {
-        @if (isShow)
+        if (isShow)
         {
             isShow = false;
             PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
@@ -161,13 +185,4 @@
             PasswordInput = InputType.Text;
         }
     }
-
-    IList<IBrowserFile> _files = new List<IBrowserFile>();
-    private void UploadFiles(IBrowserFile file)
-    {
-        _files.Add(file);
-        //TODO upload the files to the server
-    }
-
-
 }

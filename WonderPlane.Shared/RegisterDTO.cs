@@ -39,9 +39,11 @@ namespace WonderPlane.Shared
         [StringLength(20, ErrorMessage = "El país no puede exceder los 20 caracteres.")]
         public required string Country { get; set; }
 
-        //[Required(ErrorMessage = "La contraseña es obligatoria.")]
-        //[StringLength(50, MinimumLength = 8, ErrorMessage = "La contraseña no puede exceder los 50 caracteres.")]
+        [Required(ErrorMessage = "La contraseña es obligatoria.")]
+        [StringLength(50, MinimumLength = 8, ErrorMessage = "La contraseña no puede exceder los 50 caracteres.")]
         public required string Password { get; set; }
+
+        public string? Image { get; set; }
     }
 
     public enum UserGender

@@ -1,4 +1,4 @@
-﻿namespace WonderPlane.Server.DTOs;
+﻿namespace WonderPlane.Shared;
 
 public class LoginDTO
 {

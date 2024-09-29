@@ -47,7 +47,7 @@ namespace WonderPlane.Server.Models
 
         public byte[]? PasswordSalt { get; set; }
 
-        public byte[]? Image { get; set; }
+        public string? Image { get; set; }
 
         public UserRole? Role { get; set; }
 
