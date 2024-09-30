@@ -1,11 +1,12 @@
 using WonderPlane.Server.Models;
-using WonderPlane.Server.DTOs;
+using WonderPlane.Shared;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using WonderPlane.Server.Services;
 using Microsoft.AspNetCore.Authorization;
+using System.Reflection;
 
 
 
@@ -16,10 +17,12 @@ namespace WonderPlane.Server.Controllers;
 public class UserController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+    private readonly TokenProvider tokenProvider;
 
-    public UserController(ApplicationDbContext context)
+    public UserController(ApplicationDbContext context, TokenProvider tokenProvider)
     {
         _context = context;
+        this.tokenProvider = tokenProvider;
     }
 
     [Authorize(Roles = "RegisteredUser")]
@@ -31,9 +34,10 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<string>> Register(RegisterDTO registerDTO, TokenProvider tokenProvider)
+    public async Task<ActionResult<ResponseAPI<User>>> Register(RegisterDTO registerDTO, TokenProvider tokenProvider)
     {
-        if (await UserExists(registerDTO.Email)) return BadRequest("Email is already used");
+        if (await UserExists(registerDTO.Email))
+            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "Email is already used" });
 
         var hmac = new HMACSHA512();
 
@@ -46,10 +50,12 @@ public class UserController : ControllerBase
             Gender = registerDTO.Gender,
             PhoneNumber = registerDTO.PhoneNumber,
             Email = registerDTO.Email.ToLower(),
+            Address = registerDTO.Address,
+            Country = registerDTO.Country,
             Role = UserRole.RegisteredUser,
+            Image = registerDTO.Image,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
-            PasswordSalt = hmac.Key,
-
+            PasswordSalt = hmac.Key
         };
 
         _context.Users.Add(user);
@@ -57,8 +63,16 @@ public class UserController : ControllerBase
 
         string token = tokenProvider.Create(user);
 
-        return token;
+        var response = new ResponseAPI<User>
+        {
+            EsCorrecto = true,
+            Mensaje = "User registered successfully",
+            Data = user
+        };
+
+        return Ok(response);
     }
+
 
     [HttpPost("login")]
     public async Task<ActionResult<string>> Login(LoginDTO loginDTO, TokenProvider tokenProvider)
