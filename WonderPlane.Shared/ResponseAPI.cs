@@ -11,5 +11,7 @@ namespace WonderPlane.Shared
         public bool EsCorrecto { get; set; }
         public T? Valor { get; set; }
         public string? Mensaje { get; set; }
+
+        public T? Data { get; set; }
     }
 }

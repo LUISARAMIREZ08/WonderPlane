@@ -4,6 +4,7 @@ using WonderPlane.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using CloudinaryDotNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,12 +12,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 
+// Cloudinary configuration
+var cloudinaryConfig = builder.Configuration.GetSection("Cloudinary");
+var cloudinary = new Cloudinary(new Account(
+    cloudinaryConfig["CloudName"],
+    cloudinaryConfig["ApiKey"],
+    cloudinaryConfig["ApiSecret"]
+));
+
+builder.Services.AddSingleton(cloudinary);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Cadena de conexión
+// Cadena de conexión
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-//Registrando el DBContext
+// Registrando el DBContext
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddSingleton<TokenProvider>();
@@ -35,13 +46,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Configuración de CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("nuevaPolicy", app =>
     {
+        //app.WithOrigins("https://localhost:5106")
         app.AllowAnyOrigin()
-      .AllowAnyMethod()
-      .AllowAnyHeader();
+           .AllowAnyMethod()
+           .AllowAnyHeader();
     });
 });
 
@@ -54,9 +67,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
+
+// El middleware de CORS debe estar antes que Autenticación y Autorización
 app.UseCors("nuevaPolicy");
 
-app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

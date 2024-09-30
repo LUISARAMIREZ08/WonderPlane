@@ -1,0 +1,69 @@
+﻿@page "/login"
+
+@using WonderPlane.Shared;
+@using WonderPlane.Client.Servicios;
+@using System.ComponentModel.DataAnnotations;
+@using MudBlazor;
+
+@inject IUserService UserService;
+@inject NavigationManager navigation;
+@inject HttpClient Http;
+@inject CountryService CountryService;
+@inject ISnackbar Snackbar;
+@inject ImageUploadService ImageUploadService
+
+<div class="main-container poppins-light">
+
+    <div class="login-container">
+        <EditForm Model="User">
+            <DataAnnotationsValidator />
+
+            <h1>Bienvenido</h1>
+
+            <div class="form-container">
+
+                    <div class="input">
+                        <label class="form-label">Email</label>
+                        <InputText class="form-control" @bind-Value="User.Email" Placeholder="example@domain.com"></InputText>
+                        <span class="small-validation-message"><ValidationMessage For="@(() => User.Email)"></ValidationMessage></span>
+                    </div>
+
+
+                    <div class="input">
+                        <label class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" @bind-value="User.Password" />
+                        <span class="small-validation-message"><ValidationMessage For="@(() => User.Password)"></ValidationMessage></span>
+                    </div>
+          
+            </div>
+
+            <div class="form-button">
+                <button class="submit-button" type="submit">Ingresar</button>
+                
+                <ul>
+                    <li>
+                        <a>¿No tienes una cuenta?</a>
+                        <a class="ingreso" href="/register"> Ingresa aqui</a>
+                    </li>
+                </ul>
+            </div>
+        </EditForm>
+    </div>
+
+    <div class="info-container">
+        <h1>¡Inicia sesión en tu cuenta!</h1>
+        <p>Bienvenido de nuevo a nuestra comunidad. Inicia sesión para acceder a tus servicios personalizados y aprovechar al máximo todas las ventajas que ofrecemos. Si aún no tienes una cuenta, no dudes en registrarte y unirte a nosotros. ¡Te esperamos!</p>
+    </div>
+
+</div>
+
+@code 
+{
+    LoginDTO User = new LoginDTO
+        {
+            Email = string.Empty,
+            Password = string.Empty
+        };
+    
+}
+
