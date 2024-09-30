@@ -47,12 +47,13 @@ public class UserController : ControllerBase
             Name = registerDTO.Name,
             LastName = registerDTO.LastName,
             BirthDate = registerDTO.BirthDate,
-            Gender = UserGender.Other,
+            Gender = registerDTO.Gender,
             PhoneNumber = registerDTO.PhoneNumber,
             Email = registerDTO.Email.ToLower(),
             Address = registerDTO.Address,
             Country = registerDTO.Country,
             Role = UserRole.RegisteredUser,
+            Image = registerDTO.Image,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
             PasswordSalt = hmac.Key
         };

@@ -1,4 +1,4 @@
-/* Estilos del footer */
+﻿/* Estilos del footer */
 .footer {
     display: flex;
     flex-direction: column;
@@ -41,10 +41,10 @@
 
     .footer-list .List {
         margin-bottom: 15px;
-        margin-right:30px;
+        margin-right: 30px;
         display: flex;
         flex-direction: column;
-        text-align:start;
+        text-align: start;
     }
 
     .footer-list h5 {
@@ -76,19 +76,19 @@
     margin-top: 20px;
 }
 
-/* Responsividad para pantallas peque�as */
+/* Responsividad para pantallas pequeñas */
 @media (max-width: 768px) {
     .footer-list {
         display: flex;
         flex-direction: column;
-        justify-content:center;
+        justify-content: center;
         align-items: center;
     }
 
         .footer-list .List {
             padding-right: 0;
             margin-bottom: 20px;
-            margin-right:0;
+            margin-right: 0;
             text-align: center;
         }
 
@@ -105,7 +105,7 @@
     .footer-list .List {
         padding-right: 0;
         margin-bottom: 20px;
-        text-align:center;
+        text-align: center;
     }
 
     .footer-list {

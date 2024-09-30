@@ -4,6 +4,7 @@ using WonderPlane.Client;
 using MudBlazor.Services;
 
 using WonderPlane.Client.Servicios;
+//using WonderPlane.Client.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -13,6 +14,8 @@ builder.Services.AddMudServices();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7056") });
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ImageUploadService>();
+
 builder.Services.AddMudServices();
 builder.Services.AddScoped<CountryService>();
 

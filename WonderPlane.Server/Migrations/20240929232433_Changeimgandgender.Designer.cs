@@ -12,8 +12,8 @@ using WonderPlane.Server.Models;
 namespace WonderPlane.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240929013307_CambiarImgToStringdata")]
-    partial class CambiarImgToStringdata
+    [Migration("20240929232433_Changeimgandgender")]
+    partial class Changeimgandgender
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -113,8 +113,9 @@ namespace WonderPlane.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");

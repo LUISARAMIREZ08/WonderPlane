@@ -51,6 +51,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("nuevaPolicy", app =>
     {
+        //app.WithOrigins("https://localhost:5106")
         app.AllowAnyOrigin()
            .AllowAnyMethod()
            .AllowAnyHeader();

@@ -25,7 +25,7 @@ namespace WonderPlane.Server.Models
         public required DateTime BirthDate { get; set; }
 
         [Required(ErrorMessage = "El género es obligatorio.")]
-        public required UserGender Gender { get; set; }
+        public required string Gender { get; set; }
 
         [Required(ErrorMessage = "El número de teléfono es obligatorio.")]
         [StringLength(10, MinimumLength =10, ErrorMessage = "El número de teléfono debe tener 10 caracteres.")]

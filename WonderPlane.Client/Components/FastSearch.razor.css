@@ -1,15 +1,15 @@
-/* Estilo general del formulario */
+Ôªø/* Estilo general del formulario */
 .flight-search-form {
     background-color: rgba(255, 255, 255, 1);
     border-radius: 8px;
     padding: 20px;
     margin-top: -200px;
-    max-width: 1000px; /* Aumentar el ancho m·ximo */
+    max-width: 1000px; /* Aumentar el ancho m√°ximo */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    z-index: 1; /* Para que estÈ por encima del contenido */
+    z-index: 1; /* Para que est√© por encima del contenido */
 }
 
-    /* TÌtulo del formulario */
+    /* T√≠tulo del formulario */
     .flight-search-form h2 {
         text-align: center;
         margin-bottom: 20px;
@@ -23,7 +23,7 @@
         flex-direction: row; /* Alinear elementos horizontalmente */
         justify-content: space-between; /* Espacio entre los elementos */
         align-items: center; /* Centrar verticalmente */
-        padding:20px;
+        padding: 20px;
     }
 
 /* Estilo de cada grupo de input */
@@ -52,7 +52,7 @@
     outline: none;
     font-size: 16px;
     background-color: transparent;
-    transition: all 0.2s ease; /* TransiciÛn m·s suave */
+    transition: all 0.2s ease; /* Transici√≥n m√°s suave */
 }
 
 /* Estilo de los select */
@@ -64,10 +64,10 @@
     background-color: transparent; /* Fondo transparente */
 }
 
-    /* Efectos en los inputs y select cuando est·n en foco o tienen texto */
+    /* Efectos en los inputs y select cuando est√°n en foco o tienen texto */
     .input-group input:focus, .input-group input:valid, .input-group select:focus, .input-group select:valid {
         border-bottom: 3px solid #007bff; /* Cambia el color del borde inferior */
-        transform: scale(1.05); /* Aumenta ligeramente el tamaÒo */
+        transform: scale(1.05); /* Aumenta ligeramente el tama√±o */
         box-shadow: 0 8px 16px rgba(0, 123, 255, 0.2); /* Agrega una sombra suave */
         background-color: rgba(0, 123, 255, 0.1); /* Fondo con ligera opacidad */
     }
@@ -77,14 +77,14 @@
         border-bottom-color: #0056b3; /* Cambia el color del borde inferior */
     }
 
-    /* El select no permanece azul si no est· en focus */
+    /* El select no permanece azul si no est√° en focus */
     .input-group select:not(:focus) {
         background-color: transparent; /* Fondo transparente */
         border-bottom: 2px solid black;
         box-shadow: none; /* Sin sombra */
     }
 
-/* Estilo del botÛn de b˙squeda */
+/* Estilo del bot√≥n de b√∫squeda */
 .search-button {
     padding: 12px;
     background-color: #007bff;
@@ -94,7 +94,7 @@
     font-size: 16px;
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* TransiciÛn en color y tamaÒo */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transici√≥n en color y tama√±o */
 }
 
     .search-button:hover {
@@ -105,7 +105,7 @@
 /* Estilo responsive */
 @media (max-width: 800px) {
     .flight-search-form form {
-        flex-direction: column; /* Cambiar a columna en pantallas pequeÒas */
+        flex-direction: column; /* Cambiar a columna en pantallas peque√±as */
         align-items: stretch;
     }
 
