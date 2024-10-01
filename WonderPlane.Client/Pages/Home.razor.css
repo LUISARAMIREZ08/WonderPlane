@@ -1,36 +1,30 @@
 ﻿.Home-container {
-    background-color: azure;
     width: 100%;
-    margin-top: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    margin:0px;
 }
 
 .Home-container1 {
-    background-image: url(../img/img9.jpg);
+    background-image: url(../img/fondoregister.jpg);
     background-size: cover;
     background-repeat: no-repeat;
-    height: 980px;
+    background-position: center;
+    height: 900px;
     width: 100%;
-    margin-top: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     color: white;
     text-align: center;
-    padding: 20px;
+    margin-top: 0;
 }
-
     .Home-container1 h1 {
         font-size: 80px;
     }
 
     .Home-container1 p {
         font-size: 20px;
-        width: 80%; /* Para que el texto no sea demasiado ancho en pantallas grandes */
+        width: 80%;
         max-width: 900px;
     }
 
@@ -49,106 +43,16 @@
         .Home-container1 .button-discover:hover {
             background-color: royalblue;
             transition: 0.3s;
-            font-size: 22px;
         }
 
 .Home-container2 {
-    background-color: white;
-    height: 800px;
+    /*height: 800px;*/
     width: 100%;
     margin-top: 0;
 }
 
-    .Home-container2 h1 {
-        font-size: 60px;
-        margin-bottom: 60px;
-        margin-top: 30px;
-        color: white;
-    }
-
-    .Home-container2 p {
-        font-size: 20px;
-        width: 80%; /* Ajuste del ancho del texto */
-        max-width: 700px;
-        text-align: center;
-        color: white;
-    }
-
-    .Home-container2 .slider img {
-        color: black;
-        width: 100%;
-    }
-
-.slide-element1, .slide-element2, .slide-element3 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-    height: 100%; /* Ajusta según el tamaño que desees */
-    z-index: 1; /* Asegura que el contenido esté encima */
-    position: relative;
-}
-
-.Home-container2 .slider-images .slide-element1 {
-    background-image: url('../img/img21.jpg');
-    background-size: cover;
-    background-position: center;
-}
-
-.Home-container2 .slider-images .slide-element2 {
-    background-image: url('../img/img12.jpg');
-    background-size: cover;
-    background-position: center;
-}
-
-.Home-container2 .slider-images .slide-element3 {
-    background-image: url('../img/img7.jpg');
-    background-size: cover;
-    background-position: center;
-}
-
-.Home-container2 .slider-images .slide-element1::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Cambia el color y la opacidad según tu necesidad */
-    z-index: -1; /* Ubica la capa detrás del contenido */
-}
-
-.Home-container2 .slider-images .slide-element2::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Cambia el color y la opacidad según tu necesidad */
-    z-index: -1; /* Ubica la capa detrás del contenido */
-}
-
-.Home-container2 .slider-images .slide-element3::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Cambia el color y la opacidad según tu necesidad */
-    z-index: -1; /* Ubica la capa detrás del contenido */
-}
-
-.Home-container2 .slider-images h1 {
-    position: relative;
-    z-index: 2; /* Ubica el texto encima de la capa */
-}
-
 .Home-container3 {
     background-color: #fefefe;
-    height: 200px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -156,84 +60,61 @@
 }
 
 .Home-container4 {
-    /*background-image: url(../img/img12.jpg);*/
     background-color: white;
-    height: 700px;
     width: 100%;
     margin-top: 0;
     display: flex;
     justify-content: center;
-    flex-direction: column;
     align-items: center;
-    color: Black;
-    padding: 20px;
+    flex-direction:column;
 }
 
     .Home-container4 h1 {
         font-size: 60px;
-        margin-bottom: 60px;
+        margin-bottom: 40px;
         margin-top: 30px;
+        text-align: center;
     }
 
-    .Home-container4 .cards-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 70%;
-    }
-
-        .Home-container4 .cards-container .card h5, .Home-container4 .cards-container .card p {
-            font-family: "Poppins", system-ui;
-            font-weight: 400;
-            font-style: normal;
-        }
-
-        .Home-container4 .cards-container .card {
-            margin-right: 20px;
-            width: 500px;
-        }
+    
 
 .Home-container5 {
-    background-color: whitesmoke;
-    height: 1200px;
+    background-color: white;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
+    padding: 50px;
 }
 
-    .Home-container5 .about {
+    .Home-container5 .about-container {
         background-color: white;
         display: flex;
         justify-content: center;
         align-items: start;
         flex-direction: column;
-        width: 700px;
-        height: 730px;
+        width: 600px;
         padding: 50px;
-        position: relative;
         margin-left: -150px;
         z-index: 1;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Para un efecto de elevación */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     }
 
     .Home-container5 .about-main-img {
-        width: 600px;
-        height: 900px;
-        display: block;
+        width: 500px;
+        height: 800px;
     }
 
-    .Home-container5 .about .about-images {
+    .Home-container5 .about-container .about-images {
         display: flex;
         justify-content: space-between;
         align-items: center;
         width: 100%;
     }
 
-        .Home-container5 .about .about-images img {
-            height: 200px;
-            width: 280px;
+        .Home-container5 .about-container .about-images img {
+            height: 150px;
+            width: 230px;
         }
 
     .Home-container5 .about-button {
@@ -241,8 +122,7 @@
         color: white;
         font-size: 20px;
         padding: 15px 25px;
-        position: absolute;
-        bottom: 20px;
+        margin-top:10px;
     }
 
         .Home-container5 .about-button a {
@@ -256,19 +136,18 @@
         }
 
 .Home-container6 {
-    background-image: url(../img/img7.jpg);
+   background-color:white;
     background-size: cover;
     background-repeat: no-repeat;
-    height: 900px;
     width: 100%;
     margin-top: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: black;
     padding-right: 20px;
     text-align: center;
-    padding: 20px;
+    padding: 40px;
 }
 
     .Home-container6 .services {
@@ -276,22 +155,20 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        width: 40%;
+        width: 60%;
     }
 
         .Home-container6 .services .services-component {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 70%;
+            width: 100%;
             margin-bottom: 20px;
         }
 
-
-
         .Home-container6 .services .services-item {
             background-color: dodgerblue;
-            padding: 40px;
+            padding: 30px;
             margin-right: 20px;
             display: flex;
             justify-content: space-between;
@@ -304,12 +181,9 @@
 
             .Home-container6 .services .services-item span {
                 font-size: 50px;
+                color:white;
             }
 
-                .Home-container6 .services .services-item span:hover {
-                    font-size: 60px;
-                    transition: 0.3s;
-                }
 
         .Home-container6 .services .services-item-info {
             display: flex;
@@ -317,99 +191,122 @@
             flex-direction: column;
             text-align: left;
         }
+            .Home-container6 .services .services-item-info h4 {
+                color:dodgerblue;
+            }
 
             .Home-container6 .services .services-item-info p {
                 font-size: 14px;
                 width: 100%;
             }
 
-
-
-
-    .Home-container6 h1 {
-        font-size: 60px;
-    }
-
     .Home-container6 .why-text {
         width: 50%;
-    }
-
-        .Home-container6 .why-text p {
-            font-size: 20px;
-            width: 100%; /* Ajuste del ancho del texto */
-            text-align: center;
-        }
-
-/* Responsividad para dispositivos móviles */
-@media (max-width: 768px) {
-    .Home-container1 h1,
-    .Home-container4 h1,
-    .Home-container6 h1 {
-        font-size: 40px; /* Ajuste de tamaño de fuente para móviles */
-    }
-
-    .Home-container1 p,
-    .Home-container6 p {
-        font-size: 16px; /* Ajuste de tamaño de texto para móviles */
-        width: 90%; /* Ajuste del ancho del texto para móviles */
-    }
-
-    .Home-container4 {
-        text-align: center; /* Ajuste de alineación de texto para móviles */
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
-        .Home-container4 h1 {
-            font-size: 35px; /* Tamaño reducido del texto en el carrusel */
-        }
 
-    .Home-container1,
-    .Home-container2,
-    .Home-container4,
-    .Home-container6 {
-        height: 500px; /* Ajuste de altura para dispositivos móviles */
-        padding: 20px; /* Espaciado adicional para móviles */
+
+
+@media screen and (max-width:768px){
+
+    /*Contenedor 1 (Inicio)*/
+    .Home-container1 h1 {
+        font-size: 50px;
     }
 
-        .Home-container6 p {
-            width: 90%;
-        }
-}
+    /*Contenedor 2 (Carousel)*/
+    .Home-container2 {
+        height: 500px;
+    }
 
-/* Responsividad para pantallas muy pequeñas */
-@media (max-width: 440px) {
+    /*Contenedor 4 (Tarjetas)*/
+    .Home-container4 h1 {
+        font-size: 40px;
+    }
 
-    .Home-container1,
-    .Home-container2,
-    .Home-container4,
+    /*Contenedor 5 (Sobre nosotros)*/
+    .Home-container5 .about-main-img {
+        display: none;
+    }
+
+    .Home-container5 .about-container {
+        margin:0;
+    }
+
+    .Home-container5 {
+        align-items:center;
+    }
+
+
+    /*Contenedor 6 (Servicios)*/
     .Home-container6 {
+        flex-direction:column;
+    }
+
+    .Home-container6 .services {
         width: 100%;
     }
 
-        .Home-container1 h1,
-        .Home-container4 h1,
-        .Home-container6 h1 {
-            font-size: 20px;
-            text-align: center;
-        }
-
-    .Home-container6 {
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: red;
-    }
-
-        .Home-container1 p,
-        .Home-container6 p {
-            font-size: 14px;
-        }
-
-    .Home-container1 .button-discover {
-        font-size: 18px;
-        padding: 10px 20px;
+    .Home-container6 h1 {
+        font-size: 40px;
     }
 }
+
+
+@media screen and (max-width:540px){
+
+
+    /*Contenedor 1 (Inicio)*/
+    .Home-container1 {
+        height: 700px;
+    }
+    .Home-container1 h1 {
+        font-size: 40px;
+    }
+
+    .Home-container1 p {
+        font-size: 15px;
+    }
+
+    /*Contenedor 5 (Sobre nosotros)*/
+    .Home-container5 {
+        padding: 20px;
+    }
+    .Home-container5 .about-container {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .Home-container5 .about-images {
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    .Home-container5 .about-images img {
+        margin-bottom: 20px;
+    }
+
+    .Home-container5 .about-button {
+        margin: auto;
+    }
+
+    /*Contenedor 6 (Servicios)*/
+
+    .Home-container6{
+        padding: 20px;
+    }
+    .Home-container6 .services .services-component {
+        width: 100%;
+    }
+
+    .Home-container6 .services h4 {
+        font-size:18px;
+    }
+
+    .Home-container6 .services .services-item-info p {
+        font-size: 10px;
+    }
+    }

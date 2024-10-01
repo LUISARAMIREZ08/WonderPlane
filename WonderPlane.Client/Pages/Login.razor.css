@@ -1,19 +1,18 @@
 ﻿.main-container {
-    /*background-image: url("img/img2.jpg");*/
     background-image: url("img/fondoregister.jpg");
     background-size: cover;
     background-position: center;
     display: flex;
     justify-content: center;
-    align-items: center; /* Centra el contenido horizontalmente */
+    align-items: center;
 }
 
 .info-container {
-    background: rgba(173, 216, 230, 0.2); /* Azul claro a negro con transparencia */
+    background: rgba(173, 216, 230, 0.2); 
     height: 700px;
-    display: flex; /* Habilita Flexbox */
-    justify-content: center; /* Centra el contenido verticalmente */
-    align-items: center; /* Centra el contenido horizontalmente */
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
     flex-direction: column;
     color: white;
     padding: 100px;
@@ -24,8 +23,7 @@
 .login-container {
     background-color: white;
     padding: 50px;
-   /* margin: 5px -70px 80px 20px;*/
-   margin-right: -70px;
+    margin-right: -70px;
     z-index: 1;
     display:flex;
     justify-content:center;
@@ -39,7 +37,7 @@ h1 {
 }
 
 .form-container {
-    display: flex; /* Habilita Flexbox */
+    display: flex; 
     justify-content: space-between;
     flex-direction:column;
     width: 100%;
@@ -49,29 +47,30 @@ h1 {
 
 
 .input {
-    margin-bottom: 1rem; /* Espacio entre cada campo de entrada */
+    margin-bottom: 1rem; 
 }
 
 .form-button {
-    display: flex; /* Habilita Flexbox */
-    justify-content: center; /* Centra el botón */
+    display: flex; 
+    justify-content: center; 
     flex-direction: column;
     align-items: center;
+    text-align:center;
 }
 
     .form-button .submit-button {
-        background-color: #4CAF50; /* Verde */
-        color: white; /* Texto blanco */
-        padding: 10px 20px; /* Espaciado interno */
-        border: none; /* Sin borde */
-        border-radius: 5px; /* Bordes redondeados */
-        cursor: pointer; /* Cursor de puntero */
-        width: 50%; /* Ancho completo */
+        background-color: #4CAF50;
+        color: white; 
+        padding: 10px 20px; 
+        border: none; 
+        border-radius: 5px; 
+        cursor: pointer;
+        width: 50%; 
         margin-bottom: 20px;
     }
 
         .form-button .submit-button:hover {
-            background-color: #45a049; /* Verde más oscuro */
+            background-color: #45a049; 
         }
 
     .form-button .ingreso {
@@ -79,8 +78,25 @@ h1 {
     }
 
 .small-validation-message {
-    font-size: 8px; /* Ajusta el tamaño que prefieras */
-    color: red; /* Opcional: Cambia el color si lo necesitas */
-    min-height: 20px; /* Altura fija para el mensaje */
-    margin-top: 5px; /* Espacio entre el input y el mensaje */
+    font-size: 8px; 
+    color: red; 
+    min-height: 20px;
+    margin-top: 5px; 
+}
+
+
+@media screen and (max-width: 768px) {
+    .login-container {
+        margin-right:-50px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .login-container {
+        margin:20px;
+    }
+
+    .info-container {
+        display:none;
+    }
 }
