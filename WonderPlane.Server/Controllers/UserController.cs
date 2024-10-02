@@ -39,6 +39,9 @@ public class UserController : ControllerBase
         if (await UserExists(registerDTO.Email))
             return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "Email is already used" });
 
+        if (await UserExists(registerDTO.UserName))
+            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "User name is already used" });
+
         var hmac = new HMACSHA512();
 
         var user = new User

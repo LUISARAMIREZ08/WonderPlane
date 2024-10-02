@@ -26,13 +26,13 @@
 
                 <div class="form-container-left">
                     <div class="input">
-                        <label class="form-label">Nombre Completo</label>
+                        <label class="form-label">Nombres</label>
                         <InputText class="form-control" @bind-Value="newUser.Name"></InputText>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Name)"></ValidationMessage></span>
                     </div>
 
                     <div class="input">
-                        <label class="form-label">Apellido</label>
+                        <label class="form-label">Apellidos</label>
                         <InputText class="form-control" @bind-Value="newUser.LastName"></InputText>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newUser.LastName)"></ValidationMessage></span>
                     </div>
@@ -49,6 +49,7 @@
                         <select class="form-control" @bind="newUser.Gender">
                             <option value="Male">Masculino</option>
                             <option value="Female">Femenino</option>
+                            <option value="Prefiero no decirlo">Prefiero no decirlo</option>
                             <option value="Other">Otro</option>
                         </select>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Gender)"></ValidationMessage></span>
@@ -76,7 +77,7 @@
                 <div class="form-container-right">
                     <div class="input">
                         <label class="form-label">Fecha de nacimiento</label>
-                        <input type="date" min="1900-01-01" max="2023-12-31" class="form-control" @bind-value="newUser.BirthDate" />
+                        <input type="date" min="1940-01-01" max="2006-12-31" class="form-control" @bind-value="newUser.BirthDate" />
                         <span class="small-validation-message"><ValidationMessage For="@(() => newUser.BirthDate)"></ValidationMessage></span>
                     </div>
 
@@ -152,7 +153,7 @@
 
 @code {
 
-    public bool Basic_CheckBox2 { get; set; } = false;
+    // public bool Basic_CheckBox2 { get; set; } = false;
 
     RegisterDTO newUser = new RegisterDTO
         {
@@ -173,6 +174,7 @@
     private List<string> countries = new List<string>(); // Lista de países
     //private string selectedCountry = ""; País seleccionado
     private IBrowserFile? selectedFile; // Archivo de imagen seleccionado
+    private bool isProcessing = false; // Indicador de proceso en curso
 
     protected override async Task OnInitializedAsync()
     {
@@ -183,6 +185,8 @@
     {
         try
         {
+            isProcessing = true; // Indicar que se está procesando la solicitud
+            Snackbar.Add("Procesando registro...", Severity.Info);
             // Verificar si se seleccionó un archivo de imagen
             if (selectedFile != null)
             {
@@ -203,6 +207,8 @@
 
             // Crear el usuario
             await UserService.CreateUser(newUser);
+            isProcessing = false; // Indicar que se ha completado el proceso
+            Snackbar.Clear(); // Limpiar los mensajes de notificación
             Snackbar.Add("Registro realizado con éxito.", Severity.Success);
             navigation.NavigateTo("/login");
         }

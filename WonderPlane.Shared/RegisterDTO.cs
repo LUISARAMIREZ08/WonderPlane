@@ -33,7 +33,7 @@ namespace WonderPlane.Shared
 
         [Required(ErrorMessage = "Requerido")]
         [EmailAddress(ErrorMessage = "Formato de correo electrónico no válido.")]
-        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "El correo debe seguir el formato abcd@algo.com")]
+        [RegularExpression(@"^(?!.*[Rr]oot)[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "El correo no puede contener 'root' o 'Root' y debe seguir el formato abcd@algo.com")]
         public required string Email { get; set; }
 
         [Required(ErrorMessage = "Requerido")]
@@ -42,7 +42,7 @@ namespace WonderPlane.Shared
         public required string Address { get; set; }
 
         [Required(ErrorMessage = "Requerido")]
-        [StringLength(20, ErrorMessage = "No puede exceder los 20 caracteres.")]
+        [StringLength(30, ErrorMessage = "No puede exceder los 30 caracteres.")]
         [RegularExpression(@"^(?!.*\s{2,}).*$", ErrorMessage = "No puede tener espacios seguidos.")]
         public required string Country { get; set; }
 
