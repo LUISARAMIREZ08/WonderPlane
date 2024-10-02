@@ -12,36 +12,35 @@
 @inject HttpClient Http;
 @inject CountryService CountryService;
 @inject ISnackbar Snackbar;
-@inject ImageUploadService ImageUploadService
+@inject ImageUploadService ImageUploadService;
 
 <div class="main-container poppins-light">
 
     <div class="login-container">
-        <EditForm Model="User">
+        <EditForm Model="User" OnValidSubmit="OnValidSubmit">
+            <!-- Cambiado aquí -->
             <DataAnnotationsValidator />
 
             <h1>Bienvenido</h1>
 
             <div class="form-container">
 
-                    <div class="input">
-                        <label class="form-label">Email</label>
-                        <InputText class="form-control" @bind-Value="User.Email" Placeholder="example@domain.com"></InputText>
-                        <span class="small-validation-message"><ValidationMessage For="@(() => User.Email)"></ValidationMessage></span>
-                    </div>
+                <div class="input">
+                    <label class="form-label">Email</label>
+                    <InputText class="form-control" @bind-Value="User.Email" Placeholder="example@domain.com"></InputText>
+                    <span class="small-validation-message"><ValidationMessage For="@(() => User.Email)"></ValidationMessage></span>
+                </div>
 
-
-                    <div class="input">
-                        <label class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" @bind-value="User.Password" />
-                        <span class="small-validation-message"><ValidationMessage For="@(() => User.Password)"></ValidationMessage></span>
-                    </div>
-          
+                <div class="input">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" @bind-value="User.Password" />
+                    <span class="small-validation-message"><ValidationMessage For="@(() => User.Password)"></ValidationMessage></span>
+                </div>
             </div>
 
             <div class="form-button">
                 <button class="submit-button" type="submit">Ingresar</button>
-                
+
                 <ul>
                     <li>
                         <a>¿No tienes una cuenta?</a>
@@ -60,13 +59,27 @@
 
 </div>
 
-@code 
+@code
 {
     LoginDTO User = new LoginDTO
         {
             Email = string.Empty,
             Password = string.Empty
         };
-    
-}
 
+    private async Task OnValidSubmit()
+    {
+        try
+        {
+            var token = await UserService.LoginUser(User);
+            Snackbar.Add("Inicio de sesión exitoso.", Severity.Success);
+            Console.WriteLine($"Token: {token}"); // Imprimir el token en la consola
+            // Aquí podriamos guardar el token en el almacenamiento local, sesión, etc.
+            navigation.NavigateTo("/"); // Redirigir después de iniciar sesión
+        }
+        catch (ApplicationException ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}
