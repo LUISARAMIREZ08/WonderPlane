@@ -1,0 +1,33 @@
+﻿.cards-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+}
+    
+    .cards-container img {
+        max-height:200px;
+    }
+
+    .cards-container .card h5, .cards-container .card p {
+        font-family: "Poppins", system-ui;
+        font-weight: 400;
+        font-style: normal;
+    }
+
+    
+@media screen and (max-width:768px){
+    .cards-container {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .cards-container img {
+        max-height:150px;
+    }
+
+}

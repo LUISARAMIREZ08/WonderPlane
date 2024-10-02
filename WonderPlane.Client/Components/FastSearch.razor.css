@@ -2,28 +2,35 @@
 .flight-search-form {
     background-color: rgba(255, 255, 255, 1);
     border-radius: 8px;
-    padding: 20px;
-    margin-top: -200px;
+    padding: 30px;
+    margin-top: -80px;
     max-width: 1000px; /* Aumentar el ancho máximo */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     z-index: 1; /* Para que esté por encima del contenido */
 }
 
-/* Título del formulario */
-.flight-search-form h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: black;
-}
 
-/* Estilo del formulario */
-.flight-search-form form {
-    width: 100%;
+    /* Título del formulario */
+    .flight-search-form h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: black;
+    }
+
+    /* Estilo del formulario */
+    .flight-search-form form {
+        width: 100%;
+        display: flex;
+        justify-content: center; /* Espacio entre los elementos */
+        align-items: center; /* Centrar verticalmente */
+        flex-direction:column;
+        padding: 20px;
+    }
+
+.flight-search-form form .inputs {
     display: flex;
-    flex-direction: row; /* Alinear elementos horizontalmente */
-    justify-content: space-between; /* Espacio entre los elementos */
-    align-items: center; /* Centrar verticalmente */
-    padding: 20px;
+    flex-direction: row;
+    margin-bottom: 20px;
 }
 
 /* Estilo de cada grupo de input */
@@ -86,7 +93,7 @@
 
 /* Estilo del botón de búsqueda */
 .search-button {
-    padding: 12px;
+    padding: 10px 20px 10px 20px;
     background-color: #007bff;
     color: white;
     border: none;
@@ -103,15 +110,21 @@
     }
 
 /* Estilo responsive */
-@media (max-width: 800px) {
-    .flight-search-form form {
+@media (max-width: 768px) {
+    .flight-search-form form .inputs {
         flex-direction: column; /* Cambiar a columna en pantallas pequeñas */
-        align-items: stretch;
     }
 
-    .input-group,
-    .search-button {
-        width: 100%; /* Ocupa todo el ancho */
-        margin-bottom: 15px; /* Espacio entre los elementos */
+        .flight-search-form form .inputs .input-group {
+            margin-right: 0; /* Eliminar margen entre campos */
+            margin-bottom: 15px; /* Añadir margen inferior */
+        }
+}
+
+@media screen and (max-width: 500px) {
+    .flight-search-form {
+        margin-top: -50px;
+        padding: 20px;
     }
+
 }
