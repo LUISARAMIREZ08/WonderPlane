@@ -1,0 +1,38 @@
+﻿<div class="slider-images poppins-light">
+    <MudCarousel Class="mud-width-full slider" Style="height:100%;" ShowArrows="@arrows" ShowBullets="@bullets" EnableSwipeGesture="@enableSwipeGesture" AutoCycle="@autocycle" TData="object">
+        <MudCarouselItem Transition="transition" Color="@Color.Primary">
+            <div class="d-flex" style="height:100%">
+                <div class="slide element1 ">
+                    <h1>"¡Aprovecha nuestras ofertas exclusivas!"</h1>
+                    <p>"No pierdas la oportunidad de volar a tus destinos soñados con descuentos de hasta el 50%. Solo por tiempo limitado, consigue los mejores precios en nuestros vuelos seleccionados. ¡Viaja más por menos con WonderPlane!"</p>
+                </div>
+            </div>
+        </MudCarouselItem>
+        <MudCarouselItem Transition="transition" Color="@Color.Secondary">
+            <div class="d-flex" style="height:100%">
+                <div class="slide element2   ">
+                    <h1>"Conquista nuevos horizontes"</h1>
+                    <p>"Explora el mundo con nuestros vuelos internacionales. Conéctate con culturas fascinantes y destinos exóticos con la comodidad y seguridad que WonderPlane te ofrece. ¡Tu próxima aventura está a solo un clic de distancia!"</p>
+                </div>
+            </div>
+        </MudCarouselItem>
+        <MudCarouselItem Transition="transition" Color="@Color.Info">
+            <div class="d-flex" style="height:100%">
+                <div class="slide element3">
+                    <h1>"Descubre Colombia con nosotros"</h1>
+                    <p>"Desde las playas caribeñas hasta las montañas de los Andes, Colombia tiene todo para ofrecer. Aprovecha nuestros tiquetes aéreos nacionales y conoce cada rincón del país con WonderPlane."</p>
+                </div>
+            </div>
+        </MudCarouselItem>
+    </MudCarousel>
+
+
+    @code {
+        private bool arrows = true;
+        private bool bullets = true;
+        private bool enableSwipeGesture = true;
+        private bool autocycle = true;
+        private Transition transition = Transition.Slide;
+    }
+
+</div>

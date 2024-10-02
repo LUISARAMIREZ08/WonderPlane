@@ -1,20 +1,19 @@
 ﻿.main-container {
-    /*background-image: url("img/img2.jpg");*/
     background-image:url("img/fondoregister.jpg"); 
     background-size: cover;
     background-position: center;
     display: flex;
     justify-content:center;
-    align-items: center; /* Centra el contenido horizontalmente */
+    align-items: center;
 }
 
 .info-container {
-    background: rgba(173, 216, 230, 0.2); /* Azul claro a negro con transparencia */
-    flex: 1; /* Permite que el contenedor ocupe todo el espacio restante */
-    height: 900px;
-    display: flex; /* Habilita Flexbox */
-    justify-content: center; /* Centra el contenido verticalmente */
-    align-items: center; /* Centra el contenido horizontalmente */
+    background: rgba(173, 216, 230, 0.2);
+    flex: 1;
+    height: 850px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
     flex-direction:column;
     color: white;
     padding:100px;
@@ -23,10 +22,8 @@
 .register-container {
     background-color:white;
     flex:1;
-    /*height:750px;*/
     padding:30px;
-    margin:5px -70px 120px 20px;
-   /* border-radius: 10px;*/
+    margin:0px -70px 0px 20px;
     z-index:1;
 }
 
@@ -35,45 +32,46 @@
 }
 
 .form-container {
-    display: flex; /* Habilita Flexbox */
-    flex-direction: row; /* Organiza los elementos en una fila */
-    justify-content: space-between; /* Espacia los elementos */
-    width: 100%; /* Asegura que el contenedor ocupe todo el ancho */
-    max-width: 1200px; /* Opcional: establece un ancho máximo */
+    display: flex; 
+    flex-direction: row; 
+    justify-content: space-between; 
+    width: 100%; 
+    max-width: 1200px; 
 }
 
 .form-container-left, .form-container-right {
-    flex: 1; /* Permite que ambos lados ocupen espacio igual */
-    margin: 10px; /* Espaciado entre columnas */
+    flex: 1; 
+    margin: 10px; 
 }
 
 .input {
-    margin-bottom: 1rem; /* Espacio entre cada campo de entrada */
+    margin-bottom: 1rem; 
 }
 
 .register {
-    margin-top: 20px; /* Espacio entre el botón y el formulario */
+    margin-top: 20px; 
 }
 
 .form-button {
-    display: flex; /* Habilita Flexbox */
-    justify-content: center; /* Centra el botón */
+    display: flex; 
+    justify-content: center; 
     flex-direction:column;
     align-items:center;
+    text-align:center;
 }
 .form-button .submit-button {
-    background-color: #4CAF50; /* Verde */
-    color: white; /* Texto blanco */
-    padding: 10px 20px; /* Espaciado interno */
-    border: none; /* Sin borde */
-    border-radius: 5px; /* Bordes redondeados */
-    cursor: pointer; /* Cursor de puntero */
-    width: 50%; /* Ancho completo */
-    margin-bottom:5px;
+    background-color: #4CAF50; 
+    color: white; 
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    width: 50%; 
+    margin-bottom:10px;
 }
 
 .form-button .submit-button:hover {
-    background-color: #45a049; /* Verde más oscuro */
+    background-color: #45a049; 
 }
 
 .form-button .ingreso{
@@ -81,8 +79,43 @@
 }
 
 .small-validation-message {
-    font-size: 8px; /* Ajusta el tamaño que prefieras */
-    color: red; /* Opcional: Cambia el color si lo necesitas */
-    min-height: 20px; /* Altura fija para el mensaje */
-    margin-top: 5px; /* Espacio entre el input y el mensaje */
+    font-size: 8px; 
+    color: red; 
+    min-height: 20px; 
+    /*margin-top: 5px; */
+}
+
+
+@media screen and (max-width: 768px) {
+
+    .register-container {
+        margin:20px -20px 20px 10px;
+    }
+    .form-container {
+        flex-direction: column; 
+        align-items: center; 
+    }
+    .form-container-left, .form-container-right {
+        width: 100%; 
+    }
+
+    .info-container {
+        height: 1350px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .info-container {
+        display: none;
+    }
+
+    .main-container {
+        display: flex;
+        justify-content:center;
+        align-items: center;
+    }
+
+    .register-container {
+        margin:20px;
+    }
 }

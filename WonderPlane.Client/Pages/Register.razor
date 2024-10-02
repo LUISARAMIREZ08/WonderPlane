@@ -1,4 +1,7 @@
 ﻿@page "/register"
+
+<PageTitle>Registro</PageTitle>
+
 @using WonderPlane.Shared;
 @using WonderPlane.Client.Servicios;
 @using System.ComponentModel.DataAnnotations;
@@ -128,7 +131,7 @@
 
             <div class="form-button">
                 <button class="submit-button" type="submit">Registrar</button>
-                <MudCheckBox @bind-Value="Basic_CheckBox2" Size="Size.Small" Color="Color.Info" UncheckedColor="Color.Default"><a class="ingreso" href="#">Terminos y condiciones.</a></MudCheckBox>
+                @* <MudCheckBox @bind-Value="Basic_CheckBox2" Size="Size.Small" Color="Color.Info" UncheckedColor="Color.Default"><a class="ingreso" href="#">Terminos y condiciones.</a></MudCheckBox> *@
                 <ul>
                     <li>
                         <a>¿Ya tienes una cuenta?</a>
@@ -140,6 +143,7 @@
     </div>
     
     <div class="info-container">
+        <img src="img/WLogo.png" /><br />
         <h1>¡Únete a Nuestra Comunidad!</h1>
         <p>En nuestro formulario de registro, te invitamos a ser parte de una experiencia única. Al completar tu inscripción, podrás acceder a una variedad de servicios y beneficios diseñados especialmente para ti. Solo necesitas proporcionarnos algunos datos básicos, y en pocos minutos estarás listo para disfrutar de todo lo que ofrecemos. Tu información será tratada con la máxima seguridad y confidencialidad. ¡Esperamos verte pronto!</p>
     </div>
@@ -200,7 +204,6 @@
             // Crear el usuario
             await UserService.CreateUser(newUser);
             Snackbar.Add("Registro realizado con éxito.", Severity.Success);
-            await Task.Delay(3000);
             navigation.NavigateTo("/login");
         }
         catch (ApplicationException ex)

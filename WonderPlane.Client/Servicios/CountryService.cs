@@ -18,18 +18,19 @@ public class CountryService
         var response = await _httpClient.GetFromJsonAsync<List<CountryResponse>>("https://restcountries.com/v3.1/all");
 
         // Si la respuesta es válida, devolver la lista de nombres
-        return response?.Select(c => c.Name.Common).OrderBy(name => name).ToList() ?? new List<string>();
+        //return response?.Select(c => c.Name.Common).OrderBy(name => name).ToList() ?? new List<string>();
+        return response?.Select(c => c.Name?.Common?? string.Empty).OrderBy(name => name).ToList() ?? [];
     }
 
     // Clase que representa la respuesta de la API
     public class CountryResponse
     {
-        public Name Name { get; set; }
+        public Name? Name { get; set; }
     }
 
     public class Name
     {
-        public string Common { get; set; }
+        public string? Common { get; set; }
     }
 }
 

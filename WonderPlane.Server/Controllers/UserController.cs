@@ -75,22 +75,22 @@ public class UserController : ControllerBase
 
 
     [HttpPost("login")]
-    public async Task<ActionResult<string>> Login(LoginDTO loginDTO, TokenProvider tokenProvider)
+    public async Task<ActionResult<ResponseAPI<string>>> Login(LoginDTO loginDTO, TokenProvider tokenProvider)
     {
         var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == loginDTO.Email.ToLower());
 
-        if (user == null) return Unauthorized("Invalid email");
+        if (user == null) return Unauthorized(new ResponseAPI<string> { EsCorrecto=false, Mensaje="El usuario no es valido"});
 
         using var hmac = new HMACSHA512(user.PasswordSalt!);
 
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
 
         if (!computedHash.SequenceEqual(user.PasswordHash!))
-            return Unauthorized("Invalid password");
+            return Unauthorized(new ResponseAPI<string> { EsCorrecto=false, Mensaje="La contraseña no es válida"});
 
         string token = tokenProvider.Create(user);
         
-        return token;
+        return Ok(new ResponseAPI<string> { EsCorrecto = true, Mensaje = "Bienvenido", Data = token });
     }   
 
     private async Task<bool> UserExists(string Email)
