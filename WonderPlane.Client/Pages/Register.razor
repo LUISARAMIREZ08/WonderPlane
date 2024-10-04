@@ -154,9 +154,10 @@
 
     public bool Basic_CheckBox2 { get; set; } = false;
 
-    RegisterDTO newUser = new RegisterDTO
+    UserRegisterDto newUser = new UserRegisterDto
         {
             UserName = string.Empty,
+            Document = string.Empty,
             Name = string.Empty,
             LastName = string.Empty,
             BirthDate = DateTime.Now,
