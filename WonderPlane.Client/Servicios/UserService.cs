@@ -28,6 +28,7 @@ namespace WonderPlane.Client.Servicios
             
         }
 
+
         public async Task<string> LoginUser(UserLoginDto user)
         {
             var result = await _http.PostAsJsonAsync("api/login", user);
@@ -49,6 +50,20 @@ namespace WonderPlane.Client.Servicios
             }
 
             throw new ApplicationException("Error al iniciar sesión");
+        }
+
+        public async Task<string> CreateAdmin(CreateAdminDto user)
+        {
+            var result = await _http.PostAsJsonAsync("api/createadmin", user);
+
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new ApplicationException($"Error al registrar administrador: {result.ReasonPhrase}");
+            }
+
+            var jsonResponse = await result.Content.ReadAsStringAsync();
+            Console.WriteLine($"Respuesta del servidor: {jsonResponse}"); // Aquí se imprime la respuesta del servidor
+            return "Administrador registrado";
         }
 
     }

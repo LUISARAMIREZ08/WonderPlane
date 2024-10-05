@@ -3,11 +3,12 @@
 @using MudBlazor
 @using System.Collections.Generic
 @using WonderPlane.Client.Components
-
 @using System.Net.Http.Json
-
 @using System.Threading
-@inject HttpClient httpClient
+
+@inject NavigationManager navigation;
+@inject HttpClient Http;
+@inject ISnackbar Snackbar;
 
 <PageTitle>Gestión de administradores</PageTitle>
 
@@ -73,7 +74,8 @@
             <span onclick="@(() => showFormCreate())" class="material-symbols-outlined">
                 close
             </span>
-            <CreateUser />
+            <!-- Pasamos el EventCallback al componente CreateUser -->
+            <CreateUser OnUserCreated="showFormCreate" />
         </div>
     }
 </div>
@@ -153,7 +155,7 @@
     }
 
     // Función para mostrar el formulario de crear usuario
-    private void showFormCreate()
+    public void showFormCreate()
     {
         _showCreateUser = !_showCreateUser;
     }

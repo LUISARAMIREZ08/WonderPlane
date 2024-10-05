@@ -6,9 +6,8 @@
 @inject IUserService UserService;
 @inject NavigationManager navigation;
 @inject HttpClient Http;
-@inject CountryService CountryService;
 @inject ISnackbar Snackbar;
-@inject ImageUploadService ImageUploadService;
+
 
 <div class="create-form">
     <EditForm Model="newUser" OnValidSubmit="OnValidSubmit">
@@ -51,26 +50,38 @@
 
 
 @code {
+    // Define el EventCallback que invocará una función desde el componente padre
+    [Parameter]
+    public EventCallback OnUserCreated { get; set; }
 
-    RegisterDTO newUser = new RegisterDTO
+    CreateAdminDto newUser = new CreateAdminDto
         {
             UserName = string.Empty,
-            Name = string.Empty,
-            LastName = string.Empty,
-            BirthDate = DateTime.Now,
             Email = string.Empty,
-            Address = string.Empty,
-            Country = string.Empty,
             Password = string.Empty,
-            ConfirmPassword = string.Empty,
-            Gender = string.Empty,
-            PhoneNumber = string.Empty,
-            Image = string.Empty
+            ConfirmPassword = string.Empty
         };
 
-    private void OnValidSubmit()
+    private async Task OnValidSubmit()
     {
         // Call the service to create the user
-    }
+        try
+        {
+            // Crear el usuario
+            await UserService.CreateAdmin(newUser);
+            Snackbar.Clear(); // Limpiar los mensajes de notificación
+            Snackbar.Add("Administrador creado con éxito.", Severity.Success);
 
+            // Ejecutar el callback que cierra el formulario desde la página padre
+            if (OnUserCreated.HasDelegate)
+            {
+                await OnUserCreated.InvokeAsync();
+            }
+        }
+        catch (ApplicationException ex)
+        {
+            Snackbar.Add($"Error al crear administrador: {ex.Message}", Severity.Error);
+        }
+    }
 }
+

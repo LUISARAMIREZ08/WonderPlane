@@ -77,6 +77,49 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
+    [HttpPost("createadmin")]
+    public async Task<ActionResult<ResponseAPI<User>>> CreateAdmin(CreateAdminDto registerDTO, TokenProvider tokenProvider)
+    {
+        if (await EmailExists(registerDTO.Email))
+            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "Email is already used" });
+
+        if (await UserExists(registerDTO.UserName))
+            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "User name is already used" });
+
+        var hmac = new HMACSHA512();
+
+        var user = new User
+        {
+            Document = string.Empty,
+            UserName = registerDTO.UserName.ToLower(),
+            Name = string.Empty,
+            LastName = string.Empty,
+            BirthDate = DateTime.Now,
+            Gender = string.Empty,
+            PhoneNumber = string.Empty,
+            Email = registerDTO.Email.ToLower(),
+            Address = string.Empty,
+            Country = string.Empty,
+            Role = UserRole.Admin,
+            Image = string.Empty,
+            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
+            PasswordSalt = hmac.Key
+        };
+
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+        string token = tokenProvider.Create(user);
+
+        var response = new ResponseAPI<User>
+        {
+            EsCorrecto = true,
+            Mensaje = "User registered successfully",
+            Data = user
+        };
+
+        return Ok(response);
+    }
 
     [HttpPost("login")]
     public async Task<ActionResult<ResponseAPI<string>>> Login(UserLoginDto loginDTO, TokenProvider tokenProvider)
