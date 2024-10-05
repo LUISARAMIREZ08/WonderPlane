@@ -1,0 +1,76 @@
+﻿@using WonderPlane.Shared;
+@using WonderPlane.Client.Servicios;
+@using System.ComponentModel.DataAnnotations;
+@using MudBlazor;
+
+@inject IUserService UserService;
+@inject NavigationManager navigation;
+@inject HttpClient Http;
+@inject CountryService CountryService;
+@inject ISnackbar Snackbar;
+@inject ImageUploadService ImageUploadService;
+
+<div class="create-form">
+    <EditForm Model="newUser" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+
+        <h1>Crear Usuario</h1>
+
+        <div class="form-container">
+
+            <div class="input">
+                <label class="form-label">Nombre de usuario</label>
+                <InputText class="form-control" @bind-Value="newUser.UserName" ></InputText>
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.UserName)"></ValidationMessage></span>
+            </div>
+
+            <div class="input">
+                <label class="form-label">Email</label>
+                <InputText class="form-control" @bind-Value="newUser.Email" Placeholder="example@domain.com"></InputText>
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Email)"></ValidationMessage></span>
+            </div>
+
+            <div class="input">
+                <label class="form-label">Contraseña</label>
+                <input type="password" class="form-control" @bind-value="newUser.Password" />
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Password)"></ValidationMessage></span>
+            </div>
+
+            <div class="input">
+                <label class="form-label">Confirmar Contraseña</label>
+                <input type="password" class="form-control" @bind-value="newUser.ConfirmPassword" />
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.ConfirmPassword)"></ValidationMessage></span>
+            </div>
+        </div>
+
+        <div class="form-button">
+            <button class="button" type="submit">Crear</button>
+        </div>
+    </EditForm>
+</div>
+
+
+@code {
+
+    RegisterDTO newUser = new RegisterDTO
+        {
+            UserName = string.Empty,
+            Name = string.Empty,
+            LastName = string.Empty,
+            BirthDate = DateTime.Now,
+            Email = string.Empty,
+            Address = string.Empty,
+            Country = string.Empty,
+            Password = string.Empty,
+            ConfirmPassword = string.Empty,
+            Gender = string.Empty,
+            PhoneNumber = string.Empty,
+            Image = string.Empty
+        };
+
+    private void OnValidSubmit()
+    {
+        // Call the service to create the user
+    }
+
+}

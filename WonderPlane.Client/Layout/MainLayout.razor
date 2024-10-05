@@ -7,11 +7,25 @@
 <MudSnackbarProvider />
 
 <MudLayout>
-    <NavMenu />
-        <section class="content" style="margin-top:60px;">
-            @Body
-        </section>
-   <FooterMenu />
+
+    <!-- NavBar fija en la parte superior -->
+        <NavMenu />
+
+    <!-- Contenedor principal del contenido -->
+    <MudMainContent>
+        <main>
+            <div class="main-content">
+                @Body
+            </div>
+        </main>
+    </MudMainContent>
+
+    <!-- Footer fijo en la parte inferior -->
+    <FooterMenu />
+
 </MudLayout>
+
+
+
 
 
