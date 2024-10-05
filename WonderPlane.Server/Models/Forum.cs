@@ -17,7 +17,7 @@ public class Forum
     public DateTime PublicationDate { get; set; }
 
     public int? UserId { get; set; }
-    public User User { get; set; } = null!;
+    public User? User { get; set; }
 
     public ICollection<Message> Messages { get; } = new List<Message>();
 }

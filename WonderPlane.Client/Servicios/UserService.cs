@@ -13,7 +13,7 @@ namespace WonderPlane.Client.Servicios
             _http = http;
         }
 
-        public async Task<string> CreateUser(RegisterDTO user)
+        public async Task<string> CreateUser(UserRegisterDto user)
         {
             var result = await _http.PostAsJsonAsync("api/register", user);
 
@@ -28,7 +28,7 @@ namespace WonderPlane.Client.Servicios
             
         }
 
-        public async Task<string> LoginUser(LoginDTO user)
+        public async Task<string> LoginUser(UserLoginDto user)
         {
             var result = await _http.PostAsJsonAsync("api/login", user);
 

@@ -2,7 +2,7 @@
 
 namespace WonderPlane.Shared
 {
-    public class LoginResponse
+    public class LoginResponseDto
     {
         public string? Token { get; set; }
     }
