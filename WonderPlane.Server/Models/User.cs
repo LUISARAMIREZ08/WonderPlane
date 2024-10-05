@@ -28,24 +28,26 @@ namespace WonderPlane.Server.Models
         [DataType(DataType.Date)]
         public required DateTime BirthDate { get; set; }
 
-        public required string Gender { get; set; }
+        public string? Gender { get; set; }
 
         [StringLength(10, MinimumLength =10, ErrorMessage = "El número de teléfono debe tener 10 caracteres.")]
-        public required string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "El correo electrónico es obligatorio.")]
         [EmailAddress(ErrorMessage = "Formato de correo electrónico no válido.")]
         public required string Email { get; set; }
 
         [StringLength(40, ErrorMessage = "La dirección no puede exceder los 40 caracteres.")]
-        public required string Address { get; set; }
+        public string? Address { get; set; }
 
         [StringLength(20, ErrorMessage = "El país no puede exceder los 50 caracteres.")]
-        public required string Country { get; set; }
+        public string? Country { get; set; }
 
         public bool? IsSuscribedToNews { get; set; } = false;
 
         public bool? ReciveNotifications { get; set; } = false;
+
+        public bool? IsActive { get; set; } = true;
 
         public byte[]? PasswordHash { get; set; }
 
@@ -55,8 +57,15 @@ namespace WonderPlane.Server.Models
 
         public UserRole? Role { get; set; }
 
+        public int? TravelerId { get; set; }
+        public Traveler? Traveler { get; set; }
+
         public ICollection<Forum> Forums { get; } = new List<Forum>();
         public ICollection<Message> Messages { get; } = new List<Message>();
+        public ICollection<Purchase> Purchases { get; } = new List<Purchase>();
+        public ICollection<Reservation> Reservations { get; } = new List<Reservation>();
+        public ICollection<Search> Searches { get; } = new List<Search>();
+        public ICollection<Card> Cards { get; } = new List<Card>();
     }
 
     public enum UserRole
