@@ -5,22 +5,19 @@
 <MudDialogProvider />
 <MudThemeProvider />
 <MudSnackbarProvider />
+<MudPopoverProvider/>
 
 <MudLayout>
-
-    <!-- NavBar fija en la parte superior -->
+    <header>
         <NavMenu />
-
-    <!-- Contenedor principal del contenido -->
+    </header>
+    
     <MudMainContent>
-        <main>
-            <div class="main-content">
-                @Body
-            </div>
+        <main class="main-content">
+            @Body
         </main>
     </MudMainContent>
 
-    <!-- Footer fijo en la parte inferior -->
     <FooterMenu />
 
 </MudLayout>

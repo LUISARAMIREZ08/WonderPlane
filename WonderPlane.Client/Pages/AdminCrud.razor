@@ -12,100 +12,108 @@
 
 <PageTitle>Gestión de administradores</PageTitle>
 
-<div class="contain poppins-light">
+<main class="contain poppins-light">
     <h1>Administradores</h1>
 
-    <div class="table-admins">
-        <!-- Barra de búsqueda y botón de crear nuevo usuario -->
-<div class="create-button">
-    <div class="button" onclick="@(() => showFormCreate())">Crear nuevo usuario</div>
-    @* <MudTextField @bind-Value="_searchString"
-                  Placeholder="Buscar por nombre, apellidos o email"
-                  Adornment="Adornment.Start"
-                  AdornmentIcon="@Icons.Material.Filled.Search"
-                  IconSize="Size.Medium"
-                  AdornmentColor="Color.Info" /> *@
+    <section class="table-admins">
+        <!-- Cabecera del formulario -->
+        <div class="create-button">
 
-    <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-</div>
+            <div class="button" onclick="@(() => showFormCreate())">Crear usuario</div>
 
-<MudTable Items="_admins"
-          Striped="false"
-          Hover="true"
-          Bordered="false"
-          RowsPerPage="5"
-          ServerData="ServerReload"
-          PagerPosition="MudBlazor.PagerPosition.Bottom">
-    <HeaderContent>
-        <MudTh>Avatar</MudTh>
-        <MudTh>Documento de Identidad</MudTh>
-        <MudTh>Nombre</MudTh>
-        <MudTh>Apellidos</MudTh>
-        <MudTh>Email</MudTh>
-        <MudTh>Fecha de Nacimiento</MudTh>
-        <MudTh>Acciones</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Avatar">
-            <MudAvatar ImageSrc="@context.AvatarUrl" Size="Size.Medium" />
-        </MudTd>
-        <MudTd DataLabel="Documento de Identidad">@context.IdentityDocument</MudTd>
-        <MudTd DataLabel="Nombre">@context.Name</MudTd>
-        <MudTd DataLabel="Apellidos">@context.LastName</MudTd>
-        <MudTd DataLabel="Email">@context.Email</MudTd>
-        <MudTd DataLabel="Fecha de Nacimiento">@context.BirthDate.ToShortDateString()</MudTd>
-        <MudTd DataLabel="Acciones">
-            @* <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" OnClick="@(() => ViewDetails(context.Id))" /> *@
-            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="@(() => EditAdmin(context.Id))" />
-            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => DeleteAdmin(context.Id))" />
-        </MudTd>
-    </RowTemplate>
-    <PagerContent>
-        <MudTablePager />
-    </PagerContent>
-</MudTable>
-    </div>
+            <MudTextField T="string" ValueChanged="@OnSearch" Immediate="true" Placeholder="Buscar"
+                          Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+                          IconSize="Size.Medium"></MudTextField>
+        </div>
 
+        <!-- Formulario -->
+        <MudTable Items="_admins" Striped="false" Hover="true" Bordered="false" RowsPerPage="5" ServerData="ServerReload" PagerPosition="MudBlazor.PagerPosition.Bottom" @ref="_table">
+            
+            <HeaderContent>
+                <MudTh>Avatar</MudTh>
+                <MudTh>Id</MudTh>
+                <MudTh>Num. Documento</MudTh>
+                <MudTh>Nombre</MudTh>
+                <MudTh>Apellidos</MudTh>
+                <MudTh>Usuario</MudTh>
+                <MudTh>Correo</MudTh>
+                <MudTh>Estado</MudTh>
+                <MudTh>Acciones</MudTh>
+            </HeaderContent>
+
+            <RowTemplate>
+                <MudTd DataLabel="Avatar">
+                    <MudAvatar ImageSrc="@context.Image" Size="Size.Medium" />
+                </MudTd>
+                <MudTd DataLabel="Id">@context.Id</MudTd>
+                <MudTd DataLabel="Documento de Identidad">@context.Document</MudTd>
+                <MudTd DataLabel="Nombre">@context.Name</MudTd>
+                <MudTd DataLabel="Apellidos">@context.LastName</MudTd>
+                <MudTd DataLabel="Nombre de usuario">@context.UserName</MudTd>
+                <MudTd DataLabel="Correo">@context.Email</MudTd>
+                <MudTd DataLabel="Estado">@context.IsActive</MudTd>
+
+                <MudTd DataLabel="Acciones">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Info" OnClick="@(() => EditAdmin(context.Id))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => DeleteAdmin(context.Id))" />
+                </MudTd>
+            </RowTemplate>
+
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+
+        </MudTable>
+    </section>
+
+    <!-- Formulario para crear usuario -->
     @if (_showCreateUser)
     {
-        <!-- Crear usuario -->
         <div class="create-user-container">
-            <span onclick="@(() => showFormCreate())" class="material-symbols-outlined">
-                close
-            </span>
-            <!-- Pasamos el EventCallback al componente CreateUser -->
+            <span onclick="@(() => showFormCreate())" class="material-symbols-outlined">close</span>
             <CreateUser OnUserCreated="showFormCreate" />
         </div>
     }
-</div>
+
+</main>
 
 @code {
-    // Variable para saber si mostrar o no el formulario de crear usuario
-    private bool _showCreateUser = false;
 
-    // Variable de búsqueda
-    private string _searchString = "";
+    private MudTable<Admin>? _table; // Referencia a la tabla de administradores
+    private bool _showCreateUser = false; 
+    private string _searchString = "";  
+    private List<Admin> _admins = new List<Admin>(); 
 
-    // Modelo de administrador
+  
     public class Admin
     {
         public int Id { get; set; }
+        public string? Document { get; set; }
+        public string? UserName { get; set; }
         public string? Name { get; set; }
         public string? LastName { get; set; }
         public string? Email { get; set; }
-        public string? IdentityDocument { get; set; } // Documento de identidad
-        public DateTime BirthDate { get; set; } // Fecha de nacimiento
-        public string? AvatarUrl { get; set; } // Campo para la URL del avatar
+        public bool IsActive { get; set; }
+        public string? Image { get; set; }
     }
 
-    // Lista de administradores
-    private List<Admin> _admins = new List<Admin>
+    
+    // Cargar administradores al inicializar
+    protected override async Task OnInitializedAsync()
     {
-        new Admin { Id = 1, Name = "Jorge", LastName = "Mozquera", Email = "jorge.perez@example.com", IdentityDocument = "123456789", BirthDate = new DateTime(1980, 10, 15), AvatarUrl = "https://example.com/avatar1.png" },
-        new Admin { Id = 2, Name = "Andrea", LastName = "Gonzalez", Email = "andrea.gonzalez@example.com", IdentityDocument = "987654321", BirthDate = new DateTime(1988, 05, 12), AvatarUrl = "https://example.com/avatar2.png" },
-        new Admin { Id = 3, Name = "Carlos", LastName = "Perez", Email = "carlos.perez@example.com", IdentityDocument = "567891234", BirthDate = new DateTime(1995, 07, 23), AvatarUrl = "https://example.com/avatar3.png" },
-    };
+        await LoadAdmins(); // Cargar los administradores al inicializar
+    }
+
+    // Función para buscar administradores
+    private async Task OnSearch(string text)
+    {
+        _searchString = text;
+        if (_table != null)
+        {
+            await _table.ReloadServerData();
+        }
+        
+    }
 
     // Filtro de la tabla
     private bool _adminFilter(Admin admin)
@@ -114,34 +122,19 @@
             return true;
 
         return (admin?.Name?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false)
-            || (admin?.IdentityDocument?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false);
+            || (admin?.LastName?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false)
+            || (admin?.Document?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false)
+            || (admin?.Email?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false);
     }
 
-    // Función para editar administrador
-    private void EditAdmin(int id)
-    {
-        // Lógica para editar al administrador con el Id 'id'
-    }
-
-    // Función para borrar administrador
-    private void DeleteAdmin(int id)
-    {
-        // Lógica para borrar al administrador con el Id 'id'
-    }
-
-    // Simulación de datos del servidor para el paginado
+    // Función para recargar la tabla
     private async Task<TableData<Admin>> ServerReload(TableState state, CancellationToken cancellationToken)
     {
-        // Simulación de una operación asíncrona (p.ej., llamada a una API o consulta a una base de datos)
-        await Task.Delay(1000); // Simulación de retraso asíncrono
+        await LoadAdmins(); // Cargar la lista actualizada de administradores
 
-        // Aplicar el filtro de búsqueda
         var filteredAdmins = _admins.Where(a => _adminFilter(a)).ToList();
-
-        // Simular el paginado del servidor
         var pagedAdmins = filteredAdmins.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
 
-        // Devolver los datos paginados
         return new TableData<Admin>
             {
                 Items = pagedAdmins,
@@ -149,14 +142,45 @@
             };
     }
 
-    private void OnSearch(string text)
+    // Función para cargar administradores
+    private async Task LoadAdmins()
     {
-       
+        var response = await Http.GetFromJsonAsync<List<Admin>>("api/admins"); // Llama a tu API para obtener la lista de administradores
+        _admins = response ?? new List<Admin>();
     }
 
+    // Función para editar administrador
+    private void EditAdmin(int id)
+    {
+        Snackbar.Add("Editar administrador no implementado.", Severity.Info);
+    }
+
+    // Función para borrar administrador
+    private async void DeleteAdmin(int id)
+    {
+        var result = await Http.DeleteAsync($"api/admin/{id}");
+
+        if (result.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Administrador eliminado correctamente.", Severity.Success);
+            await LoadAdmins();
+        }
+        else
+        {
+            Snackbar.Add("Error al eliminar administrador.", Severity.Error);
+        }
+    }
+
+
     // Función para mostrar el formulario de crear usuario
-    public void showFormCreate()
+    public async Task showFormCreate()
     {
         _showCreateUser = !_showCreateUser;
+        if (_table != null)
+        {
+            await _table.ReloadServerData();
+        }
     }
+
+
 }

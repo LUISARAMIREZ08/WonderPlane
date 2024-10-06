@@ -90,10 +90,10 @@ public class UserController : ControllerBase
 
         var user = new User
         {
-            Document = string.Empty,
+            Document = registerDTO.Document,
             UserName = registerDTO.UserName.ToLower(),
-            Name = string.Empty,
-            LastName = string.Empty,
+            Name = registerDTO.Name,
+            LastName = registerDTO.LastName,
             BirthDate = DateTime.Now,
             Gender = string.Empty,
             PhoneNumber = string.Empty,
@@ -120,6 +120,18 @@ public class UserController : ControllerBase
 
         return Ok(response);
     }
+
+    
+    [HttpGet("admins")]
+    public async Task<ActionResult<IEnumerable<User>>> GetAdmins()
+    {
+        var admins = await _context.Users
+            .Where(u => u.Role == UserRole.Admin)
+            .ToListAsync();
+
+        return Ok(admins);
+    }
+
 
     [HttpPost("login")]
     public async Task<ActionResult<ResponseAPI<string>>> Login(UserLoginDto loginDTO, TokenProvider tokenProvider)

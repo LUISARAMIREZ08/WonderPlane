@@ -1,11 +1,10 @@
-/* Barra de navegación */
+
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #212f3c;
     padding: 0px 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: fixed;
     width: 100%;
     height: 80px;
@@ -15,7 +14,6 @@
 
 }
 
-/* Logo del menú */
 .navbar-logo {
     display: flex;
     align-items: center;
@@ -32,7 +30,6 @@
         font-size: 24px;
     }
 
-/* Menú de navegación */
 .navbar-menu {
     display: flex;
     gap: 1px;
@@ -53,9 +50,9 @@
             background-color: dodgerblue;
         }
 
-/* Botón de menú hamburguesa */
+
 .hamburger {
-    display: none; /* Oculto en pantallas grandes */
+    display: none;
     font-size: 30px;
     background: none;
     border: none;
@@ -63,9 +60,9 @@
     color:white;
 }
 
-/* Estilos para pantallas pequeñas */
+
 @media (max-width: 768px) {
-    /* Menú escondido por defecto en pantallas pequeñas */
+
     .navbar-menu {
         display: none;
         flex-direction: column;
@@ -80,20 +77,18 @@
         transition: ease-out 0.3s;
     }
 
-        /* Mostrar menú cuando se activa */
         .navbar-menu.active {
             display: flex;
         }
 
-    /* Mostrar botón hamburguesa en móviles */
+        .navbar-menu a {
+            padding: 15px;
+            text-align: center;
+            width: 100%;
+        }
+
     .hamburger {
         display: block;
     }
 
-    /* Estilos para los enlaces en móviles */
-    .navbar-menu a {
-        padding: 15px;
-        text-align: center;
-        width: 100%;
-    }
 }

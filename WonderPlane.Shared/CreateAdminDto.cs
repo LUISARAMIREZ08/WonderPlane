@@ -6,6 +6,22 @@ namespace WonderPlane.Shared
 {
     public class CreateAdminDto
     {
+
+        [Required(ErrorMessage = "Requerido")]
+        [StringLength(10, MinimumLength = 7, ErrorMessage = "El documento de identidad debe tener entre 7 y 10 caracteres.")]
+        // [RegularExpression()]
+        public required string Document { get; set; }
+
+        [Required(ErrorMessage = "Requerido")]
+        [StringLength(20, ErrorMessage = "No puede exceder los 20 caracteres.")]
+        [RegularExpression(@"^(?!.*\s{2,}).*$", ErrorMessage = "No puede tener espacios seguidos.")]
+        public required string Name { get; set; }
+
+        [Required(ErrorMessage = "Requerido")]
+        [StringLength(20, ErrorMessage = "No puede exceder los 20 caracteres.")]
+        [RegularExpression(@"^(?!.*\s{2,}).*$", ErrorMessage = "No puede tener espacios seguidos.")]
+        public required string LastName { get; set; }
+
         [Required(ErrorMessage = "Requerido")]
         [StringLength(20, ErrorMessage = "No puede exceder los 20 caracteres.")]
         [RegularExpression(@"^(?!.*\s{2,}).*$", ErrorMessage = "No puede tener espacios seguidos.")]

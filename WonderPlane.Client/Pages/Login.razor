@@ -14,11 +14,11 @@
 @inject ISnackbar Snackbar;
 @inject ImageUploadService ImageUploadService;
 
-<div class="main-container poppins-light">
+<main class="main-container poppins-light">
 
-    <div class="login-container">
+    <section class="login-container">
+
         <EditForm Model="User" OnValidSubmit="OnValidSubmit">
-            <!-- Cambiado aquí -->
             <DataAnnotationsValidator />
 
             <h1>Bienvenido</h1>
@@ -36,9 +36,11 @@
                     <input type="password" class="form-control" @bind-value="User.Password" />
                     <span class="small-validation-message"><ValidationMessage For="@(() => User.Password)"></ValidationMessage></span>
                 </div>
+
             </div>
 
             <div class="form-button">
+
                 <button class="submit-button" type="submit">Ingresar</button>
 
                 <ul>
@@ -49,23 +51,26 @@
                 </ul>
             </div>
         </EditForm>
-    </div>
 
-    <div class="info-container">
+    </section>
+
+    <section class="info-container">
+
         <img src="img/Wlogo.png" alt="Alternate Text" /><br />
-        <h1>¡Inicia sesión en tu cuenta!</h1>
+        <h2>¡Inicia sesión en tu cuenta!</h2>
         <p>Bienvenido de nuevo a nuestra comunidad. Inicia sesión para acceder a tus servicios personalizados y aprovechar al máximo todas las ventajas que ofrecemos. Si aún no tienes una cuenta, no dudes en registrarte y unirte a nosotros. ¡Te esperamos!</p>
-    </div>
+    
+    </section>
 
-</div>
+</main>
 
 @code
 {
     UserLoginDto User = new UserLoginDto
-        {
-            Email = string.Empty,
-            Password = string.Empty
-        };
+    {
+        Email = string.Empty,
+        Password = string.Empty
+    };
 
     private async Task OnValidSubmit()
     {
@@ -73,9 +78,8 @@
         {
             var token = await UserService.LoginUser(User);
             Snackbar.Add("Inicio de sesión exitoso.", Severity.Success);
-            Console.WriteLine($"Token: {token}"); // Imprimir el token en la consola
-            // Aquí podriamos guardar el token en el almacenamiento local, sesión, etc.
-            navigation.NavigateTo("/"); // Redirigir después de iniciar sesión
+            Console.WriteLine($"Token: {token}");
+            navigation.NavigateTo("/");
         }
         catch (ApplicationException ex)
         {

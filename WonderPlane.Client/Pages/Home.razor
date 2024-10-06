@@ -4,53 +4,66 @@
 <PageTitle>Home</PageTitle>
 
 @* Sección 1 de Home (Bienvenido) *@
-<div class="Home-container">
-   <div id="Descubrir" class="Home-container1">
-       <h1 class="poppins-light">Bienvenido a WonderPlane</h1>
+<main class="Home-container">
+   <section id="Descubrir" class="welcome">
+
+        <h1 class="poppins-light">Bienvenido a WonderPlane</h1>
         <p class="poppins-light">WonderPlane es una web para gestionar tus tiquetes y poder conquistar 
             otros mundos, animate a descubrir el universo con nosotros.</p>
 
        <div class="button-discover">
             <a href="#" class="poppins-light">Descubrir</a>
        </div>
-   </div>
+
+   </section>
 
    @* Sección 2 de Home (Carousel de imagenes) *@
-    <div id="Carousel" class="Home-container2">
+    <section id="Carousel" class="carousel">
+
         <Carousel />
-    </div>
+
+    </section>
 
     @* Sección 3 de Home (Formulario de búsqueda rápida) *@
-    <div id="BusquedaVuelo" class="Home-container3">
+    <section id="BusquedaVuelo" class="search-fly">
+
         <FastSearch />
-    </div>
+
+    </section>
 
     @* Sección 4 de Home (Tarjetas) *@
-    <div id="InformacionCards" class="Home-container4">
+    <section id="InformacionCards" class="cards-info">
 
-        <h1 class="poppins-light">Viaja comodo con nosotros</h1>
+        <h2 class="poppins-light">Viaja comodo con nosotros</h2>
         <CardsInformation />
-    </div>
+
+    </section>
 
     @* Sección 5 de Home (Sobre Nosotros) *@
-    <div id="SobreNosotros" class="Home-container5">
+    <section id="SobreNosotros" class="about-us">
+
         <img class="about-main-img" src="img/img24.jpg" alt="Alternate Text" />
-        <div class="about-container">
+
+        <article class="about-info">
             <h5 class="poppins-semibold" style="color:dodgerblue;">Sobre Nosotros</h5>
-            <h1 class="poppins-bold">Nosotros proveemos la forma más fácil para gestionar tus tiquetes de vuelo.</h1>
+            <h2 class="poppins-bold">Nosotros proveemos la forma más fácil para gestionar tus tiquetes de vuelo.</h2>
             <p class="poppins-regular">WonderPlane es una plataforma de reservas de vuelos que te permite encontrar y comprar tiquetes aéreos de forma rápida y segura. Con una interfaz intuitiva y amigable, podrás buscar vuelos, comparar precios y reservar tus tiquetes en pocos minutos. ¡Descubre una nueva forma de volar con WonderPlane!</p>
+            
             <div class="about-images">
                 <img src="img/img25.jpg" alt="Alternate Text" />
                 <img src="img/img26.jpg" alt="Alternate Text" />
             </div>
+
             <div class="about-button"><a href="#">Ver más</a></div>
-        </div>
-    </div>
+        </article>
+
+    </section>
 
     @* Sección 6 de Home (Servicios) *@
-    <div id="Servicios" class="Home-container6">
+    <section id="Servicios" class="services-container">
 
-        <div class="services poppins-regular">
+        <article class="services poppins-regular">
+
             <div class="services-component">
                 <div class="services-item">
                     <span class="material-symbols-outlined">price_check</span>
@@ -60,6 +73,7 @@
                     <p>¡Aprovecha las tarifas más competitivas del mercado! Te ofrecemos las mejores ofertas para que tu viaje sea no solo inolvidable, sino también asequible.</p>
                 </div>
             </div>
+
             <div class="services-component">
                 <div class="services-item">
                     <span class="material-symbols-outlined">support_agent</span>
@@ -69,6 +83,7 @@
                     <p>Nuestro compromiso es ofrecerte una experiencia de viaje excepcional. Desde la reserva hasta el aterrizaje, nuestro equipo de expertos está a tu disposición para garantizar tu satisfacción.</p>
                 </div>
             </div>
+
             <div class="services-component">
                 <div class="services-item">
                     <span class="material-symbols-outlined">autorenew</span>
@@ -79,11 +94,12 @@
                 </div>
             </div>
            
-        </div>
-        <div class="why-text">
+        </article>
+
+        <article class="why-text">
             <img src="img/W.png" alt="Alternate Text" />
-        </div>
-    </div>
-</div>
+        </article>
+    </section>
+</main>
 
 

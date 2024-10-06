@@ -2,7 +2,6 @@
     background-color:whitesmoke;
     margin:0;
     height:800px;
-    /*padding-top:20px;*/
     display:flex;
     justify-content:flex-start;
     align-items:center;
@@ -40,9 +39,6 @@
     transition: ease 0.5s;
 }
 
-.table-admins {
-    /*display:none;*/
-}
 
 .create-user-container {
     position:fixed;
@@ -64,3 +60,12 @@
     padding:10px;
     cursor:pointer;
 }
+
+.active {
+    background-color: green;
+}
+
+.inactive {
+    background-color: red;
+}
+
