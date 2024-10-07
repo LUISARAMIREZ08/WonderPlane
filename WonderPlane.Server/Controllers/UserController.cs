@@ -36,8 +36,11 @@ public class UserController : ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult<ResponseAPI<User>>> Register(UserRegisterDto registerDTO, TokenProvider tokenProvider)
     {
-        if (await UserExists(registerDTO.Email))
+        if (await EmailExists(registerDTO.Email))
             return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "Email is already used" });
+
+        if (await UserExists(registerDTO.UserName))
+            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "User name is already used" });
 
         var hmac = new HMACSHA512();
 
@@ -94,9 +97,14 @@ public class UserController : ControllerBase
         return Ok(new ResponseAPI<string> { EsCorrecto = true, Mensaje = "Bienvenido", Data = token });
     }   
 
-    private async Task<bool> UserExists(string Email)
+    private async Task<bool> EmailExists(string Email)
     {
         return await _context.Users.AnyAsync(x => x.Email == Email.ToLower());
+    }
+
+    private async Task<bool> UserExists(string UserName)
+    {
+        return await _context.Users.AnyAsync(x => x.UserName == UserName.ToLower());
     }
 
 }

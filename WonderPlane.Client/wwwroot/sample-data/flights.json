@@ -1,0 +1,72 @@
+[
+  {
+    "city": "Bogotá",
+    "code": "BOG",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "El Dorado International Airport"
+  },
+  {
+    "city": "Cali",
+    "code": "CLO",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Alfonso Bonilla Aragon International Airport"
+  },
+  {
+    "city": "Pereira",
+    "code": "PEI",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Matecaña International Airport"
+  },
+  {
+    "city": "Medellin",
+    "code": "MDE",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "José María Córdova International Airport"
+  },
+  {
+    "city": "Cartagena",
+    "code": "CTG",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Rafael Núñez International Airport"
+  },
+  {
+    "city": "Madrid",
+    "code": "MAD",
+    "country": "España",
+    "country_code": "ES",
+    "airport": "Aeropuerto Adolfo Suárez Madrid-Barajas"
+  },
+  {
+    "city": "Londres",
+    "code": "LON",
+    "country": "Reino Unido",
+    "country_code": "UK",
+    "airport": "Aeropuerto Internacional de Londres Heathrow"
+  },
+  {
+    "city": "New York",
+    "code": "NYC",
+    "country": "Estados Unidos",
+    "country_code": "US",
+    "airport": "Aeropuerto Internacional John F. Kennedy"
+  },
+  {
+    "city": "Buenos Aires",
+    "code": "BUE",
+    "country": "Argentina",
+    "country_code": "AR",
+    "airport": "Aeropuerto Internacional Ezeiza"
+  },
+  {
+    "city": "Miami",
+    "code": "MIA",
+    "country": "Estados Unidos",
+    "country_code": "US",
+    "airport": "Aeropuerto Internacional de Miami"
+  }
+]
