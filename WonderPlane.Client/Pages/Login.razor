@@ -6,6 +6,7 @@
 @using WonderPlane.Client.Servicios;
 @using System.ComponentModel.DataAnnotations;
 @using MudBlazor;
+@using Microsoft.AspNetCore.Components.Authorization
 
 @inject IUserService UserService;
 @inject NavigationManager navigation;
@@ -13,6 +14,11 @@
 @inject CountryService CountryService;
 @inject ISnackbar Snackbar;
 @inject ImageUploadService ImageUploadService;
+@inject IJSRuntime JS
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
+
 
 <main class="main-container poppins-light">
 
@@ -78,7 +84,12 @@
         {
             var token = await UserService.LoginUser(User);
             Snackbar.Add("Inicio de sesión exitoso.", Severity.Success);
-            Console.WriteLine($"Token: {token}");
+            await Task.Delay(2000); 
+            // Console.WriteLine($"Token: {token}");
+
+            await JS.InvokeVoidAsync("localStorage.setItem", "Token", token); // Guardar token en local storage
+            await AuthenticationStateProvider.GetAuthenticationStateAsync(); // Actualizar estado de autenticación
+            
             navigation.NavigateTo("/");
         }
         catch (ApplicationException ex)

@@ -1,6 +1,13 @@
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject NavigationManager navigation
+@inject IJSRuntime JS
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
 
 <nav class="navbar poppins-extralight">
-
     <div class="navbar-logo">
         <img src="img/Wlogo.png" alt="Logo" />
         <span>WonderPlane</span>
@@ -9,8 +16,25 @@
     <div class="navbar-menu" id="navbarMenu">
         <a href="/">Inicio</a>
         <a href="/buscarVuelo">Buscar vuelos</a>
-        <a href="/login">Iniciar sesión</a>
-        <a href="/register">Registrarse</a>
+
+        <!-- Mostrar el enlace de 'Gestionar Administradores' solo si el usuario es Admin -->
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+                <a href="/admincrud">Gestionar Administradores</a>
+            </Authorized>
+        </AuthorizeView>
+
+        <!-- Mostrar 'Cerrar sesión' solo si el usuario está autenticado -->
+        <AuthorizeView>
+            <Authorized>
+                <a href="#" @onclick="Logout">Cerrar sesión</a>
+            </Authorized>
+            <NotAuthorized>
+                <!-- Mostrar 'Iniciar sesión' y 'Registrarse' si no está autenticado -->
+                <a href="/login">Iniciar sesión</a>
+                <a href="/register">Registrarse</a>
+            </NotAuthorized>
+        </AuthorizeView>
     </div>
 
     <button class="hamburger" id="hamburger">
@@ -22,8 +46,17 @@
     const hamburger = document.getElementById('hamburger');
     const navbarMenu = document.getElementById('navbarMenu');
 
-    hamburger.addEventListener('click', () => {
+        hamburger.addEventListener('click', () => {
         navbarMenu.classList.toggle('active');
-    });
+        });
 </script>
 
+@code {
+    // Este método será llamado cuando el usuario haga clic en 'Cerrar sesión'
+    private async Task Logout()
+    {
+        await JS.InvokeVoidAsync("localStorage.removeItem", "Token"); // Elimina el token del almacenamiento local
+        await AuthenticationStateProvider.GetAuthenticationStateAsync(); // Actualiza el estado de autenticación
+        navigation.NavigateTo("/login"); // Redirige a la página de inicio de sesión
+    }
+}

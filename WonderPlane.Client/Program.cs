@@ -4,19 +4,26 @@ using WonderPlane.Client;
 using MudBlazor.Services;
 
 using WonderPlane.Client.Servicios;
-//using WonderPlane.Client.Services;
+using Microsoft.AspNetCore.Components.Authorization;
+
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
-builder.Services.AddMudServices();
 
+// HttpClient
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7056") });
 
+// Authentication and Authorization
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddAuthorizationCore();
+
+// Third-party services (MudBlazor)
+builder.Services.AddMudServices();
+
+// Application-specific services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ImageUploadService>();
-
-builder.Services.AddMudServices();
 builder.Services.AddScoped<CountryService>();
 
 await builder.Build().RunAsync();

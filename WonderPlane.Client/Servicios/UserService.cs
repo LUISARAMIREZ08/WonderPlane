@@ -44,7 +44,7 @@ namespace WonderPlane.Client.Servicios
 
             if (loginResponse != null && !string.IsNullOrEmpty(loginResponse.Data))
             {
-                Console.WriteLine($"Token: {loginResponse.Data}");
+                //Console.WriteLine($"Token: {loginResponse.Data}");
                 return loginResponse.Data;
 
             }
