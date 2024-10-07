@@ -1,0 +1,9 @@
+﻿.nav-menu-admin{
+    display: flex;
+    flex-direction: row;
+}
+.nav-item ::deep a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
