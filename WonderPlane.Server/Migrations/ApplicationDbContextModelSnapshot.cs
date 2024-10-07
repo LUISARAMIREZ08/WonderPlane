@@ -108,8 +108,9 @@ namespace WonderPlane.Server.Migrations
                     b.Property<TimeSpan>("DepartureTime")
                         .HasColumnType("time");
 
-                    b.Property<int>("Destination")
-                        .HasColumnType("int");
+                    b.Property<string>("Destination")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Duration")
                         .HasColumnType("nvarchar(max)");
@@ -123,11 +124,16 @@ namespace WonderPlane.Server.Migrations
                     b.Property<bool>("IsInternational")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Origin")
-                        .HasColumnType("int");
+                    b.Property<string>("Origin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PromotionId")
                         .HasColumnType("int");
+
+                    b.Property<string>("flightCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

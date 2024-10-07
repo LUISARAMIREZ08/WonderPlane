@@ -12,8 +12,8 @@ using WonderPlane.Server.Models;
 namespace WonderPlane.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241005054335_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20241007124752_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,8 +111,9 @@ namespace WonderPlane.Server.Migrations
                     b.Property<TimeSpan>("DepartureTime")
                         .HasColumnType("time");
 
-                    b.Property<int>("Destination")
-                        .HasColumnType("int");
+                    b.Property<string>("Destination")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Duration")
                         .HasColumnType("nvarchar(max)");
@@ -126,11 +127,16 @@ namespace WonderPlane.Server.Migrations
                     b.Property<bool>("IsInternational")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Origin")
-                        .HasColumnType("int");
+                    b.Property<string>("Origin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PromotionId")
                         .HasColumnType("int");
+
+                    b.Property<string>("flightCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
