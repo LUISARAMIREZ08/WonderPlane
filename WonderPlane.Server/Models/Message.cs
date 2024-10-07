@@ -14,9 +14,9 @@ public class Message
     public required DateTime Date { get; set; }
 
     public int? ForumId { get; set; }
-    public Forum Forum { get; set; } = null!;
+    public Forum? Forum { get; set; }
 
     public int? UserId { get; set; }
-    public User User { get; set; } = null!;
+    public User? User { get; set; }
 
 }

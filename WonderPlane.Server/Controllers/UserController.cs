@@ -34,7 +34,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<ResponseAPI<User>>> Register(RegisterDTO registerDTO, TokenProvider tokenProvider)
+    public async Task<ActionResult<ResponseAPI<User>>> Register(UserRegisterDto registerDTO, TokenProvider tokenProvider)
     {
         if (await EmailExists(registerDTO.Email))
             return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "Email is already used" });
@@ -46,6 +46,7 @@ public class UserController : ControllerBase
 
         var user = new User
         {
+            Document = registerDTO.Document,
             UserName = registerDTO.UserName.ToLower(),
             Name = registerDTO.Name,
             LastName = registerDTO.LastName,
@@ -78,7 +79,7 @@ public class UserController : ControllerBase
 
 
     [HttpPost("login")]
-    public async Task<ActionResult<ResponseAPI<string>>> Login(LoginDTO loginDTO, TokenProvider tokenProvider)
+    public async Task<ActionResult<ResponseAPI<string>>> Login(UserLoginDto loginDTO, TokenProvider tokenProvider)
     {
         var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == loginDTO.Email.ToLower());
 

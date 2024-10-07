@@ -2,7 +2,7 @@
 
 namespace WonderPlane.Shared;
 
-public class LoginDTO
+public class UserLoginDto
 {
     [Required(ErrorMessage = "Requerido")]
     [EmailAddress(ErrorMessage = "Formato de correo electrónico no válido.")]
