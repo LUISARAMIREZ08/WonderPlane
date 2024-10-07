@@ -34,6 +34,7 @@ namespace WonderPlane.Shared
 
         [Required(ErrorMessage = "El precio de la maleta es obligatorio.")]
         public required decimal BagPrice { get; set; }
+        [Required(ErrorMessage = "El código del vuelo es obligatorio.")]
         public required string flightCode { get; set; }
         [Required(ErrorMessage = "La duración del vuelo es obligatoria.")]
         public string? Duration { get; set; }
