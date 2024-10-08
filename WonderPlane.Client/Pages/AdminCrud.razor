@@ -41,7 +41,6 @@
                 <MudTh>Apellidos</MudTh>
                 <MudTh>Usuario</MudTh>
                 <MudTh>Correo</MudTh>
-                <MudTh>Estado</MudTh>
                 <MudTh>Acciones</MudTh>
             </HeaderContent>
 
@@ -55,7 +54,6 @@
                 <MudTd DataLabel="Apellidos">@context.LastName</MudTd>
                 <MudTd DataLabel="Nombre de usuario">@context.UserName</MudTd>
                 <MudTd DataLabel="Correo">@context.Email</MudTd>
-                <MudTd DataLabel="Estado">@context.IsActive</MudTd>
 
                 <MudTd DataLabel="Acciones">
                     <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => showConfirmDelete(context.Id, context.Name))" />
@@ -85,7 +83,7 @@
                 <h4>¿Esta seguro de que desea eliminar al usuario <strong style="color:red;">@selectedAdminName</strong>?</h4>
                 <div class="options-delete">
                     <div class="button cancel" onclick="@(() => showConfirmDelete())">Cancelar</div>
-                    <div class="button" onclick="@(() => DeleteAdmin(selectedAdminId))">Eliminar</div>
+                    <div class="button" onclick="@(() => confirmDelete(selectedAdminId))">Eliminar</div>
                 </div>
             </div>
         </div>
@@ -187,8 +185,8 @@
         {
             Snackbar.Add("Error al desactivar administrador.", Severity.Error);
         }
-        
-       
+
+
 
     }
 
@@ -215,5 +213,10 @@
         _showDeleteUser = !_showDeleteUser;  // Alternar la visibilidad del modal
     }
 
+    private void confirmDelete(int id)
+    {
+        DeleteAdmin(id);
+        showConfirmDelete();
+    }
 
 }

@@ -144,7 +144,7 @@ public class UserController : ControllerBase
     public async Task<ActionResult<IEnumerable<User>>> GetAdmins()
     {
         var admins = await _context.Users
-            .Where(u => u.Role == UserRole.Admin)
+            .Where(u => u.Role == UserRole.Admin && u.IsActive == true)
             .ToListAsync();
 
         return Ok(admins);
