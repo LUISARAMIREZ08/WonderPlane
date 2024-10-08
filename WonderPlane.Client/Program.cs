@@ -15,6 +15,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ImageUploadService>();
+builder.Services.AddScoped<IFlightService, FlightService>();
 
 builder.Services.AddMudServices();
 builder.Services.AddScoped<CountryService>();

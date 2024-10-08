@@ -7,8 +7,10 @@
 @using MudBlazor;
 
 @inject HttpClient Http;
+@inject NavigationManager navigation;
 @inject ISnackbar Snackbar;
 @inject ImageUploadService ImageUploadService;
+@inject IFlightService FlightService;
 
 <div class="main-container poppins-light">
     
@@ -31,9 +33,9 @@
                             }
                             else
                             {
-                                @foreach (var Origin in addFlights)
+                                @foreach (var origin in addFlights)
                                 {
-                                    <option value="@Origin">@Origin.city (@Origin.code) - @Origin.country (@Origin.country_code)</option>
+                                    <option value="@origin.city (@origin.code) - @origin.country (@origin.country_code)">@origin.city (@origin.code) - @origin.country (@origin.country_code)</option>
                                 }
                             }
                         </select>
@@ -46,14 +48,14 @@
                     </div>
                     <div class="input">
                         <label class="form-label">Hora de salida</label>
-                        <input type="time" class="form-control" @bind-value="newFlight.DepartureTime" />
+                        <MudTimePicker  @bind-Time="newFlight.DepartureTime" Color="Color.Tertiary" style="font-size: 0.8rem;color: #507687;padding:2px;" />
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.DepartureTime)"></ValidationMessage></span>
                     </div>
                     <div class="input">
                         <label class="form-label">Código de Vuelo</label>
-                        <InputText class="form-control" @bind-Value="newFlight.flightCode" style="font-size: 0.8rem;color: #507687"></InputText>
+                        <InputText class="form-control" @bind-Value="newFlight.FlightCode" style="font-size: 0.8rem;color: #507687"></InputText>
                         <button class="button-code" type="button" @onclick="GenerateRandomCode">Generar Código</button>
-                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.flightCode)"></ValidationMessage></span>
+                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.FlightCode)"></ValidationMessage></span>
                     </div>
                 </div>
                 <div class="form-container-right">
@@ -67,9 +69,9 @@
                             }
                             else
                             {
-                                @foreach (var Destination in addFlights)
+                                @foreach (var destination in addFlights)
                                 {
-                                    <option value="@Destination">@Destination.city (@Destination.code) - @Destination.country (@Destination.country_code)</option>
+                                    <option value="@destination.city (@destination.code) - @destination.country (@destination.country_code)">@destination.city (@destination.code) - @destination.country (@destination.country_code)</option>
                                 }
                             }
                         </select>
@@ -82,7 +84,7 @@
                     </div>
                     <div class="input">
                         <label class="form-label">Hora de Llegada</label>
-                        <input type="time" class="form-control" @bind-value="newFlight.ArriveTime" />
+                        <MudTimePicker @bind-Time="newFlight.ArriveTime" Color="Color.Tertiary" style="font-size: 0.8rem;color: #507687;padding:2px;" />
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.ArriveTime)"></ValidationMessage></span>
                     </div>
                     <div class="input">
@@ -99,7 +101,7 @@
                 <div class="form-container-right-2">
                     <div class="input">
                         <label class="form-label">Estado del Vuelo</label>
-                        <InputText class="form-control" @bind-Value="newFlight.FlightStatus" Disabled="true" style="font-size: 0.8rem;color: #507687"></InputText>
+                        <InputText class="form-control" Disabled="true" @bind-Value="newFlight.FlightStatus" style="font-size: 0.8rem;color: #507687"></InputText>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.FlightStatus)"></ValidationMessage></span>
                     </div>
                     <div class="input">
@@ -116,7 +118,7 @@
                         <label class="form-label">Subir Imagen del Vuelo</label>
                         <MudFileUpload T="IBrowserFile" FilesChanged="OnFileSelected">
                             <ActivatorContent>
-                                <MudButton Variant="Variant.Filled" Color="Color.Info" Style="margin-right: 10px;">
+                                <MudButton Variant="Variant.Filled" Style="margin-right: 10px; background-color:#41B3A2; color:white;border-radius:5px">
                                     Subir imagen
                                 </MudButton>
                                 <i class="fa-solid fa-upload fa-lg"></i>
@@ -145,13 +147,13 @@
         Origin = string.Empty,
         Destination = string.Empty,
         DepartureDate = DateTime.Now,
-        DepartureTime = DateTime.Now,
+        DepartureTime = TimeSpan.Zero,
         ArriveDate = DateTime.Now,
-        ArriveTime = DateTime.Now,
+        ArriveTime = TimeSpan.Zero,
         FlightStatus = "Programado",
         IsInternational = false,
         BagPrice = 0,
-        flightCode = string.Empty,
+        FlightCode = string.Empty,
         PromotionId = 0,
         Duration = string.Empty,
         Image = string.Empty,
@@ -171,18 +173,23 @@
     {
         Random random = new Random();
         int randomNumber = random.Next(1000, 10000); 
-        newFlight.flightCode = $"WP{randomNumber}";
+        newFlight.FlightCode = $"WP{randomNumber}";
     }
 
     private async Task OnValidSubmit()
     {
         try
         {
-            if (newFlight.Origin == newFlight.Destination)
+            // Para comparar Origen y Destino
+            var originCode = newFlight.Origin.Split(' ')[1].Trim('(', ')'); 
+            var destinationCode = newFlight.Destination.Split(' ')[1].Trim('(', ')');
+
+            if (originCode == destinationCode)
             {
                 Snackbar.Add("El origen y el destino no pueden ser iguales.", Severity.Error);
-                return;
+                return; 
             }
+
             // Verificar si se seleccionó un archivo de imagen
             if (selectedFile != null)
             {
@@ -200,10 +207,30 @@
                     return; // Detener el proceso si la imagen no se subió
                 }
             }
+            await FlightService.CreateFlight(newFlight);
+            Snackbar.Add("Vuelo Registrado Correctamente", Severity.Success);
+            newFlight = new FlightDTO
+                {
+                    Origin = string.Empty,
+                    Destination = string.Empty,
+                    DepartureDate = DateTime.Now,
+                    DepartureTime = TimeSpan.Zero,
+                    ArriveDate = DateTime.Now,
+                    ArriveTime = TimeSpan.Zero,
+                    FlightStatus = "Programado",
+                    IsInternational = false,
+                    BagPrice = 0,
+                    FlightCode = string.Empty,
+                    PromotionId = 0,
+                    Duration = string.Empty,
+                    Image = string.Empty,
+                };
+
+            selectedFile = null;
         }
         catch (ApplicationException ex)
         {
-            Snackbar.Add($"Error al subir imagen {ex.Message}", Severity.Error);
+            Snackbar.Add($"Error al Registrar el Vuelo {ex.Message}", Severity.Error);
         }
     }
     IList<IBrowserFile> _files = new List<IBrowserFile>();
