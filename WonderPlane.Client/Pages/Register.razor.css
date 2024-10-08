@@ -1,7 +1,6 @@
 ﻿.main-container {
-    background-image:url("img/fondoregister.jpg"); 
+    background:url("img/fondoregister.jpg") no-repeat center; 
     background-size: cover;
-    background-position: center;
     display: flex;
     justify-content:center;
     align-items: center;
@@ -64,7 +63,6 @@
     color: white; 
     padding: 10px 20px; 
     border: none; 
-    border-radius: 5px; 
     cursor: pointer; 
     width: 50%; 
     margin-bottom:10px;
@@ -82,7 +80,6 @@
     font-size: 8px; 
     color: red; 
     min-height: 20px; 
-    /*margin-top: 5px; */
 }
 
 

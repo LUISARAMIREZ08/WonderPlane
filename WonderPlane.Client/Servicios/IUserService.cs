@@ -6,6 +6,8 @@ namespace WonderPlane.Client.Servicios
     {
         Task<string> CreateUser(UserRegisterDto user);
         Task<string> LoginUser(UserLoginDto user);
+        Task<string> CreateAdmin(CreateAdminDto user);
+        Task<UserInfo?> GetUserById(int id);
 
     }
 }

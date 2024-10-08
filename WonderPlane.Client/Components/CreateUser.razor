@@ -1,0 +1,107 @@
+﻿@using WonderPlane.Shared;
+@using WonderPlane.Client.Servicios;
+@using System.ComponentModel.DataAnnotations;
+@using MudBlazor;
+
+@inject IUserService UserService;
+@inject NavigationManager navigation;
+@inject HttpClient Http;
+@inject ISnackbar Snackbar;
+
+
+<article class="create-form">
+    <EditForm Model="newUser" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+
+        <h2>Crear Usuario</h2>
+
+        <div class="form-container">
+
+            <div class="input">
+                <label class="form-label">Documento</label>
+                <InputText class="form-control" @bind-Value="newUser.Document"></InputText>
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Document)"></ValidationMessage></span>
+            </div>
+
+            <div class="input">
+                <label class="form-label">Nombre</label>
+                <InputText class="form-control" @bind-Value="newUser.Name"></InputText>
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Name)"></ValidationMessage></span>
+            </div>
+
+            <div class="input">
+                <label class="form-label">Apellido</label>
+                <InputText class="form-control" @bind-Value="newUser.LastName"></InputText>
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.LastName)"></ValidationMessage></span>
+            </div>
+
+            <div class="input">
+                <label class="form-label">Nombre de usuario</label>
+                <InputText class="form-control" @bind-Value="newUser.UserName" ></InputText>
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.UserName)"></ValidationMessage></span>
+            </div>
+
+            <div class="input">
+                <label class="form-label">Contraseña</label>
+                <input type="password" class="form-control" @bind-value="newUser.Password" />
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Password)"></ValidationMessage></span>
+            </div>
+
+            <div class="input">
+                <label class="form-label">Confirmar Contraseña</label>
+                <input type="password" class="form-control" @bind-value="newUser.ConfirmPassword" />
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.ConfirmPassword)"></ValidationMessage></span>
+            </div>
+
+            <div class="input-email">
+                <label class="form-label">Email</label>
+                <InputText class="form-control" @bind-Value="newUser.Email" Placeholder="ejemplo@dominio.com"></InputText>
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Email)"></ValidationMessage></span>
+            </div>
+
+        </div>
+
+        <div class="form-button">
+            <button class="button" type="submit">Crear</button>
+        </div>
+    </EditForm>
+</article>
+
+
+@code {
+
+    // EventCallback que invocará una función desde el componente padre
+    [Parameter]
+    public EventCallback OnUserCreated { get; set; }
+
+    CreateAdminDto newUser = new CreateAdminDto
+    {
+        Document = string.Empty,
+        Name = string.Empty,
+        LastName = string.Empty,
+        UserName = string.Empty,
+        Email = string.Empty,
+        Password = string.Empty,
+        ConfirmPassword = string.Empty
+    };
+
+    private async Task OnValidSubmit()
+    {
+        try
+        {
+            await UserService.CreateAdmin(newUser);
+            Snackbar.Clear();
+            Snackbar.Add("Administrador creado con éxito.", Severity.Success);
+
+            if (OnUserCreated.HasDelegate)
+            {
+                await OnUserCreated.InvokeAsync();
+            }
+        }
+        catch (ApplicationException ex)
+        {
+            Snackbar.Add($"Error al crear administrador: {ex.Message}", Severity.Error);
+        }
+    }
+}
+

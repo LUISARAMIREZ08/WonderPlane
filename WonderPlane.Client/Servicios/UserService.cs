@@ -28,6 +28,7 @@ namespace WonderPlane.Client.Servicios
             
         }
 
+
         public async Task<string> LoginUser(UserLoginDto user)
         {
             var result = await _http.PostAsJsonAsync("api/login", user);
@@ -43,12 +44,44 @@ namespace WonderPlane.Client.Servicios
 
             if (loginResponse != null && !string.IsNullOrEmpty(loginResponse.Data))
             {
-                Console.WriteLine($"Token: {loginResponse.Data}");
+                //Console.WriteLine($"Token: {loginResponse.Data}");
                 return loginResponse.Data;
 
             }
 
             throw new ApplicationException("Error al iniciar sesión");
+        }
+
+        public async Task<string> CreateAdmin(CreateAdminDto user)
+        {
+            var result = await _http.PostAsJsonAsync("api/createadmin", user);
+
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new ApplicationException($"Error al registrar administrador: {result.ReasonPhrase}");
+            }
+
+            var jsonResponse = await result.Content.ReadAsStringAsync();
+            Console.WriteLine($"Respuesta del servidor: {jsonResponse}"); // Aquí se imprime la respuesta del servidor
+            return "Administrador registrado";
+        }
+
+        public async Task<UserInfo?> GetUserById(int id)
+        {
+            var result = await _http.GetAsync($"api/user/{id}");
+
+            if (result.IsSuccessStatusCode)
+            {
+                // Leer la respuesta y deserializarla como un objeto User
+                return await result.Content.ReadFromJsonAsync<UserInfo>();
+            }
+            else
+            {
+                // Maneja el error aquí si es necesario
+                var errorResponse = await result.Content.ReadFromJsonAsync<ResponseAPI<UserInfo>>();
+                var errorMensaje = errorResponse?.Mensaje ?? "Error al obtener el usuario";
+                throw new ApplicationException($"Error al obtener el usuario: {errorMensaje}");
+            }
         }
 
     }

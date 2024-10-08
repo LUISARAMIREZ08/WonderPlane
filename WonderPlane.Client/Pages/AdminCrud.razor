@@ -1,0 +1,222 @@
+﻿@page "/admincrud"
+@* @attribute [Authorize (Roles = "Admin")] *@
+
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using System.Collections.Generic
+@using WonderPlane.Client.Components
+@using System.Net.Http.Json
+@using System.Threading
+@using System.Linq
+
+
+@inject NavigationManager navigation;
+@inject HttpClient Http;
+@inject ISnackbar Snackbar;
+
+<PageTitle>Gestión de administradores</PageTitle>
+
+<main class="contain poppins-light">
+    <h1>Administradores</h1>
+
+    <section class="table-admins">
+        <!-- Cabecera del formulario -->
+        <div class="create-button">
+
+            <div class="button" onclick="@(() => showFormCreate())">Crear usuario</div>
+
+            <MudTextField T="string" ValueChanged="@OnSearch" Immediate="true" Placeholder="Buscar"
+                          Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+                          IconSize="Size.Medium"></MudTextField>
+        </div>
+
+        <!-- Formulario -->
+        <MudTable Items="_admins" Striped="false" Hover="true" Bordered="false" RowsPerPage="5" ServerData="ServerReload" PagerPosition="MudBlazor.PagerPosition.Bottom" @ref="_table">
+            
+            <HeaderContent>
+                <MudTh>Avatar</MudTh>
+                <MudTh>Id</MudTh>
+                <MudTh>Num. Documento</MudTh>
+                <MudTh>Nombre</MudTh>
+                <MudTh>Apellidos</MudTh>
+                <MudTh>Usuario</MudTh>
+                <MudTh>Correo</MudTh>
+                <MudTh>Acciones</MudTh>
+            </HeaderContent>
+
+            <RowTemplate>
+                <MudTd DataLabel="Avatar">
+                    <MudAvatar ImageSrc="@context.Image" Size="Size.Medium" />
+                </MudTd>
+                <MudTd DataLabel="Id">@context.Id</MudTd>
+                <MudTd DataLabel="Documento de Identidad">@context.Document</MudTd>
+                <MudTd DataLabel="Nombre">@context.Name</MudTd>
+                <MudTd DataLabel="Apellidos">@context.LastName</MudTd>
+                <MudTd DataLabel="Nombre de usuario">@context.UserName</MudTd>
+                <MudTd DataLabel="Correo">@context.Email</MudTd>
+
+                <MudTd DataLabel="Acciones">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => showConfirmDelete(context.Id, context.Name))" />
+                </MudTd>
+            </RowTemplate>
+
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+
+        </MudTable>
+    </section>
+
+    <!-- Formulario para crear usuario -->
+    @if (_showCreateUser)
+    {
+        <div class="create-user-container">
+            <span onclick="@(() => showFormCreate())" class="material-symbols-outlined">close</span>
+            <CreateUser OnUserCreated="showFormCreate" />
+        </div>
+    }
+
+    @if (_showDeleteUser){
+        <div class="create-user-container">
+            <span onclick="@(() => showConfirmDelete())" class="material-symbols-outlined">close</span>
+            <div class="confirm-delete">
+                <h4>¿Esta seguro de que desea eliminar al usuario <strong style="color:red;">@selectedAdminName</strong>?</h4>
+                <div class="options-delete">
+                    <div class="button cancel" onclick="@(() => showConfirmDelete())">Cancelar</div>
+                    <div class="button" onclick="@(() => confirmDelete(selectedAdminId))">Eliminar</div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+</main>
+
+@code {
+
+    private MudTable<Admin>? _table; // Referencia a la tabla de administradores
+    private bool _showCreateUser = false;
+    private bool _showDeleteUser = false;
+    private string _searchString = "";  
+    private List<Admin> _admins = new List<Admin>();
+    private int selectedAdminId;
+    private string? selectedAdminName;
+
+    public class Admin
+    {
+        public int Id { get; set; }
+        public string? Document { get; set; }
+        public string? UserName { get; set; }
+        public string? Name { get; set; }
+        public string? LastName { get; set; }
+        public string? Email { get; set; }
+        public bool IsActive { get; set; }
+        public string? Image { get; set; }
+    }
+
+
+    // Cargar administradores al inicializar
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAdmins(); // Cargar los administradores al inicializar
+    }
+
+    // Función para buscar administradores
+    private async Task OnSearch(string text)
+    {
+        _searchString = text;
+        if (_table != null)
+        {
+            await _table.ReloadServerData();
+        }
+
+    }
+
+    // Filtro de la tabla
+    private bool _adminFilter(Admin admin)
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        return (admin?.Name?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false)
+            || (admin?.LastName?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false)
+            || (admin?.Document?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false)
+            || (admin?.Email?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false);
+    }
+
+    // Función para recargar la tabla
+    private async Task<TableData<Admin>> ServerReload(TableState state, CancellationToken cancellationToken)
+    {
+        await LoadAdmins(); // Cargar la lista actualizada de administradores
+
+        var filteredAdmins = _admins.Where(a => _adminFilter(a)).ToList();
+        var pagedAdmins = filteredAdmins.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+
+        return new TableData<Admin>
+            {
+                Items = pagedAdmins,
+                TotalItems = filteredAdmins.Count
+            };
+    }
+
+    // Función para cargar administradores
+    private async Task LoadAdmins()
+    {
+        var response = await Http.GetFromJsonAsync<List<Admin>>("api/admins"); // Llama a tu API para obtener la lista de administradores
+        _admins = response ?? new List<Admin>();
+    }
+
+    // Función para borrar administrador
+    private async void DeleteAdmin(int id)
+    {
+        var result = await Http.PutAsync($"api/admin/deactivate/{id}", null);
+
+        if (result.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Administrador desactivado correctamente.", Severity.Success);
+            _showDeleteUser = !_showDeleteUser;
+            await LoadAdmins();
+            if (_table != null)
+            {
+                await _table.ReloadServerData();
+            }
+        }
+        else
+        {
+            Snackbar.Add("Error al desactivar administrador.", Severity.Error);
+        }
+
+
+
+    }
+
+
+    // Función para mostrar el formulario de crear usuario
+    public async Task showFormCreate()
+    {
+        _showCreateUser = !_showCreateUser;
+        if (_table != null)
+        {
+            await _table.ReloadServerData();
+        }
+    }
+
+    // Función para mostrar la confirmación de eliminar usuario
+    public void showConfirmDelete(int? id = null, string? name = null)
+    {
+        if (id.HasValue && name != null)
+        {
+            selectedAdminId = id.Value;  // Establecer el ID si está disponible
+            selectedAdminName = name;  // Establecer el nombre si está disponible
+        }
+
+        _showDeleteUser = !_showDeleteUser;  // Alternar la visibilidad del modal
+    }
+
+    private void confirmDelete(int id)
+    {
+        DeleteAdmin(id);
+        showConfirmDelete();
+    }
+
+}
