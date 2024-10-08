@@ -37,6 +37,8 @@ builder.Services.AddMudServices(config =>
 // Application-specific services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ImageUploadService>();
+
+builder.Services.AddScoped<IFlightService, FlightService>();
 builder.Services.AddScoped<CountryService>();
 
 await builder.Build().RunAsync();

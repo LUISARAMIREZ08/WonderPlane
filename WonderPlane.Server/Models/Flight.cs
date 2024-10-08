@@ -8,10 +8,10 @@ public class Flight
     public int Id { get; set; }
 
     [Required(ErrorMessage = "El origen es obligatorio.")]
-    public required Origin Origin { get; set; }
+    public required string Origin { get; set; }
 
     [Required(ErrorMessage = "El destino es obligatorio.")]
-    public required Destination Destination { get; set; }
+    public required string Destination { get; set; }
 
     [Required(ErrorMessage = "La fecha de salida es obligatoria.")]
     [DataType(DataType.Date, ErrorMessage = "Fecha no valida")]
@@ -37,7 +37,8 @@ public class Flight
 
     [Required(ErrorMessage = "El precio de la maleta es obligatorio.")]
     public required decimal BagPrice { get; set; }
-
+    [Required(ErrorMessage = "El código del vuelo es obligatorio.")]
+    public required string FlightCode { get; set; }
     public string? Duration { get; set; }
 
     public string? Image { get; set; }
@@ -60,20 +61,4 @@ public enum FlightStatus
     Canceled
 }
 
-public enum Origin
-{
-    Pereira,
-    Bogota,
-    Medellin,
-    Cali,
-    Cartagena
-}
 
-public enum Destination
-{
-    Madrid,
-    Londres,
-    NewYork,
-    BuenosAires,
-    Miami
-}

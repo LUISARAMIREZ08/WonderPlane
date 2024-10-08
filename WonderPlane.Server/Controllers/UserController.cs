@@ -58,7 +58,8 @@ public class UserController : ControllerBase
             return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "Email is already used" });
 
         if (await UserExists(registerDTO.UserName))
-            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "User name is already used" });
+
+            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "User name is alreadyÂ used" });
 
         var hmac = new HMACSHA512();
 
@@ -102,7 +103,7 @@ public class UserController : ControllerBase
             return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "Email is already used" });
 
         if (await UserExists(registerDTO.UserName))
-            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "User name is already used" });
+            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "User name is alreadyÂ used" });
 
         var hmac = new HMACSHA512();
 
@@ -177,7 +178,7 @@ public class UserController : ControllerBase
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
 
         if (!computedHash.SequenceEqual(user.PasswordHash!))
-            return Unauthorized(new ResponseAPI<string> { EsCorrecto=false, Mensaje="La contraseña no es válida"});
+            return Unauthorized(new ResponseAPI<string> { EsCorrecto=false, Mensaje="La contraseÃ±a no es vÃ¡lida"});
 
         string token = tokenProvider.Create(user);
         
