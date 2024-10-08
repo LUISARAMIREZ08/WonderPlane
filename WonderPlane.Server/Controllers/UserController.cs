@@ -33,6 +33,24 @@ public class UserController : ControllerBase
         return Ok(users);
     }
 
+   
+    [HttpGet("user/{id}")]
+    public async Task<ActionResult<UserInfo>> GetUserById(int id)
+    {
+        // Buscar al usuario en la base de datos usando su ID
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+
+        // Si el usuario no existe, retornar 404
+        if (user == null)
+        {
+            return NotFound(new { Message = "User not found" });
+        }
+
+        // Retornar el objeto completo del usuario
+        return Ok(user);
+    }
+
+
     [HttpPost("register")]
     public async Task<ActionResult<ResponseAPI<User>>> Register(UserRegisterDto registerDTO, TokenProvider tokenProvider)
     {
@@ -132,6 +150,20 @@ public class UserController : ControllerBase
         return Ok(admins);
     }
 
+    [HttpPut("admin/deactivate/{id}")]
+    public async Task<IActionResult> DeactivateAdmin(int id)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id && u.Role == UserRole.Admin);
+
+        if (user == null)
+            return NotFound(new { Message = "Admin not found" });
+
+        user.IsActive = false;
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 
     [HttpPost("login")]
     public async Task<ActionResult<ResponseAPI<string>>> Login(UserLoginDto loginDTO, TokenProvider tokenProvider)

@@ -1,10 +1,14 @@
 ﻿@page "/admincrud"
+@* @attribute [Authorize (Roles = "Admin")] *@
 
+@using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 @using System.Collections.Generic
 @using WonderPlane.Client.Components
 @using System.Net.Http.Json
 @using System.Threading
+@using System.Linq
+
 
 @inject NavigationManager navigation;
 @inject HttpClient Http;
@@ -54,8 +58,7 @@
                 <MudTd DataLabel="Estado">@context.IsActive</MudTd>
 
                 <MudTd DataLabel="Acciones">
-                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Info" OnClick="@(() => EditAdmin(context.Id))" />
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => DeleteAdmin(context.Id))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => showConfirmDelete(context.Id, context.Name))" />
                 </MudTd>
             </RowTemplate>
 
@@ -75,16 +78,32 @@
         </div>
     }
 
+    @if (_showDeleteUser){
+        <div class="create-user-container">
+            <span onclick="@(() => showConfirmDelete())" class="material-symbols-outlined">close</span>
+            <div class="confirm-delete">
+                <h4>¿Esta seguro de que desea eliminar al usuario <strong style="color:red;">@selectedAdminName</strong>?</h4>
+                <div class="options-delete">
+                    <div class="button cancel" onclick="@(() => showConfirmDelete())">Cancelar</div>
+                    <div class="button" onclick="@(() => DeleteAdmin(selectedAdminId))">Eliminar</div>
+                </div>
+            </div>
+        </div>
+    }
+
+
 </main>
 
 @code {
 
     private MudTable<Admin>? _table; // Referencia a la tabla de administradores
-    private bool _showCreateUser = false; 
+    private bool _showCreateUser = false;
+    private bool _showDeleteUser = false;
     private string _searchString = "";  
-    private List<Admin> _admins = new List<Admin>(); 
+    private List<Admin> _admins = new List<Admin>();
+    private int selectedAdminId;
+    private string? selectedAdminName;
 
-  
     public class Admin
     {
         public int Id { get; set; }
@@ -97,7 +116,7 @@
         public string? Image { get; set; }
     }
 
-    
+
     // Cargar administradores al inicializar
     protected override async Task OnInitializedAsync()
     {
@@ -112,7 +131,7 @@
         {
             await _table.ReloadServerData();
         }
-        
+
     }
 
     // Filtro de la tabla
@@ -149,26 +168,28 @@
         _admins = response ?? new List<Admin>();
     }
 
-    // Función para editar administrador
-    private void EditAdmin(int id)
-    {
-        Snackbar.Add("Editar administrador no implementado.", Severity.Info);
-    }
-
     // Función para borrar administrador
     private async void DeleteAdmin(int id)
     {
-        var result = await Http.DeleteAsync($"api/admin/{id}");
+        var result = await Http.PutAsync($"api/admin/deactivate/{id}", null);
 
         if (result.IsSuccessStatusCode)
         {
-            Snackbar.Add("Administrador eliminado correctamente.", Severity.Success);
+            Snackbar.Add("Administrador desactivado correctamente.", Severity.Success);
+            _showDeleteUser = !_showDeleteUser;
             await LoadAdmins();
+            if (_table != null)
+            {
+                await _table.ReloadServerData();
+            }
         }
         else
         {
-            Snackbar.Add("Error al eliminar administrador.", Severity.Error);
+            Snackbar.Add("Error al desactivar administrador.", Severity.Error);
         }
+        
+       
+
     }
 
 
@@ -180,6 +201,18 @@
         {
             await _table.ReloadServerData();
         }
+    }
+
+    // Función para mostrar la confirmación de eliminar usuario
+    public void showConfirmDelete(int? id = null, string? name = null)
+    {
+        if (id.HasValue && name != null)
+        {
+            selectedAdminId = id.Value;  // Establecer el ID si está disponible
+            selectedAdminName = name;  // Establecer el nombre si está disponible
+        }
+
+        _showDeleteUser = !_showDeleteUser;  // Alternar la visibilidad del modal
     }
 
 

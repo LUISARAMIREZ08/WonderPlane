@@ -22,6 +22,10 @@
 }
 
 .create-button .button {
+    margin-right:50%;
+}
+
+.button {
     background-color: dodgerblue;
     border: none;
     color: white;
@@ -30,11 +34,14 @@
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 4px 50% 4px 0;
     cursor: pointer;
 }
 
-.create-button .button:hover {
+.cancel {
+    background-color:red;
+}
+
+.button:hover {
     background-color: #555;
     transition: ease 0.5s;
 }
@@ -61,11 +68,28 @@
     cursor:pointer;
 }
 
-.active {
-    background-color: green;
+.confirm-delete {
+    position: fixed;
+    background-color: white;
+    padding: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: black;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-.inactive {
-    background-color: red;
+.options-delete {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:20px;
+    width:50%;
 }
+
+
+
+
+
 

@@ -72,24 +72,29 @@
 
 @code
 {
-    UserLoginDto User = new UserLoginDto
-    {
-        Email = string.Empty,
-        Password = string.Empty
-    };
+    private UserLoginDto User = new UserLoginDto
+        {
+            Email = string.Empty,
+            Password = string.Empty
+        };
 
     private async Task OnValidSubmit()
     {
         try
         {
+            Snackbar.Add("Iniciando sesión...", Severity.Info);
             var token = await UserService.LoginUser(User);
+            Snackbar.Clear();
             Snackbar.Add("Inicio de sesión exitoso.", Severity.Success);
-            await Task.Delay(2000); 
-            // Console.WriteLine($"Token: {token}");
 
-            await JS.InvokeVoidAsync("localStorage.setItem", "Token", token); // Guardar token en local storage
-            await AuthenticationStateProvider.GetAuthenticationStateAsync(); // Actualizar estado de autenticación
-            
+            await JS.InvokeVoidAsync("localStorage.setItem", "Token", token);
+
+            // Forzar actualización del estado de autenticación
+            var authStateProvider = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
+            await authStateProvider.GetAuthenticationStateAsync();
+
+            // la página y la UI se actualicen correctamente
+            StateHasChanged();
             navigation.NavigateTo("/");
         }
         catch (ApplicationException ex)
@@ -98,3 +103,4 @@
         }
     }
 }
+

@@ -6,7 +6,7 @@ namespace WonderPlane.Shared
     {
         [Required(ErrorMessage = "Requerido")]
         [StringLength(10, MinimumLength = 7, ErrorMessage = "El documento de identidad debe tener entre 7 y 10 caracteres.")]
-       // [RegularExpression()]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "El número de documento debe contener solo dígitos.")]
         public required string Document { get; set; }
 
         [Required(ErrorMessage = "Requerido")]

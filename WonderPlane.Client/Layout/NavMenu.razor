@@ -1,62 +1,114 @@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Components.Authorization
+@using System.Text.Json
+@using WonderPlane.Shared
 
 @inject NavigationManager navigation
 @inject IJSRuntime JS
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-
-
-<nav class="navbar poppins-extralight">
+<nav class="poppins-light">
     <div class="navbar-logo">
         <img src="img/Wlogo.png" alt="Logo" />
         <span>WonderPlane</span>
     </div>
 
-    <div class="navbar-menu" id="navbarMenu">
-        <a href="/">Inicio</a>
-        <a href="/buscarVuelo">Buscar vuelos</a>
+    <ul class="menu-horizontal">
+        <li><a href="/">Inicio</a></li>
+        <li>
+            <a href="#">Buscar vuelos</a>
+            <ul class="menu-vertical">
+                <li><a href="#">Nacional</a></li>
+                <li><a href="#">Internacional</a></li>
+            </ul>
+        </li>
 
-        <!-- Mostrar el enlace de 'Gestionar Administradores' solo si el usuario es Admin -->
         <AuthorizeView Roles="Admin">
             <Authorized>
-                <a href="/admincrud">Gestionar Administradores</a>
+                <li><a href="/admincrud">Gestionar Administradores</a></li>
             </Authorized>
         </AuthorizeView>
 
-        <!-- Mostrar 'Cerrar sesión' solo si el usuario está autenticado -->
         <AuthorizeView>
             <Authorized>
-                <a href="#" @onclick="Logout">Cerrar sesión</a>
+                <li>
+                    <a class="profile" href="#"><img src="@userInfo?.Image" />@userInfo?.UserName</a>
+                    <ul class="menu-vertical">
+                        <li><a href="#">Ver perfil</a></li>
+                        <li><a href="#" @onclick="Logout">Cerrar sesión</a></li>
+                    </ul>
+                </li>
             </Authorized>
             <NotAuthorized>
-                <!-- Mostrar 'Iniciar sesión' y 'Registrarse' si no está autenticado -->
-                <a href="/login">Iniciar sesión</a>
-                <a href="/register">Registrarse</a>
+                <li><a href="/login">Iniciar sesión</a></li>
+                <li><a href="/register">Registrarse</a></li>
             </NotAuthorized>
         </AuthorizeView>
-    </div>
 
-    <button class="hamburger" id="hamburger">
-        &#9776;
-    </button>
+    </ul>
 </nav>
 
-<script>
-    const hamburger = document.getElementById('hamburger');
-    const navbarMenu = document.getElementById('navbarMenu');
-
-        hamburger.addEventListener('click', () => {
-        navbarMenu.classList.toggle('active');
-        });
-</script>
-
 @code {
-    // Este método será llamado cuando el usuario haga clic en 'Cerrar sesión'
+    private UserInfo? userInfo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Escuchar cambios en el estado de autenticación
+        AuthenticationStateProvider.AuthenticationStateChanged += async (task) =>
+        {
+            var authState = await task;
+            var user = authState.User;
+
+            if (user?.Identity?.IsAuthenticated == true)
+            {
+                // Obtener la claim del usuario autenticado
+                var userInfoClaim = user.FindFirst("UserInfo");
+                if (userInfoClaim != null)
+                {
+                    userInfo = JsonSerializer.Deserialize<UserInfo>(userInfoClaim.Value);
+                }
+            }
+            else
+            {
+                userInfo = null; // Limpiar la información si no está autenticado
+            }
+
+            // Actualizar la UI después del cambio
+            StateHasChanged();
+        };
+
+        // Llamada inicial para cargar el estado
+        var initialAuthState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var initialUser = initialAuthState.User;
+
+        if (initialUser?.Identity?.IsAuthenticated == true)
+        {
+            var userInfoClaim = initialUser.FindFirst("UserInfo");
+            if (userInfoClaim != null)
+            {
+                userInfo = JsonSerializer.Deserialize<UserInfo>(userInfoClaim.Value);
+            }
+        }
+    }
+
+    // Método para cerrar sesión
     private async Task Logout()
     {
-        await JS.InvokeVoidAsync("localStorage.removeItem", "Token"); // Elimina el token del almacenamiento local
-        await AuthenticationStateProvider.GetAuthenticationStateAsync(); // Actualiza el estado de autenticación
-        navigation.NavigateTo("/login"); // Redirige a la página de inicio de sesión
+        // Eliminar token y limpiar estado local
+        await JS.InvokeVoidAsync("localStorage.removeItem", "Token");
+
+        // Notificar al proveedor de autenticación que el usuario ha cerrado sesión
+        var authStateProvider = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
+        authStateProvider.NotifyUserLogout();
+
+        // Limpiar información del usuario en memoria
+        userInfo = null;
+
+        // Volver a cargar el estado de autenticación y actualizar la UI
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        StateHasChanged();
+
+        // Redirigir al login
+        navigation.NavigateTo("/login");
     }
 }

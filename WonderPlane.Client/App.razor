@@ -1,7 +1,15 @@
-﻿<Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
+﻿@using Microsoft.AspNetCore.Components.Authorization
+
+@inject NavigationManager NavigationManager
+
+<Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    <p>No tienes permisos para acceder a esta página.</p>
+                </NotAuthorized>
+            </AuthorizeRouteView>
         </Found>
         <NotFound>
             <PageTitle>Not found</PageTitle>
@@ -11,3 +19,4 @@
         </NotFound>
     </Router>
 </Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
+

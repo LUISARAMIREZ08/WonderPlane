@@ -66,5 +66,23 @@ namespace WonderPlane.Client.Servicios
             return "Administrador registrado";
         }
 
+        public async Task<UserInfo?> GetUserById(int id)
+        {
+            var result = await _http.GetAsync($"api/user/{id}");
+
+            if (result.IsSuccessStatusCode)
+            {
+                // Leer la respuesta y deserializarla como un objeto User
+                return await result.Content.ReadFromJsonAsync<UserInfo>();
+            }
+            else
+            {
+                // Maneja el error aquí si es necesario
+                var errorResponse = await result.Content.ReadFromJsonAsync<ResponseAPI<UserInfo>>();
+                var errorMensaje = errorResponse?.Mensaje ?? "Error al obtener el usuario";
+                throw new ApplicationException($"Error al obtener el usuario: {errorMensaje}");
+            }
+        }
+
     }
 }

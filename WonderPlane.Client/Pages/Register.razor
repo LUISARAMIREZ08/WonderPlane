@@ -74,6 +74,13 @@
                 </div>
 
                 <div class="form-container-right">
+
+                    <div class="input">
+                        <label class="form-label">Documento</label>
+                        <InputText class="form-control" @bind-Value="newUser.Document"></InputText>
+                        <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Document)"></ValidationMessage></span>
+                    </div>
+
                     <div class="input">
                         <label class="form-label">Fecha de nacimiento</label>
                         <input type="date" min="1940-01-01" max="2006-12-31" class="form-control" @bind-value="newUser.BirthDate" />
@@ -82,7 +89,7 @@
 
                     <div class="input">
                         <label class="form-label">Email</label>
-                        <InputText class="form-control" @bind-Value="newUser.Email" Placeholder="example@domain.com"></InputText>
+                        <InputText class="form-control" @bind-Value="newUser.Email" Placeholder="ejemplo@dominio.com"></InputText>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Email)"></ValidationMessage></span>
                     </div>
 
@@ -104,31 +111,32 @@
                         <span class="small-validation-message"><ValidationMessage For="@(() => newUser.ConfirmPassword)"></ValidationMessage></span>
                     </div>
 
-                    <div class="input">
-                        <label class="form-label" >Seleccionar Imagen de Perfi</label>
-                        <MudFileUpload T="IBrowserFile" FilesChanged="OnFileSelected">
-                            <ActivatorContent>
-                                <MudButton Variant="Variant.Filled" Color="Color.Info">
-                                    Subir imagen
-                                </MudButton>
-                            </ActivatorContent>
-                        </MudFileUpload>
-                      
-                        @if (selectedFile != null)
-                        {
-                            <p>@selectedFile.Name</p>
-                        }
-                        else
-                        {
-                            <p>No seleccionado</p>
-                        }
-                       
-                    </div> 
+                    
                 </div>
 
             </div>
 
             <div class="form-button">
+                <div class="input">
+                    <label class="form-label">Seleccionar Imagen de Perfi</label>
+                    <MudFileUpload T="IBrowserFile" FilesChanged="OnFileSelected">
+                        <ActivatorContent>
+                            <MudButton Variant="Variant.Filled" Color="Color.Info">
+                                Subir imagen
+                            </MudButton>
+                        </ActivatorContent>
+                    </MudFileUpload>
+
+                    @if (selectedFile != null)
+                    {
+                        <p>@selectedFile.Name</p>
+                    }
+                    else
+                    {
+                        <p>No seleccionado</p>
+                    }
+
+                </div>
                 <button class="submit-button" type="submit">Registrar</button>
                 <ul>
                     <li>
