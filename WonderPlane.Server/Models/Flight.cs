@@ -38,7 +38,7 @@ public class Flight
     [Required(ErrorMessage = "El precio de la maleta es obligatorio.")]
     public required decimal BagPrice { get; set; }
     [Required(ErrorMessage = "El código del vuelo es obligatorio.")]
-    public required string flightCode { get; set; }
+    public required string FlightCode { get; set; }
     public string? Duration { get; set; }
 
     public string? Image { get; set; }

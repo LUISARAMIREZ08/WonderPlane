@@ -16,7 +16,7 @@ namespace WonderPlane.Shared
 
         [Required(ErrorMessage = "La hora de salida es obligatoria.")]
         [DataType(DataType.Time, ErrorMessage = "Hora no valida")]
-        public required DateTime DepartureTime { get; set; }
+        public required TimeSpan? DepartureTime { get; set; }
 
         [Required(ErrorMessage = "La fecha de llegada es obligatoria.")]
         [DataType(DataType.Date, ErrorMessage = "Fecha no valida")]
@@ -24,7 +24,7 @@ namespace WonderPlane.Shared
 
         [Required(ErrorMessage = "La hora de llegada es obligatoria.")]
         [DataType(DataType.Time, ErrorMessage = "Hora no valida")]
-        public required DateTime ArriveTime { get; set; }
+        public required TimeSpan? ArriveTime { get; set; }
 
         [Required(ErrorMessage = "El estado del vuelo es obligatorio.")]
         public required string FlightStatus { get; set; }
@@ -35,7 +35,7 @@ namespace WonderPlane.Shared
         [Required(ErrorMessage = "El precio de la maleta es obligatorio.")]
         public required decimal BagPrice { get; set; }
         [Required(ErrorMessage = "El código del vuelo es obligatorio.")]
-        public required string flightCode { get; set; }
+        public required string FlightCode { get; set; }
         [Required(ErrorMessage = "La duración del vuelo es obligatoria.")]
         public string? Duration { get; set; }
         public string? Image { get; set; }

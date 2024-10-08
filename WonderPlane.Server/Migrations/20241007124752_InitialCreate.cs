@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WonderPlane.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,8 +38,8 @@ namespace WonderPlane.Server.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Origin = table.Column<int>(type: "int", nullable: false),
-                    Destination = table.Column<int>(type: "int", nullable: false),
+                    Origin = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Destination = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DepartureDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DepartureTime = table.Column<TimeSpan>(type: "time", nullable: false),
                     ArriveDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -47,6 +47,7 @@ namespace WonderPlane.Server.Migrations
                     FlightStatus = table.Column<int>(type: "int", nullable: false),
                     IsInternational = table.Column<bool>(type: "bit", nullable: false),
                     BagPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    flightCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Duration = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PromotionId = table.Column<int>(type: "int", nullable: true)
