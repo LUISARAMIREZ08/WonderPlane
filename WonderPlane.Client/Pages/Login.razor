@@ -6,6 +6,7 @@
 @using WonderPlane.Client.Servicios;
 @using System.ComponentModel.DataAnnotations;
 @using MudBlazor;
+@using Microsoft.AspNetCore.Components.Authorization
 
 @inject IUserService UserService;
 @inject NavigationManager navigation;
@@ -13,12 +14,17 @@
 @inject CountryService CountryService;
 @inject ISnackbar Snackbar;
 @inject ImageUploadService ImageUploadService;
+@inject IJSRuntime JS
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-<div class="main-container poppins-light">
 
-    <div class="login-container">
+
+
+<main class="main-container poppins-light">
+
+    <section class="login-container">
+
         <EditForm Model="User" OnValidSubmit="OnValidSubmit">
-            <!-- Cambiado aquí -->
             <DataAnnotationsValidator />
 
             <h1>Bienvenido</h1>
@@ -27,7 +33,7 @@
 
                 <div class="input">
                     <label class="form-label">Email</label>
-                    <InputText class="form-control" @bind-Value="User.Email" Placeholder="example@domain.com"></InputText>
+                    <InputText class="form-control" @bind-Value="User.Email" Placeholder="ejemplo@algo.com"></InputText>
                     <span class="small-validation-message"><ValidationMessage For="@(() => User.Email)"></ValidationMessage></span>
                 </div>
 
@@ -36,9 +42,11 @@
                     <input type="password" class="form-control" @bind-value="User.Password" />
                     <span class="small-validation-message"><ValidationMessage For="@(() => User.Password)"></ValidationMessage></span>
                 </div>
+
             </div>
 
             <div class="form-button">
+
                 <button class="submit-button" type="submit">Ingresar</button>
 
                 <ul>
@@ -49,19 +57,22 @@
                 </ul>
             </div>
         </EditForm>
-    </div>
 
-    <div class="info-container">
+    </section>
+
+    <section class="info-container">
+
         <img src="img/Wlogo.png" alt="Alternate Text" /><br />
-        <h1>¡Inicia sesión en tu cuenta!</h1>
+        <h2>¡Inicia sesión en tu cuenta!</h2>
         <p>Bienvenido de nuevo a nuestra comunidad. Inicia sesión para acceder a tus servicios personalizados y aprovechar al máximo todas las ventajas que ofrecemos. Si aún no tienes una cuenta, no dudes en registrarte y unirte a nosotros. ¡Te esperamos!</p>
-    </div>
+    
+    </section>
 
-</div>
+</main>
 
 @code
 {
-    UserLoginDto User = new UserLoginDto
+    private UserLoginDto User = new UserLoginDto
         {
             Email = string.Empty,
             Password = string.Empty
@@ -71,11 +82,20 @@
     {
         try
         {
+            Snackbar.Add("Iniciando sesión...", Severity.Info);
             var token = await UserService.LoginUser(User);
+            Snackbar.Clear();
             Snackbar.Add("Inicio de sesión exitoso.", Severity.Success);
-            Console.WriteLine($"Token: {token}"); // Imprimir el token en la consola
-            // Aquí podriamos guardar el token en el almacenamiento local, sesión, etc.
-            navigation.NavigateTo("/"); // Redirigir después de iniciar sesión
+
+            await JS.InvokeVoidAsync("localStorage.setItem", "Token", token);
+
+            // Forzar actualización del estado de autenticación
+            var authStateProvider = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
+            await authStateProvider.GetAuthenticationStateAsync();
+
+            // la página y la UI se actualicen correctamente
+            StateHasChanged();
+            navigation.NavigateTo("/");
         }
         catch (ApplicationException ex)
         {
@@ -83,3 +103,4 @@
         }
     }
 }
+

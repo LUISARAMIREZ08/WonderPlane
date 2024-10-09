@@ -5,13 +5,24 @@
 <MudDialogProvider />
 <MudThemeProvider />
 <MudSnackbarProvider />
+<MudPopoverProvider/>
 
 <MudLayout>
-    <NavMenu />
-        <section class="content" style="margin-top:60px;">
+    <header>
+        <NavMenu />
+    </header>
+    
+    <MudMainContent>
+        <main class="main-content">
             @Body
-        </section>
-   <FooterMenu />
+        </main>
+    </MudMainContent>
+
+    <FooterMenu />
+
 </MudLayout>
+
+
+
 
 

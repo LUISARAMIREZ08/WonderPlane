@@ -14,9 +14,9 @@
 @inject ISnackbar Snackbar;
 @inject ImageUploadService ImageUploadService
 
-<div class="main-container poppins-light">
+<main class="main-container poppins-light">
     
-    <div class="register-container">
+    <section class="register-container">
         <EditForm Model="newUser" OnValidSubmit="OnValidSubmit">
             <DataAnnotationsValidator />
 
@@ -26,20 +26,19 @@
 
                 <div class="form-container-left">
                     <div class="input">
-                        <label class="form-label">Nombre Completo</label>
+                        <label class="form-label">Nombres</label>
                         <InputText class="form-control" @bind-Value="newUser.Name"></InputText>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Name)"></ValidationMessage></span>
                     </div>
 
                     <div class="input">
-                        <label class="form-label">Apellido</label>
+                        <label class="form-label">Apellidos</label>
                         <InputText class="form-control" @bind-Value="newUser.LastName"></InputText>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newUser.LastName)"></ValidationMessage></span>
                     </div>
 
                     <div class="input">
                         <label class="form-label">Numero de telefono</label>
-                        @* <input type="tel" class="form-control" @bind-value="newUser.PhoneNumber" @bind-value:event="oninput" /> *@
                         <InputText class="form-control" @bind-Value="newUser.PhoneNumber"></InputText>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newUser.PhoneNumber)"></ValidationMessage></span>
                     </div>
@@ -49,6 +48,7 @@
                         <select class="form-control" @bind="newUser.Gender">
                             <option value="Male">Masculino</option>
                             <option value="Female">Femenino</option>
+                            <option value="Prefiero no decirlo">Prefiero no decirlo</option>
                             <option value="Other">Otro</option>
                         </select>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Gender)"></ValidationMessage></span>
@@ -74,15 +74,22 @@
                 </div>
 
                 <div class="form-container-right">
+
+                    <div class="input">
+                        <label class="form-label">Documento</label>
+                        <InputText class="form-control" @bind-Value="newUser.Document"></InputText>
+                        <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Document)"></ValidationMessage></span>
+                    </div>
+
                     <div class="input">
                         <label class="form-label">Fecha de nacimiento</label>
-                        <input type="date" min="1900-01-01" max="2023-12-31" class="form-control" @bind-value="newUser.BirthDate" />
+                        <input type="date" min="1940-01-01" max="2006-12-31" class="form-control" @bind-value="newUser.BirthDate" />
                         <span class="small-validation-message"><ValidationMessage For="@(() => newUser.BirthDate)"></ValidationMessage></span>
                     </div>
 
                     <div class="input">
                         <label class="form-label">Email</label>
-                        <InputText class="form-control" @bind-Value="newUser.Email" Placeholder="example@domain.com"></InputText>
+                        <InputText class="form-control" @bind-Value="newUser.Email" Placeholder="ejemplo@dominio.com"></InputText>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Email)"></ValidationMessage></span>
                     </div>
 
@@ -104,34 +111,33 @@
                         <span class="small-validation-message"><ValidationMessage For="@(() => newUser.ConfirmPassword)"></ValidationMessage></span>
                     </div>
 
-                    <div class="input">
-                        <label class="form-label" >Seleccionar Imagen de Perfi</label>
-                        @* <InputFile onshow="false" OnChange="OnFileSelected"></InputFile> *@
-                        <MudFileUpload T="IBrowserFile" FilesChanged="OnFileSelected">
-                            <ActivatorContent>
-                                <MudButton Variant="Variant.Filled" Color="Color.Info">
-                                    Subir imagen
-                                </MudButton>
-                            </ActivatorContent>
-                        </MudFileUpload>
-                        @* Mostrar el nombre del archivo seleccionado *@
-                        @if (selectedFile != null)
-                        {
-                            <p>@selectedFile.Name</p>
-                        }
-                        else
-                        {
-                            <p>No file</p>
-                        }
-                       
-                    </div> 
+                    
                 </div>
 
             </div>
 
             <div class="form-button">
+                <div class="input">
+                    <label class="form-label">Seleccionar Imagen de Perfi</label>
+                    <MudFileUpload T="IBrowserFile" FilesChanged="OnFileSelected">
+                        <ActivatorContent>
+                            <MudButton Variant="Variant.Filled" Color="Color.Info">
+                                Subir imagen
+                            </MudButton>
+                        </ActivatorContent>
+                    </MudFileUpload>
+
+                    @if (selectedFile != null)
+                    {
+                        <p>@selectedFile.Name</p>
+                    }
+                    else
+                    {
+                        <p>No seleccionado</p>
+                    }
+
+                </div>
                 <button class="submit-button" type="submit">Registrar</button>
-                @* <MudCheckBox @bind-Value="Basic_CheckBox2" Size="Size.Small" Color="Color.Info" UncheckedColor="Color.Default"><a class="ingreso" href="#">Terminos y condiciones.</a></MudCheckBox> *@
                 <ul>
                     <li>
                         <a>¿Ya tienes una cuenta?</a>
@@ -140,41 +146,39 @@
                 </ul>
             </div>
         </EditForm>
-    </div>
+    </section>
     
-    <div class="info-container">
+    <section class="info-container">
         <img src="img/WLogo.png" /><br />
         <h1>¡Únete a Nuestra Comunidad!</h1>
         <p>En nuestro formulario de registro, te invitamos a ser parte de una experiencia única. Al completar tu inscripción, podrás acceder a una variedad de servicios y beneficios diseñados especialmente para ti. Solo necesitas proporcionarnos algunos datos básicos, y en pocos minutos estarás listo para disfrutar de todo lo que ofrecemos. Tu información será tratada con la máxima seguridad y confidencialidad. ¡Esperamos verte pronto!</p>
-    </div>
+    </section>
      
-</div>
+</main>
 
 @code {
 
-    public bool Basic_CheckBox2 { get; set; } = false;
+    private List<string> countries = new List<string>();
+    private IBrowserFile? selectedFile;
 
     UserRegisterDto newUser = new UserRegisterDto
-        {
-            UserName = string.Empty,
-            Document = string.Empty,
-            Name = string.Empty,
-            LastName = string.Empty,
-            BirthDate = DateTime.Now,
-            Email = string.Empty,
-            Address = string.Empty,
-            Country = string.Empty,
-            Password = string.Empty,
-            ConfirmPassword = string.Empty,
-            Gender = string.Empty,
-            PhoneNumber = string.Empty,
-            Image = string.Empty
-        };
+    {
+        UserName = string.Empty,
+        Document = string.Empty,
+        Name = string.Empty,
+        LastName = string.Empty,
+        BirthDate = DateTime.Now,
+        Email = string.Empty,
+        Address = string.Empty,
+        Country = string.Empty,
+        Password = string.Empty,
+        ConfirmPassword = string.Empty,
+        Gender = string.Empty,
+        PhoneNumber = string.Empty,
+        Image = string.Empty
+    };
 
-    private List<string> countries = new List<string>(); // Lista de países
-    //private string selectedCountry = ""; País seleccionado
-    private IBrowserFile? selectedFile; // Archivo de imagen seleccionado
-
+   
     protected override async Task OnInitializedAsync()
     {
         countries = await CountryService.GetCountriesAsync();
@@ -184,26 +188,27 @@
     {
         try
         {
-            // Verificar si se seleccionó un archivo de imagen
+            Snackbar.Add("Procesando registro...", Severity.Info);
+            
             if (selectedFile != null)
             {
-                // Subir la imagen y obtener la URL
                 var imageUrl = await ImageUploadService.UploadImage(selectedFile);
                 Console.WriteLine(imageUrl);
+
                 if (!string.IsNullOrEmpty(imageUrl))
                 {
-                    newUser.Image = imageUrl; // Asignar la URL de la imagen al usuario
-                                              // Snackbar.Add("La imagen se ha guardado correctamente.", Severity.Success);
+                    newUser.Image = imageUrl; 
+                    Snackbar.Add("Imagen subida correctamente.", Severity.Info);
                 }
                 else
                 {
                     Snackbar.Add("Error al subir la imagen.", Severity.Error);
-                    return; // Detener el proceso si la imagen no se subió
+                    return; 
                 }
             }
 
-            // Crear el usuario
             await UserService.CreateUser(newUser);
+            Snackbar.Clear(); 
             Snackbar.Add("Registro realizado con éxito.", Severity.Success);
             navigation.NavigateTo("/login");
         }
@@ -213,9 +218,9 @@
         }
     }
 
-    //Manejo del archivo seleccionado
-
+    // Manejo de archivos
     IList<IBrowserFile> _files = new List<IBrowserFile>();
+
     private void UploadFiles(IBrowserFile file)
     {
         _files.Add(file);
@@ -225,7 +230,7 @@
     { 
         if(file != null)
         {
-            selectedFile = file; // Asignar el archivo seleccionado
+            selectedFile = file; 
             Snackbar.Add("La imagen se ha cargado correctamente.", Severity.Info);
         }
         else

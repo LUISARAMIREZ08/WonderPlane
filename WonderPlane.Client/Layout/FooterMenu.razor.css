@@ -1,5 +1,4 @@
-﻿/* Estilos del footer */
-.footer {
+﻿.footer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -11,7 +10,6 @@
     text-align: center;
 }
 
-/* Estilos del logo en el footer */
 .footer-logo {
     display: flex;
     align-items: center;
@@ -30,7 +28,6 @@
         text-decoration: none;
     }
 
-/* Listado del footer */
 .footer-list {
     display: flex;
     justify-content: center;
@@ -70,13 +67,12 @@
             color: dodgerblue;
         }
 
-/* Derechos reservados */
 .rights-reserved {
     font-size: 12px;
     margin-top: 20px;
 }
 
-/* Responsividad para pantallas pequeñas */
+
 @media (max-width: 768px) {
     .footer-list {
         display: flex;

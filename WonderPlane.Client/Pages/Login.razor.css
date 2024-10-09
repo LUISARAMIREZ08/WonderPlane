@@ -1,7 +1,6 @@
 ﻿.main-container {
-    background-image: url("img/fondoregister.jpg");
+    background: url("img/fondoregister.jpg") no-repeat center;
     background-size: cover;
-    background-position: center;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -63,7 +62,6 @@ h1 {
         color: white; 
         padding: 10px 20px; 
         border: none; 
-        border-radius: 5px; 
         cursor: pointer;
         width: 50%; 
         margin-bottom: 20px;
@@ -86,12 +84,14 @@ h1 {
 
 
 @media screen and (max-width: 768px) {
+
     .login-container {
         margin-right:-50px;
     }
 }
 
 @media screen and (max-width: 576px) {
+
     .login-container {
         margin:20px;
     }

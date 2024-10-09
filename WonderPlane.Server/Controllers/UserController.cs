@@ -33,6 +33,24 @@ public class UserController : ControllerBase
         return Ok(users);
     }
 
+   
+    [HttpGet("user/{id}")]
+    public async Task<ActionResult<UserInfo>> GetUserById(int id)
+    {
+        // Buscar al usuario en la base de datos usando su ID
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+
+        // Si el usuario no existe, retornar 404
+        if (user == null)
+        {
+            return NotFound(new { Message = "User not found" });
+        }
+
+        // Retornar el objeto completo del usuario
+        return Ok(user);
+    }
+
+
     [HttpPost("register")]
     public async Task<ActionResult<ResponseAPI<User>>> Register(UserRegisterDto registerDTO, TokenProvider tokenProvider)
     {
@@ -40,7 +58,8 @@ public class UserController : ControllerBase
             return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "Email is already used" });
 
         if (await UserExists(registerDTO.UserName))
-            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "User name is already used" });
+
+            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "User name is already used" });
 
         var hmac = new HMACSHA512();
 
@@ -77,6 +96,75 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
+    [HttpPost("createadmin")]
+    public async Task<ActionResult<ResponseAPI<User>>> CreateAdmin(CreateAdminDto registerDTO, TokenProvider tokenProvider)
+    {
+        if (await EmailExists(registerDTO.Email))
+            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "Email is already used" });
+
+        if (await UserExists(registerDTO.UserName))
+            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "User name is already used" });
+
+        var hmac = new HMACSHA512();
+
+        var user = new User
+        {
+            Document = registerDTO.Document,
+            UserName = registerDTO.UserName.ToLower(),
+            Name = registerDTO.Name,
+            LastName = registerDTO.LastName,
+            BirthDate = DateTime.Now,
+            Gender = string.Empty,
+            PhoneNumber = string.Empty,
+            Email = registerDTO.Email.ToLower(),
+            Address = string.Empty,
+            Country = string.Empty,
+            Role = UserRole.Admin,
+            Image = string.Empty,
+            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
+            PasswordSalt = hmac.Key
+        };
+
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+        string token = tokenProvider.Create(user);
+
+        var response = new ResponseAPI<User>
+        {
+            EsCorrecto = true,
+            Mensaje = "User registered successfully",
+            Data = user
+        };
+
+        return Ok(response);
+    }
+
+    
+    [HttpGet("admins")]
+    public async Task<ActionResult<IEnumerable<User>>> GetAdmins()
+    {
+        var admins = await _context.Users
+            .Where(u => u.Role == UserRole.Admin && u.IsActive == true)
+            .ToListAsync();
+
+        return Ok(admins);
+    }
+
+    [HttpPut("admin/deactivate/{id}")]
+    public async Task<IActionResult> DeactivateAdmin(int id)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id && u.Role == UserRole.Admin);
+
+        if (user == null)
+            return NotFound(new { Message = "Admin not found" });
+
+        user.IsActive = false;
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 
     [HttpPost("login")]
     public async Task<ActionResult<ResponseAPI<string>>> Login(UserLoginDto loginDTO, TokenProvider tokenProvider)
@@ -90,7 +178,7 @@ public class UserController : ControllerBase
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
 
         if (!computedHash.SequenceEqual(user.PasswordHash!))
-            return Unauthorized(new ResponseAPI<string> { EsCorrecto=false, Mensaje="La contrase�a no es v�lida"});
+            return Unauthorized(new ResponseAPI<string> { EsCorrecto=false, Mensaje="La contraseña no es válida"});
 
         string token = tokenProvider.Create(user);
         
