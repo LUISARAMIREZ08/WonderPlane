@@ -15,7 +15,7 @@
 <div class="main-container poppins-light">
     
     <div class="register-container">
-        <EditForm Model="newFlight" OnValidSubmit="OnValidSubmit">
+        <EditForm Model="newFlight" OnValidSubmit="OnValidSubmit" style="display:flex;flex-direction: column;justify-content: center;width:90%">
             <DataAnnotationsValidator />
 
             <h3>Crea Los Vuelos Disponibles</h3>
@@ -105,11 +105,6 @@
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.FlightStatus)"></ValidationMessage></span>
                     </div>
                     <div class="input">
-                        <label class="form-label">Aplicar Promoción</label>
-                        <InputNumber class="form-control" @bind-Value="newFlight.PromotionId" style="font-size: 0.8rem;color: #507687; width:100%"></InputNumber>
-                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.PromotionId)"></ValidationMessage></span>
-                    </div>
-                    <div class="input">
                         <label class="form-label">Duración del Vuelo</label>
                         <InputText class="form-control" @bind-Value="newFlight.Duration" style="font-size: 0.8rem;color: #507687"></InputText>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.Duration)"></ValidationMessage></span>
@@ -130,12 +125,13 @@
                         }
                         
                     </div>
-               </div>
-                
+                    
+               </div>  
             </div>
             <div class="form-button">
                 <button class="submit-button" type="submit">Crear Vuelo</button>
             </div>
+            
         </EditForm>
     </div>
      
@@ -165,7 +161,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        addFlights = await Http.GetFromJsonAsync<AddFlights[]>("http://localhost:5195/sample-data/flights.json");
+        addFlights = await Http.GetFromJsonAsync<AddFlights[]>("sample-data/flights.json");
 
     }
 
