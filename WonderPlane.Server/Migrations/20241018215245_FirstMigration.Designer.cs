@@ -12,8 +12,8 @@ using WonderPlane.Server.Models;
 namespace WonderPlane.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241005200427_MigrationComplete")]
-    partial class MigrationComplete
+    [Migration("20241018215245_FirstMigration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,26 +111,26 @@ namespace WonderPlane.Server.Migrations
                     b.Property<TimeSpan>("DepartureTime")
                         .HasColumnType("time");
 
-                    b.Property<int>("Destination")
-                        .HasColumnType("int");
+                    b.Property<string>("Destination")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Duration")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FlightCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FlightStatus")
                         .HasColumnType("int");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsInternational")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Origin")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PromotionId")
-                        .HasColumnType("int");
+                    b.Property<string>("Origin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -283,9 +283,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FlightId")
-                        .IsUnique()
-                        .HasFilter("[FlightId] IS NOT NULL");
+                    b.HasIndex("FlightId");
 
                     b.ToTable("Promotion", "WonderPlane");
                 });
@@ -659,8 +657,8 @@ namespace WonderPlane.Server.Migrations
             modelBuilder.Entity("WonderPlane.Server.Models.Promotion", b =>
                 {
                     b.HasOne("WonderPlane.Server.Models.Flight", "Flight")
-                        .WithOne("Promotion")
-                        .HasForeignKey("WonderPlane.Server.Models.Promotion", "FlightId");
+                        .WithMany("Promotions")
+                        .HasForeignKey("FlightId");
 
                     b.Navigation("Flight");
                 });
@@ -763,7 +761,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.Navigation("News");
 
-                    b.Navigation("Promotion");
+                    b.Navigation("Promotions");
 
                     b.Navigation("Seats");
                 });

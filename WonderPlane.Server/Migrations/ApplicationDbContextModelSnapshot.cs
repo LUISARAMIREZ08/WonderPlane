@@ -115,23 +115,17 @@ namespace WonderPlane.Server.Migrations
                     b.Property<string>("Duration")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FlightCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("FlightStatus")
                         .HasColumnType("int");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsInternational")
                         .HasColumnType("bit");
 
                     b.Property<string>("Origin")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PromotionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("flightCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -286,9 +280,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FlightId")
-                        .IsUnique()
-                        .HasFilter("[FlightId] IS NOT NULL");
+                    b.HasIndex("FlightId");
 
                     b.ToTable("Promotion", "WonderPlane");
                 });
@@ -662,8 +654,8 @@ namespace WonderPlane.Server.Migrations
             modelBuilder.Entity("WonderPlane.Server.Models.Promotion", b =>
                 {
                     b.HasOne("WonderPlane.Server.Models.Flight", "Flight")
-                        .WithOne("Promotion")
-                        .HasForeignKey("WonderPlane.Server.Models.Promotion", "FlightId");
+                        .WithMany("Promotions")
+                        .HasForeignKey("FlightId");
 
                     b.Navigation("Flight");
                 });
@@ -766,7 +758,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.Navigation("News");
 
-                    b.Navigation("Promotion");
+                    b.Navigation("Promotions");
 
                     b.Navigation("Seats");
                 });

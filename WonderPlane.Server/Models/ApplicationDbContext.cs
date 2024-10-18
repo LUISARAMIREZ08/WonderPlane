@@ -104,15 +104,10 @@ public class ApplicationDbContext : DbContext
             .WithMany(t => t.Tickets)
             .HasForeignKey(t => t.TravelerId);
 
-        modelBuilder.Entity<Flight>()
-            .HasOne(f => f.Promotion)
-            .WithOne(p => p.Flight)
-            .HasForeignKey<Flight>(f => f.PromotionId);
-
         modelBuilder.Entity<Promotion>()
             .HasOne(p => p.Flight)
-            .WithOne(f => f.Promotion)
-            .HasForeignKey<Promotion>(p => p.FlightId);
+            .WithMany (f => f.Promotions)
+            .HasForeignKey(p => p.FlightId);
 
         modelBuilder.Entity<FlightRecommendation>()
             .HasOne(fr => fr.Flight)
