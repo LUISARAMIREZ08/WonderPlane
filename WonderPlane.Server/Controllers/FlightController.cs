@@ -32,13 +32,11 @@ namespace WonderPlane.Server.Controllers
                     DepartureTime = flightDTO.DepartureTime ?? TimeSpan.Zero,
                     ArriveDate = flightDTO.ArriveDate,
                     ArriveTime = flightDTO.DepartureTime ?? TimeSpan.Zero,
-                    FlightStatus = FlightStatus.Canceled,
+                    FlightStatus = FlightStatus.Scheduled,
                     IsInternational = flightDTO.IsInternational,
                     BagPrice = flightDTO.BagPrice,
                     FlightCode = flightDTO.FlightCode,
                     Duration = flightDTO.Duration,
-                    Image = flightDTO.Image,
-                    PromotionId = flightDTO.PromotionId
                 };
                 _dbContext.Set<Flight>().Add(dbFlight);
                 await _dbContext.SaveChangesAsync();

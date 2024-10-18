@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WonderPlane.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,10 +47,8 @@ namespace WonderPlane.Server.Migrations
                     FlightStatus = table.Column<int>(type: "int", nullable: false),
                     IsInternational = table.Column<bool>(type: "bit", nullable: false),
                     BagPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    flightCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Duration = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PromotionId = table.Column<int>(type: "int", nullable: true)
+                    FlightCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Duration = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -475,9 +473,7 @@ namespace WonderPlane.Server.Migrations
                 name: "IX_Promotion_FlightId",
                 schema: "WonderPlane",
                 table: "Promotion",
-                column: "FlightId",
-                unique: true,
-                filter: "[FlightId] IS NOT NULL");
+                column: "FlightId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Purchase_RegisteredUserId",
