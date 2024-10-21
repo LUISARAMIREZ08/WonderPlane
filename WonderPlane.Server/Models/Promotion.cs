@@ -24,6 +24,8 @@ public class Promotion
 
     public required PromotionStatus PromotionStatus { get; set; }
 
+    public required PromotionType PromotionType { get; set; }
+
     public int? FlightId { get; set; }
     public Flight? Flight { get; set; }
 }
@@ -32,4 +34,10 @@ public enum PromotionStatus
 {
     Active,
     Inactive
+}
+
+public enum PromotionType
+{
+    Seat,
+    Bag,
 }

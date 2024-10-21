@@ -38,7 +38,7 @@ namespace WonderPlane.Server.Controllers
                     FlightCode = flightDTO.FlightCode,
                     Duration = flightDTO.Duration,
                 };
-                _dbContext.Set<Flight>().Add(dbFlight);
+                _dbContext.Flights.Add(dbFlight);
                 await _dbContext.SaveChangesAsync();
                 if(dbFlight.Id > 0)
                 {
