@@ -38,7 +38,6 @@ namespace WonderPlane.Shared
         public required string FlightCode { get; set; }
         [Required(ErrorMessage = "La duración del vuelo es obligatoria.")]
         public string? Duration { get; set; }
-        public string? Image { get; set; }
         public int? PromotionId { get; set; }
     }
 }
