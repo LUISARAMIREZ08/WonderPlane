@@ -84,5 +84,34 @@ namespace WonderPlane.Client.Servicios
             }
         }
 
+        public async Task<string> UpdateUserAsync(UserInfo userInfo)
+        {
+            var result = await _http.PutAsJsonAsync("api/user/update", userInfo);
+
+            if (!result.IsSuccessStatusCode)
+            {
+                var errorResponse = await result.Content.ReadAsStringAsync();
+                throw new ApplicationException($"Error al actualizar la información del usuario: {errorResponse}");
+            }
+
+            var successResponse = await result.Content.ReadAsStringAsync();
+            return "Información del usuario actualizada exitosamente";
+        }
+
+        public async Task<string> ChangePasswordAsync(ChangePasswordDto user)
+        {
+            var result = await _http.PutAsJsonAsync("api/user/changepassword", user);
+
+            if (!result.IsSuccessStatusCode)
+            {
+                var errorResponse = await result.Content.ReadFromJsonAsync<ResponseAPI<string>>();
+                var errorMensaje = errorResponse?.Mensaje ?? "Error al cambiar la contraseña";
+                throw new ApplicationException($"Error al cambiar la contraseña: {errorMensaje}");
+            }
+
+            var successResponse = await result.Content.ReadAsStringAsync();
+            return "Contraseña actualizada exitosamente";
+        }
+
     }
 }

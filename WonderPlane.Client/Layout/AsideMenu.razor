@@ -1,0 +1,48 @@
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Text.Json
+@using WonderPlane.Shared
+
+@inject NavigationManager navigation
+@inject IJSRuntime JS
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<div class="btn-menu">
+    <label for="btn-menu">
+        <span class="material-symbols-outlined">chevron_right</span>
+    </label>
+</div>
+
+<input type="checkbox" id="btn-menu">
+<aside class="cont-menu btn-menu poppins-regular">
+    <label for="btn-menu">
+        Menú
+        <span class="material-symbols-outlined">chevron_left</span>
+    </label>
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            <a href="#"><span class="material-symbols-outlined">add</span>Crear vuelo</a>
+            <a href="#"><span class="material-symbols-outlined">flight</span>Vuelos programados</a>
+            <a href="#"><span class="material-symbols-outlined">flight_land</span>Vuelos realizados</a>
+            <a href="#"><span class="material-symbols-outlined">edit</span>Editar vuelos</a>
+        </Authorized>
+    </AuthorizeView>
+    <AuthorizeView Roles="RegisteredUser">
+        <Authorized>
+            <a href="#"><span class="material-symbols-outlined">event_seat</span>Reservas</a>
+            <a href="#"><span class="material-symbols-outlined">shopping_bag</span>Compras</a>
+            <a href="#"><span class="material-symbols-outlined">event_available</span>Check-in</a>
+            <a href="#"><span class="material-symbols-outlined">credit_card</span>Medios de pago</a>
+        </Authorized>
+    </AuthorizeView>
+    <AuthorizeView Roles="Root">
+        <Authorized>
+            <a href="#"><span class="material-symbols-outlined">manage_accounts</span>Gestionar Admins</a>
+        </Authorized>
+    </AuthorizeView>
+    
+    <a href="#"><span class="material-symbols-outlined">forum</span>Foros</a>
+    <a href="#"><span class="material-symbols-outlined">communities</span>Noticias</a>
+    <a href="#"><span class="material-symbols-outlined">manage_accounts</span>Editar perfil</a>
+</aside>
+

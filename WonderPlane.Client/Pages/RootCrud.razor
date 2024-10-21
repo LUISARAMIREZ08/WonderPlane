@@ -1,5 +1,5 @@
-﻿@page "/admincrud"
-@* @attribute [Authorize (Roles = "Admin")] *@
+﻿@page "/rootcrud"
+@attribute [Authorize (Roles = "Root")]
 
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
@@ -16,6 +16,10 @@
 
 <PageTitle>Gestión de administradores</PageTitle>
 
+<aside>
+    <AsideMenu />
+</aside>
+
 <main class="contain poppins-light">
     <h1>Administradores</h1>
 
@@ -31,7 +35,7 @@
         </div>
 
         <!-- Formulario -->
-        <MudTable Items="_admins" Striped="false" Hover="true" Bordered="false" RowsPerPage="5" ServerData="ServerReload" PagerPosition="MudBlazor.PagerPosition.Bottom" @ref="_table">
+        <MudTable Items="_admins" Striped="false" Hover="true" Bordered="false" RowsPerPage="5" ServerData="ServerReload" @ref="_table">
             
             <HeaderContent>
                 <MudTh>Avatar</MudTh>
@@ -46,7 +50,9 @@
 
             <RowTemplate>
                 <MudTd DataLabel="Avatar">
-                    <MudAvatar ImageSrc="@context.Image" Size="Size.Medium" />
+                    <MudAvatar>
+                        <MudImage Src="@context.Image" Alt="Imagen de perfil del administrador"></MudImage>
+                    </MudAvatar>
                 </MudTd>
                 <MudTd DataLabel="Id">@context.Id</MudTd>
                 <MudTd DataLabel="Documento de Identidad">@context.Document</MudTd>
@@ -185,9 +191,6 @@
         {
             Snackbar.Add("Error al desactivar administrador.", Severity.Error);
         }
-
-
-
     }
 
 

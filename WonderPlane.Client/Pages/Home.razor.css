@@ -4,20 +4,24 @@
 }
 
 .welcome {
-    background: url(../img/fondoregister.jpg) no-repeat center;
-    background-size: cover;
-    height: 900px;
+    /*background: url(../img/fondoregister.jpg) no-repeat center;
+    background-size: cover;*/
+    height: 700px;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: black;
     text-align: center;
     margin-top: 0;
 }
     .welcome h1 {
         font-size: 80px;
+    }
+
+    .welcome h1 span {
+        color: dodgerblue;
     }
 
     .welcome p {
@@ -30,6 +34,7 @@
         font-size: 20px;
         background-color: dodgerblue;
         padding: 15px 25px;
+        border-radius:5px;
     }
 
         .welcome .button-discover a {

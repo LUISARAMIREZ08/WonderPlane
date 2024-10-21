@@ -1,0 +1,12 @@
+﻿main {
+    background-color: white;
+    height:500px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+aside {
+    height:500px;
+    float:left;
+}
