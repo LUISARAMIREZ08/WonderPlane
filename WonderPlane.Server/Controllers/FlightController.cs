@@ -63,6 +63,29 @@ public class FlightController : ControllerBase
         return Ok(responseApi);
     }
 
+    [HttpGet]
+    [Route("list")]
+    public async Task<IActionResult> GetAllFlights()
+    {
+        var responseApi = new ResponseAPI<List<Flight>>();
+        try
+        {
+            var flights = await _dbContext.Flights.ToListAsync();
+
+            responseApi.Data = flights;
+            responseApi.EsCorrecto = true;
+            responseApi.Mensaje = "Lista de todos los vuelos obtenida correctamente";
+            return Ok(responseApi);
+        }
+        catch (Exception ex)
+        {
+            responseApi.EsCorrecto = false;
+            responseApi.Mensaje = $"Error inesperado: {ex.Message}";
+            return StatusCode(500, responseApi);
+        }
+    }
+
+
     private List<Seat> GenerateSeats(Flight flight, decimal firstClassPrice, decimal economicClassPrice)
     {
         var seats = new List<Seat>();
