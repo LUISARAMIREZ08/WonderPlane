@@ -66,7 +66,7 @@ public class UserController : ControllerBase
         var user = new User
         {
             Document = registerDTO.Document,
-            UserName = registerDTO.UserName.ToLower(),
+            UserName = registerDTO.UserName,
             Name = registerDTO.Name,
             LastName = registerDTO.LastName,
             BirthDate = registerDTO.BirthDate,
@@ -166,6 +166,66 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("user/deactivate/{id}")]
+    public async Task<IActionResult> DeactivateUser(int id)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id && u.Role == UserRole.RegisteredUser);
+
+        if (user == null)
+            return NotFound(new { Message = "User not found" });
+
+        user.IsActive = false;
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+
+    [HttpPut("user/update")]
+    public async Task<IActionResult> UpdateUserInfo([FromBody] UserInfo userInfo)
+    {
+        // Buscar al usuario en la base de datos usando su ID
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userInfo.Id);
+
+        // Si el usuario no existe, retornar 404
+        if (user == null)
+        {
+            return NotFound(new { Message = "User not found" });
+        }
+
+        // Actualizar los campos permitidos
+        user.Name = userInfo.Name;
+        user.LastName = userInfo.LastName;
+        user.UserName = userInfo.UserName;
+        user.Gender = userInfo.Gender;
+        user.PhoneNumber = userInfo.PhoneNumber;
+        user.Email = userInfo.Email;
+        user.Address = userInfo.Address;
+        user.Country = userInfo.Country;
+        user.BirthDate = userInfo.BirthDate;
+        user.IsSuscribedToNews = userInfo.IsSuscribedToNews;
+        user.ReciveNotifications = userInfo.ReciveNotifications;
+        // Actualizar la imagen si es necesario
+        if (!string.IsNullOrEmpty(userInfo.Image))
+        {
+            user.Image = userInfo.Image;
+        }
+
+        try
+        {
+            // Guardar los cambios en la base de datos
+            await _context.SaveChangesAsync();
+            return Ok(new { Message = "User information updated successfully" });
+        }
+        catch (Exception ex)
+        {
+            // Manejo de errores
+            return StatusCode(500, new { Message = "An error occurred while updating the user", Details = ex.Message });
+        }
+    }
+
+
     [HttpPost("login")]
     public async Task<ActionResult<ResponseAPI<string>>> Login(UserLoginDto loginDTO, TokenProvider tokenProvider)
     {
@@ -183,7 +243,47 @@ public class UserController : ControllerBase
         string token = tokenProvider.Create(user);
         
         return Ok(new ResponseAPI<string> { EsCorrecto = true, Mensaje = "Bienvenido", Data = token });
-    }   
+    }
+
+
+    [HttpPut("user/changepassword")]
+    public async Task<ActionResult<ResponseAPI<string>>> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+    {
+        Console.WriteLine(changePasswordDto.Id);
+        // Buscar al usuario autenticado por su ID
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == changePasswordDto.Id);
+
+        if (user == null)
+        {
+            return NotFound(new ResponseAPI<string> { EsCorrecto = false, Mensaje = "Usario no encontrado" });
+        }
+
+        // Verificar que la contraseña actual proporcionada coincida
+        using var hmac = new HMACSHA512(user.PasswordSalt!);
+        var currentHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(changePasswordDto.OldPassword));
+
+        if (!currentHash.SequenceEqual(user.PasswordHash!))
+        {
+            return BadRequest(new ResponseAPI<string> { EsCorrecto = false, Mensaje = "La contraseña actual es incorrecta" });
+        }
+
+        // Generar la nueva contraseña
+        var newHmac = new HMACSHA512();
+        user.PasswordHash = newHmac.ComputeHash(Encoding.UTF8.GetBytes(changePasswordDto.NewPassword));
+        user.PasswordSalt = newHmac.Key;
+
+        // Guardar los cambios en la base de datos
+        try
+        {
+            await _context.SaveChangesAsync();
+            return Ok(new ResponseAPI<string> { EsCorrecto = true, Mensaje = "Contraseña actualizada satisfactoriamente" });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { Message = "Ha ocurrido un error mientras se actualizaba la contraseña", Details = ex.Message });
+        }
+    }
+
 
     private async Task<bool> EmailExists(string Email)
     {

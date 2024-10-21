@@ -1,0 +1,501 @@
+﻿@page "/editprofile"
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Text.Json
+@using WonderPlane.Shared
+@using WonderPlane.Client.Servicios
+@using System.Net.Http.Json
+@using MudBlazor
+
+@inject NavigationManager navigation
+@inject IJSRuntime JS
+@inject ISnackbar Snackbar
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IUserService UserService
+@inject HttpClient Http;
+@inject ImageUploadService ImageUploadService
+@inject CountryService CountryService;
+
+<PageTitle>Perfil</PageTitle>
+
+<AsideMenu />
+
+<main class="contain poppins-light">
+    <section class="edit-image">
+        <div class="img-change">
+            <img src="@userInfo?.Image" alt="Profile Image" />
+            <div class="img-change-button">
+                <MudFileUpload T="IBrowserFile" FilesChanged="OnFileSelected">
+                    <ActivatorContent>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" />
+                    </ActivatorContent>
+                </MudFileUpload>
+            </div>
+        </div>
+        <h1>@FullName</h1>
+        <h6>@userInfo?.UserName</h6>
+    </section>
+
+
+    <section class="configuration-section">
+
+        <EditForm Model="@userInfo" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+
+            <section class="edit-section">
+                <article class="basic-info">
+                    <h3>Información Básica</h3>
+                    <table>
+                        @foreach (var field in basicInfoFields)
+                        {
+                            <tr>
+                                <td><span class="poppins-semibold">@field.Label:</span></td>
+                                <td>
+                                    @if (field.IsEditing)
+                                    {
+                                        if (field.InputType == "select")
+                                        {
+                                            <select class="form-control" @bind="field.Value" @ref="field.InputRef" @onblur="() => FinishEditing(field)">
+                                                <option value="">Seleccione un país</option>
+                                                @foreach (var country in countries)
+                                                {
+                                                    <option value="@country">@country</option>
+                                                }
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <input type="@field.InputType" min="1940-01-01" max="2006-12-31" @bind="field.Value" @ref="field.InputRef" @onblur="() => FinishEditing(field)" class="input-no-border" />
+                                            <ul class="field-messages">
+                                                @foreach (var message in field.Messages)
+                                                {
+                                                    <li>@message</li>
+                                                }
+                                            </ul>
+                                            <ValidationMessage For="@(() => field.Value)"></ValidationMessage>
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        <span>@field.Value</span>
+                                        <ValidationMessage For="@(() => field.Value)"></ValidationMessage>
+                                    }
+                                </td>
+                                <td>
+                                    <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" @onclick="() => StartEditing(field)" />
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </article>
+
+                <hr class="vertical-hr" />
+
+                <article class="system-configuration">
+                    <h3>Configuración del Sistema</h3>
+                    <table>
+                        @if (@userInfo != null)
+                        {
+                            <tr>
+                                <td><span class="poppins-semibold">Recibir Notificaciones</span></td>
+                                <td>
+                                    <MudSwitch @bind-Value="@userInfo.ReciveNotifications" Color="Color.Info" @onclick="() => OnSwitchChange()" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="poppins-semibold">Suscrito a noticias</span></td>
+                                <td>
+                                    <MudSwitch @bind-Value="@userInfo.IsSuscribedToNews" Color="Color.Info" @onclick="() => OnSwitchChange()" />
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+
+                    <h3>Seguridad</h3>
+                    <table>
+                        <tr>
+                            <td><span class="poppins-semibold">Contraseña</span></td>
+                            <td class="change-password" onclick="@(() => showChangePassword())">Cambiar contraseña</td>
+                        </tr>
+                        <tr>
+                            <td><span class="poppins-semibold">Medios de pago</span></td>
+                            <td class="change-password">Gestionar tarjetas</td>
+                        </tr>
+                        <tr>
+                            <td class="poppins-regular delete-account-button" onclick="@(() => showConfirmDelete())">Eliminar cuenta</td>
+                        </tr>
+                    </table>
+                    @if (_hasChanges)
+                    {
+                        <button class="button confirm-button" type="submit">Guardar</button>
+                        <button class="button discard-button" type="submit" @onclick="DiscardChanges">Descartar</button>
+                    }
+                    <ValidationSummary />
+                </article>
+            </section>
+        </EditForm>
+    </section>
+    
+
+    @if (_showDeleteUser)
+    {
+        <div class="confirm-delete">
+            <h3>Confirmación</h3>
+            <h6 class="poppins-regular">¿Esta seguro de que desea eliminar su cuenta?</h6>
+            <div class="options-delete">
+                @if (userInfo != null)
+                {
+                    <div class="button discard-button" onclick="@(() => showConfirmDelete())">Cancelar</div>
+                    <div class="button confirm-button" onclick="@(() => confirmDelete(userInfo.Id))">Eliminar</div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (_showChangePassword)
+    {
+        <article class="password-form">
+            <EditForm Model="@user" OnValidSubmit="ChangePassword">
+                <DataAnnotationsValidator />
+
+                <h2>Nueva contraseña</h2>
+
+                <div class="form-container">
+
+                    <div class="input">
+                        <label class="form-label">Contraseña actual</label>
+                        <input type="password" class="form-control" @bind-value="user.OldPassword" />
+                        <span class="small-validation-message"><ValidationMessage For="@(() => user.OldPassword)"></ValidationMessage></span>
+                    </div>
+
+                    <div class="input">
+                        <label class="form-label">Nueva contraseña</label>
+                        <input type="password" class="form-control" @bind-value="user.NewPassword" />
+                        <span class="small-validation-message"><ValidationMessage For="@(() => user.NewPassword)"></ValidationMessage></span>
+                    </div>
+
+                    <div class="input">
+                        <label class="form-label">Confirmar nueva contraseña</label>
+                        <input type="password" class="form-control" @bind-value="user.ConfirmNewPassword" />
+                        <span class="small-validation-message"><ValidationMessage For="@(() => user.ConfirmNewPassword)"></ValidationMessage></span>
+                    </div>
+                </div>
+
+                <div class="form-button">
+                    <button class="button confirm-button" type="submit">Cambiar</button>
+                    <button class="button discard-button" type="submit" @onclick="showChangePassword">Descartar</button>
+                </div>
+            </EditForm>
+        </article>
+    }   
+
+</main>
+
+
+@code
+{
+    //Variables
+
+    private UserInfo? userInfo;
+    private UserInfo? originalUserInfo;
+    public string FullName => $"{userInfo?.Name} {userInfo?.LastName}";
+    private List<string> countries = new List<string>();
+    private IBrowserFile? selectedFile;
+    IList<IBrowserFile> _files = new List<IBrowserFile>();
+    private bool _showDeleteUser = false;
+    private bool _showChangePassword = false;
+    private bool _hasChanges = false;
+
+    //Gestión de campos editables
+
+    public class EditableField
+    {
+        public string Label { get; set; }
+        public string Value { get; set; }
+        public bool IsEditing { get; set; } = false;
+        public ElementReference InputRef { get; set; } // Referencia al input
+        public string InputType { get; set; }
+        public List<string> Messages { get; set; }
+
+        public EditableField(string label, string value, string inputType = "text", List<string>? messages = null)
+        {
+            Label = label;
+            Value = value;
+            InputType = inputType;
+            Messages = messages ?? new List<string>();
+        }
+    }
+
+    private List<EditableField> basicInfoFields = new()
+    {
+        new EditableField("Nombre", string.Empty, "text", new List<string> { "Debe tener entre 2 y 50 caracteres." }),
+        new EditableField("Apellidos", string.Empty, "text", new List<string> { "Debe tener entre 2 y 50 caracteres." }),
+        new EditableField("Nombre de usuario", string.Empty, "text", new List<string> { "Debe tener entre 5 y 20 caracteres.", "Solo se permiten letras y números." }),
+        new EditableField("Correo Electrónico", string.Empty, "text", new List<string> { "Debe ser un correo válido (ej: usuario@ejemplo.com)." }),
+        new EditableField("Fecha de Nacimiento", string.Empty, "date"),
+        new EditableField("Teléfono", string.Empty, "tel", new List<string> { "Debe contener solo números.", "Debe tener 10 dígitos." }),
+        new EditableField("Dirección", string.Empty, "text", new List<string> { "Max 50 caracteres." }),
+        new EditableField("Pais", string.Empty, "select")
+    };
+
+    // Dto para el cambio de contraseña
+    ChangePasswordDto user = new ChangePasswordDto
+        {
+            Id = 0,
+            OldPassword = string.Empty,
+            NewPassword = string.Empty,
+            ConfirmNewPassword = string.Empty
+        };
+
+    // Al iniciar la pagina
+
+    protected override async Task OnInitializedAsync()
+    {
+        countries = await CountryService.GetCountriesAsync();
+        // Escuchar cambios en el estado de autenticación
+        AuthenticationStateProvider.AuthenticationStateChanged += async (task) =>
+        {
+            var authState = await task;
+            var user = authState.User;
+
+            if (user?.Identity?.IsAuthenticated == true)
+            {
+                // Obtener la claim del usuario autenticado
+                var userInfoClaim = user.FindFirst("UserInfo");
+                if (userInfoClaim != null)
+                {
+                    userInfo = JsonSerializer.Deserialize<UserInfo>(userInfoClaim.Value);
+
+                    if (userInfo is not null)
+                    {
+                        // Guardar el ID del usuario en la propiedad user.Id
+                        this.user.Id = userInfo.Id;
+                        // Rellenar los campos con la información del objeto User
+                        basicInfoFields[0].Value = userInfo.Name;
+                        basicInfoFields[1].Value = userInfo.LastName;
+                        basicInfoFields[2].Value = userInfo.UserName;
+                        basicInfoFields[3].Value = userInfo.Email;
+                        basicInfoFields[4].Value = userInfo.BirthDate.ToString("yyyy-MM-dd");
+                        basicInfoFields[5].Value = userInfo?.PhoneNumber ?? string.Empty;
+                        basicInfoFields[6].Value = userInfo?.Address ?? string.Empty;
+                        basicInfoFields[7].Value = userInfo?.Country ?? string.Empty;
+
+                        //Guardamos el usuario original en caso de descartar los cambios
+                        originalUserInfo = JsonSerializer.Deserialize<UserInfo>(userInfoClaim.Value);
+                    }
+                }
+            }
+            else
+            {
+                userInfo = null; // Limpiar la información si no está autenticado
+            }
+
+            // Actualizar la UI después del cambio
+            StateHasChanged();
+        };
+
+        // Llamada inicial para cargar el estado
+        var initialAuthState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var initialUser = initialAuthState.User;
+
+        if (initialUser?.Identity?.IsAuthenticated == true)
+        {
+            var userInfoClaim = initialUser.FindFirst("UserInfo");
+            if (userInfoClaim != null)
+            {
+                userInfo = JsonSerializer.Deserialize<UserInfo>(userInfoClaim.Value);
+            }
+        }
+    }
+
+    // Al enviar el formulario de edición
+
+    private async Task HandleValidSubmit()
+    {
+        // Actualizar los campos de userInfo con los valores de los campos editables
+        if (userInfo != null)
+        {
+            userInfo.Name = basicInfoFields[0].Value;
+            userInfo.LastName = basicInfoFields[1].Value;
+            userInfo.UserName = basicInfoFields[2].Value;
+            userInfo.Email = basicInfoFields[3].Value;
+            userInfo.BirthDate = DateTime.Parse(basicInfoFields[4].Value);
+            userInfo.PhoneNumber = basicInfoFields[5].Value;
+            userInfo.Address = basicInfoFields[6].Value;
+            userInfo.Country = basicInfoFields[7].Value;
+
+            // Llamar al servicio para actualizar la información en el backend
+            var result = await Http.PutAsJsonAsync("api/user/update", userInfo);
+
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Información actualizada correctamente.", Severity.Success);
+                // Notificar el cambio de estado
+                if (AuthenticationStateProvider is CustomAuthenticationStateProvider customProvider)
+                {
+                    await customProvider.GetAuthenticationStateAsync();
+                }
+            }
+            else
+            {
+                Snackbar.Add("Error al actualizar la información. Porfavor revisa que los datos sean correctos. hemos restaurado los datos originales", Severity.Error);
+                DiscardChanges();
+            }
+        }
+
+        _hasChanges = false;
+        ReloadEditableFields();
+        StateHasChanged();
+    }
+
+    // Manejo de archivos
+
+    private void UploadFiles(IBrowserFile file)
+    {
+        _files.Add(file);
+    }
+
+    private async Task OnFileSelected(IBrowserFile file)
+    {
+        if (file != null)
+        {
+            selectedFile = file;
+            _hasChanges = true;
+
+            if (selectedFile != null)
+            {
+                var imageUrl = await ImageUploadService.UploadImage(selectedFile);
+                Console.WriteLine(imageUrl);
+
+                if (!string.IsNullOrEmpty(imageUrl) && userInfo != null)
+                {
+                    userInfo.Image = imageUrl;
+                    Snackbar.Add("Imagen subida correctamente.", Severity.Info);
+                }
+                else
+                {
+                    Snackbar.Add("Error al subir la imagen.", Severity.Error);
+                    return;
+                }
+            }
+        }
+        else
+        {
+            Snackbar.Add("Error al cargar la imagen.", Severity.Error);
+        }
+
+    }
+
+    // Switches
+    private void OnSwitchChange()
+    {
+        _hasChanges = true; 
+    }
+
+
+    //Estados de edición
+
+    public async Task StartEditing(EditableField field)
+    {
+        field.IsEditing = true;
+        await Task.Delay(1); 
+        await field.InputRef.FocusAsync();
+        _hasChanges = true; 
+    }
+
+    private void FinishEditing(EditableField field)
+    {
+        field.IsEditing = false;
+        _hasChanges = true; 
+        StateHasChanged(); 
+    }
+
+    private void DiscardChanges()
+    {
+        if (originalUserInfo != null)
+        {
+            userInfo = JsonSerializer.Deserialize<UserInfo>(JsonSerializer.Serialize(originalUserInfo));
+
+            ReloadEditableFields();
+        }
+    }
+
+    private void ReloadEditableFields()
+    {
+        if (userInfo != null)
+        {
+            basicInfoFields[0].Value = userInfo.Name;
+            basicInfoFields[1].Value = userInfo.LastName;
+            basicInfoFields[2].Value = userInfo.UserName;
+            basicInfoFields[3].Value = userInfo.Email;
+            basicInfoFields[4].Value = userInfo.BirthDate.ToString("yyyy-MM-dd");
+            basicInfoFields[5].Value = userInfo?.PhoneNumber ?? string.Empty;
+            basicInfoFields[6].Value = userInfo?.Address ?? string.Empty;
+            basicInfoFields[7].Value = userInfo?.Country ?? string.Empty;
+
+            _hasChanges = false;
+            StateHasChanged();
+        }
+    }
+
+    // Desactivar usuario
+    private async void DeleteUser(int id)
+    {
+        var result = await Http.PutAsync($"api/user/deactivate/{id}", null);
+
+        if (result.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Usuario eliminado correctamente.", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add("Error al eliminar usuario.", Severity.Error);
+        }
+
+    }
+
+    public void showConfirmDelete()
+    {
+        _showDeleteUser = !_showDeleteUser;
+    }
+
+    private void confirmDelete(int id)
+    {
+        DeleteUser(id);
+        showConfirmDelete();
+    }
+
+    // Cambiar contraseña
+
+    private void showChangePassword()
+    {
+        _showChangePassword = !_showChangePassword;
+        ResetPasswordForm();
+    }
+
+    private void ResetPasswordForm()
+    {
+        user.OldPassword = string.Empty;
+        user.NewPassword = string.Empty;
+        user.ConfirmNewPassword = string.Empty;
+    }
+
+    private async Task ChangePassword()
+    {
+
+        try
+        {
+            var result = await UserService.ChangePasswordAsync(user);
+            Snackbar.Clear();
+            Snackbar.Add("Contraseña cambiada con éxito.", Severity.Success);
+        }
+        catch (ApplicationException ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+}

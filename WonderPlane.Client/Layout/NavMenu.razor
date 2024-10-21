@@ -8,8 +8,8 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <nav class="poppins-light">
-    <div class="navbar-logo">
-        <img src="img/Wlogo.png" alt="Logo" />
+    <div class="navbar-logo poppins-regular">
+        <img src="img/Wblack.png" alt="Logo" />
         <span>WonderPlane</span>
     </div>
 
@@ -23,9 +23,15 @@
             </ul>
         </li>
 
+        <AuthorizeView Roles="Root">
+            <Authorized>
+                <li><a href="/rootcrud">Gestionar Administradores</a></li>
+            </Authorized>
+        </AuthorizeView>
+
         <AuthorizeView Roles="Admin">
             <Authorized>
-                <li><a href="/admincrud">Gestionar Administradores</a></li>
+                <li><a href="/admin">Gestionar vuelos</a></li>
             </Authorized>
         </AuthorizeView>
 
@@ -34,7 +40,7 @@
                 <li>
                     <a class="profile" href="#"><img src="@userInfo?.Image" />@userInfo?.UserName</a>
                     <ul class="menu-vertical">
-                        <li><a href="#">Ver perfil</a></li>
+                        <li><a href="/viewprofile">Ver perfil</a></li>
                         <li><a href="#" @onclick="Logout">Cerrar sesión</a></li>
                     </ul>
                 </li>
