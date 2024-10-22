@@ -96,6 +96,59 @@ public class FlightController : ControllerBase
         }
     }
 
+    [HttpPut]
+    //[Authorize(Roles = "Admin")]
+    [Route("update/{id}")]
+    public async Task<IActionResult> UpdateFlight(int id, [FromBody] FlightDTO flightDTO)
+    {
+        var responseApi = new ResponseAPI<Flight>();
+
+        try
+        {
+            var flight = await _dbContext.Flights.FindAsync(id);
+
+            if (flight == null)
+            {
+                responseApi.EsCorrecto = false;
+                responseApi.Mensaje = "Vuelo no encontrado";
+                return NotFound(responseApi);
+            }
+
+            var flightWithSameCode = await _dbContext.Flights
+            .FirstOrDefaultAsync(f => f.FlightCode == flightDTO.FlightCode && f.Id != id);
+
+            if (flightWithSameCode != null)
+            {
+                responseApi.EsCorrecto = false;
+                responseApi.Mensaje = $"El código de vuelo '{flightDTO.FlightCode}' ya está en uso.";
+                return BadRequest(responseApi);
+            }
+
+            flight.Origin = flightDTO.Origin;
+            flight.Destination = flightDTO.Destination;
+            flight.DepartureDate = flightDTO.DepartureDate;
+            flight.DepartureTime = flightDTO.DepartureTime;
+            flight.ArriveDate = flightDTO.ArriveDate;
+            flight.ArriveTime = flightDTO.ArriveTime;
+            flight.IsInternational = flightDTO.IsInternational;
+            flight.BagPrice = flightDTO.BagPrice;
+            flight.FlightCode = flightDTO.FlightCode;
+            flight.Duration = flightDTO.Duration;
+
+            await _dbContext.SaveChangesAsync();
+
+            responseApi.Data = flight;
+            responseApi.EsCorrecto = true;
+            responseApi.Mensaje = "Vuelo actualizado correctamente";
+            return Ok(responseApi);
+        }
+        catch (Exception ex)
+        {
+            responseApi.EsCorrecto = false;
+            responseApi.Mensaje = $"Error inesperado: {ex.Message}";
+            return StatusCode(500, responseApi);
+        }
+    }
 
     private List<Seat> GenerateSeats(Flight flight, decimal firstClassPrice, decimal economicClassPrice)
     {
