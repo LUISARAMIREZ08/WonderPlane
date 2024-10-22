@@ -22,6 +22,16 @@ public class FlightController : ControllerBase
         var responseApi = new ResponseAPI<int>();
         try
         {
+            var existingFlight = await _dbContext.Flights
+            .FirstOrDefaultAsync(f => f.FlightCode == flightDTO.FlightCode);
+
+            if (existingFlight != null)
+            {
+                responseApi.EsCorrecto = false;
+                responseApi.Mensaje = $"El código de vuelo '{flightDTO.FlightCode}' ya está en uso.";
+                return BadRequest(responseApi);
+            }
+
             var dbFlight = new Flight
             {
                 Origin = flightDTO.Origin,
@@ -64,6 +74,7 @@ public class FlightController : ControllerBase
     }
 
     [HttpGet]
+    //[Authorize(Roles = "Admin")]
     [Route("list")]
     public async Task<IActionResult> GetAllFlights()
     {
