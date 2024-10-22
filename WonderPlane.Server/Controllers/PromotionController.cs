@@ -16,6 +16,7 @@ public class PromotionController : ControllerBase
     }
 
     [HttpPost]
+    //[Authorize(Roles = "Admin")]
     [Route("create")]
     public async Task<IActionResult> CreatePromotion(PromotionDTO promotionDTO)
     {

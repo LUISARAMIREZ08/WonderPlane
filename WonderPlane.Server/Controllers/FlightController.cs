@@ -150,6 +150,37 @@ public class FlightController : ControllerBase
         }
     }
 
+    [HttpGet]
+    //[Authorize(Roles = "Admin")]
+    [Route("search/{flightCode}")]
+    public async Task<IActionResult> GetFlightByCode(string flightCode)
+    {
+        var responseApi = new ResponseAPI<Flight>();
+        try
+        {
+            var flight = await _dbContext.Flights
+                .FirstOrDefaultAsync(f => f.FlightCode == flightCode);
+
+            if (flight == null)
+            {
+                responseApi.EsCorrecto = false;
+                responseApi.Mensaje = "Vuelo no encontrado.";
+                return NotFound(responseApi);
+            }
+
+            responseApi.Data = flight;
+            responseApi.EsCorrecto = true;
+            responseApi.Mensaje = "Vuelo encontrado correctamente.";
+            return Ok(responseApi);
+        }
+        catch (Exception ex)
+        {
+            responseApi.EsCorrecto = false;
+            responseApi.Mensaje = $"Error inesperado: {ex.Message}";
+            return StatusCode(500, responseApi);
+        }
+    }
+
     private List<Seat> GenerateSeats(Flight flight, decimal firstClassPrice, decimal economicClassPrice)
     {
         var seats = new List<Seat>();
