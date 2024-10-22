@@ -15,7 +15,7 @@ public class FlightController : ControllerBase
         _dbContext = dbContext;
     }
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [Route("create")]
     public async Task<IActionResult> CreateFlight(FlightDTO flightDTO)
     {
@@ -27,9 +27,9 @@ public class FlightController : ControllerBase
                 Origin = flightDTO.Origin,
                 Destination = flightDTO.Destination,
                 DepartureDate = flightDTO.DepartureDate,
-                DepartureTime = TimeSpan.Parse(flightDTO.DepartureTime),
+                DepartureTime = flightDTO.DepartureTime,
                 ArriveDate = flightDTO.ArriveDate,
-                ArriveTime = TimeSpan.Parse(flightDTO.ArriveTime),
+                ArriveTime = flightDTO.ArriveTime,
                 FlightStatus = FlightStatus.Scheduled,
                 IsInternational = flightDTO.IsInternational,
                 BagPrice = flightDTO.BagPrice,
