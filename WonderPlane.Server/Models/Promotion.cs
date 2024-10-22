@@ -1,5 +1,5 @@
-﻿using Microsoft.Identity.Client;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using WonderPlane.Shared;
 
 namespace WonderPlane.Server.Models;
 
@@ -28,16 +28,4 @@ public class Promotion
 
     public int? FlightId { get; set; }
     public Flight? Flight { get; set; }
-}
-
-public enum PromotionStatus
-{
-    Active,
-    Inactive
-}
-
-public enum PromotionType
-{
-    Seat,
-    Bag,
 }
