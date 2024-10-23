@@ -8,5 +8,6 @@ namespace WonderPlane.Shared
         public string country { get; set; }
         public string country_code { get; set; }
         public string airport { get; set; }
+        public string image { get; set; }
     }
 }

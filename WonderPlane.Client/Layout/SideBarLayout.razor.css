@@ -6,7 +6,7 @@
 
 .sidebar {
     flex-basis: auto;
-    min-width: 20%;
+    min-width: 16%;
     height: auto; 
     transition: height 0.3s ease;
 }

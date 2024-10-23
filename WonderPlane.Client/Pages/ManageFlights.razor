@@ -1,0 +1,122 @@
+﻿@page "/manage-flights"
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+@using System.Net.Http.Json
+@using WonderPlane.Shared;
+@using MudBlazor;
+
+@inject NavigationManager navigation;
+@inject HttpClient Http;
+@inject IHttpClientFactory HttpClientFactory
+
+<main class="container poppins-light">
+    <div class="tittle">
+        <h4>Gestión de Vuelos</h4>
+    </div>
+    <div>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Tertiary" OnClick="@(() => navigation.NavigateTo("/createFlight"))">Añadir Vuelo</MudButton>
+    </div>
+    <MudTable Items="@Elements" FixedHeader=true Breakpoint="Breakpoint.Sm" Hover=true Filter="new Func<FlightDTO,bool>(FilterFunc1)" @bind-SelectedItem="addFlights" Style="margin-top:3%; margin-block-end:3%">
+        <ToolBarContent> 
+            <MudText Typo="Typo.h6"><MudIconButton Icon="material-symbols-outlined/table"  />Vuelos Creados</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Codigo del Vuelo</MudTh>
+            <MudTh>Origen</MudTh>
+            <MudTh>Fecha de Salida</MudTh>
+            <MudTh>Hora de Salida</MudTh>
+            <MudTh>Destino</MudTh>
+            <MudTh>Fecha de Llegada</MudTh>
+            <MudTh>Hora de Llegada</MudTh>
+            <MudTh>Valor adicional por maleta</MudTh>
+            <MudTh>Duración del Vuelo</MudTh>
+            <MudTh>Estado del Vuelo</MudTh>
+            <MudTh>Cancelar Vuelo</MudTh>
+            <MudTh>Editar Vuelo</MudTh>
+            <MudTh>Eliminar Vuelo</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Codigo del Vuelo">@context.FlightCode</MudTd>
+            <MudTd DataLabel="Origen">@context.Origin</MudTd>
+            <MudTd DataLabel="Fecha de Salida">@context.DepartureDate.ToString("dd/MM/yyyy")</MudTd>
+            <MudTd DataLabel="Hora de Salida">@context.DepartureTime</MudTd>
+            <MudTd DataLabel="Destino">@context.Destination</MudTd>
+            <MudTd DataLabel="Fecha de Llegada">@context.ArriveDate.ToString("dd/MM/yyyy")</MudTd>
+            <MudTd DataLabel="Hora de Llegada">@context.ArriveTime</MudTd>
+            <MudTd DataLabel="Valor adicional por maleta">@context.BagPrice</MudTd>
+            <MudTd DataLabel="Duración del Vuelo">@context.Duration</MudTd>
+            <MudTd DataLabel="Estado del Vuelo">@context.FlightStatus</MudTd>
+            <MudTd><MudTooltip Text="Cancelar Vuelo"><MudButton Variant="Variant.Outlined" Color="Color.Secondary">Cancelar</MudButton></MudTooltip></MudTd>
+            <MudTd><MudTooltip Text="Editar Vuelo"><MudIconButton Icon="material-symbols-outlined/edit" aria-label="cancel" Color="Color.Tertiary" /></MudTooltip></MudTd>
+            <MudTd><MudTooltip Text="Eliminar Vuelo"><MudIconButton Icon="material-symbols-outlined/delete" aria-label="cancel" Color="Color.Secondary" /></MudTooltip></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 5, int.MaxValue }"
+                           InfoFormat="@infoFormat"
+                           AllItemsText="@allItemsText"
+                           HorizontalAlignment="@horizontalAlignment"
+                           HideRowsPerPage="@hideRowsPerPage"
+                           HidePageNumber="@hidePageNumber"
+                           HidePagination="@hidePagination" />
+        </PagerContent>
+    </MudTable>
+</main>
+
+<style>
+    .mud-table-toolbar {
+        background-color: ghostwhite;
+        border-block-end: solid 1px lightgray;
+        color: #071952;
+    }
+
+    .mud-table-root .mud-table-head .mud-table-cell {
+        font-size: smaller;
+        color: #071952;
+    }
+
+    .mud-table-root .mud-table-body .mud-table-cell {
+        font-size: smaller;
+        color: #071952;
+    }
+</style>
+
+
+@code {
+    bool fixedheader = true;
+    private string searchString1 = "";
+    private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center;
+    private bool hidePageNumber;
+    private bool hidePagination;
+    private bool hideRowsPerPage = true;
+    private string infoFormat = "{first_item}-{last_item} de {all_items}";
+    private string allItemsText = "Todos";
+
+    private FlightDTO? addFlights;
+    private HashSet<FlightDTO> addFlights1 = new HashSet<FlightDTO>();
+    private IEnumerable<FlightDTO> Elements = new List<FlightDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var localClient = HttpClientFactory.CreateClient("LocalClient");
+        Elements = await localClient.GetFromJsonAsync<FlightDTO[]>("sample-data/prueba.json");
+    }
+
+    private bool FilterFunc1(FlightDTO element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(FlightDTO element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Origin.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Destination.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.FlightStatus.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.FlightCode.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+}

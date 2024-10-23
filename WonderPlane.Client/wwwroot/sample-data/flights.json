@@ -4,69 +4,79 @@
     "code": "BOG",
     "country": "Colombia",
     "country_code": "CO",
-    "airport": "El Dorado International Airport"
+    "airport": "El Dorado International Airport",
+    "image": "https://media.istockphoto.com/id/2148178476/es/foto/hispanic-woman-programmer-engaged-in-coding-at-desk.jpg?s=1024x1024&w=is&k=20&c=OSMJWh8o8uWdBXJoLnRh6eESKvlFVrck4fB482aFHDE="
   },
   {
     "city": "Cali",
     "code": "CLO",
     "country": "Colombia",
     "country_code": "CO",
-    "airport": "Alfonso Bonilla Aragon International Airport"
+    "airport": "Alfonso Bonilla Aragon International Airport",
+    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
   },
   {
     "city": "Pereira",
     "code": "PEI",
     "country": "Colombia",
     "country_code": "CO",
-    "airport": "Matecaña International Airport"
+    "airport": "Matecaña International Airport",
+    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
   },
   {
     "city": "Medellin",
     "code": "MDE",
     "country": "Colombia",
     "country_code": "CO",
-    "airport": "José María Córdova International Airport"
+    "airport": "José María Córdova International Airport",
+    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
   },
   {
     "city": "Cartagena",
     "code": "CTG",
     "country": "Colombia",
     "country_code": "CO",
-    "airport": "Rafael Núñez International Airport"
+    "airport": "Rafael Núñez International Airport",
+    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
   },
   {
     "city": "Madrid",
     "code": "MAD",
     "country": "España",
     "country_code": "ES",
-    "airport": "Aeropuerto Adolfo Suárez Madrid-Barajas"
+    "airport": "Aeropuerto Adolfo Suárez Madrid-Barajas",
+    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
   },
   {
     "city": "Londres",
     "code": "LON",
     "country": "Reino Unido",
     "country_code": "UK",
-    "airport": "Aeropuerto Internacional de Londres Heathrow"
+    "airport": "Aeropuerto Internacional de Londres Heathrow",
+    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
   },
   {
     "city": "New York",
     "code": "NYC",
     "country": "Estados Unidos",
     "country_code": "US",
-    "airport": "Aeropuerto Internacional John F. Kennedy"
+    "airport": "Aeropuerto Internacional John F. Kennedy",
+    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
   },
   {
     "city": "Buenos Aires",
     "code": "BUE",
     "country": "Argentina",
     "country_code": "AR",
-    "airport": "Aeropuerto Internacional Ezeiza"
+    "airport": "Aeropuerto Internacional Ezeiza",
+    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
   },
   {
     "city": "Miami",
     "code": "MIA",
     "country": "Estados Unidos",
     "country_code": "US",
-    "airport": "Aeropuerto Internacional de Miami"
+    "airport": "Aeropuerto Internacional de Miami",
+    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
   }
 ]

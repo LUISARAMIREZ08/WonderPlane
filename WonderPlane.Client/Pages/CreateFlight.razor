@@ -1,5 +1,4 @@
-﻿@page "/CrearVuelo"
-@layout SideBarLayout
+﻿@page "/create-flight"
 
 @using WonderPlane.Shared;
 @using WonderPlane.Client.Servicios;
@@ -7,9 +6,9 @@
 @using MudBlazor;
 
 @inject HttpClient Http;
+@inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager navigation;
 @inject ISnackbar Snackbar;
-@inject ImageUploadService ImageUploadService;
 @inject IFlightService FlightService;
 
 <div class="main-container poppins-light">
@@ -52,10 +51,9 @@
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.DepartureTime)"></ValidationMessage></span>
                     </div>
                     <div class="input">
-                        <label class="form-label">Código de Vuelo</label>
-                        <InputText class="form-control" @bind-Value="newFlight.FlightCode" style="font-size: 0.8rem;color: #507687"></InputText>
-                        <button class="button-code" type="button" @onclick="GenerateRandomCode">Generar Código</button>
-                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.FlightCode)"></ValidationMessage></span>
+                        <label class="form-label">Valor adicional por maleta</label>
+                        <InputNumber class="form-control" @bind-Value="newFlight.BagPrice" style="font-size: 0.8rem;color: #507687;"></InputNumber>
+                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.BagPrice)"></ValidationMessage></span>
                     </div>
                 </div>
                 <div class="form-container-right">
@@ -88,14 +86,9 @@
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.ArriveTime)"></ValidationMessage></span>
                     </div>
                     <div class="input">
-                        <label class="form-label">Valor adicional por maleta</label>
-                        <InputNumber class="form-control" @bind-Value="newFlight.BagPrice" style="font-size: 0.8rem;color: #507687;"></InputNumber>
-                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.BagPrice)"></ValidationMessage></span>
-                    </div>
-                    <div class="input">
-                        <label class="form-label">Vuelo Internacional</label>
-                        <InputCheckbox style="width: 18px; height: 18px;" @bind-Value="newFlight.IsInternational"/>
-                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.IsInternational)"></ValidationMessage></span>
+                        <label class="form-label">Duración del Vuelo</label>
+                        <InputText class="form-control" @bind-Value="newFlight.Duration" style="font-size: 0.8rem;color: #507687"></InputText>
+                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.Duration)"></ValidationMessage></span>
                     </div>
                 </div>
                 <div class="form-container-right-2">
@@ -105,27 +98,16 @@
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.FlightStatus)"></ValidationMessage></span>
                     </div>
                     <div class="input">
-                        <label class="form-label">Duración del Vuelo</label>
-                        <InputText class="form-control" @bind-Value="newFlight.Duration" style="font-size: 0.8rem;color: #507687"></InputText>
-                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.Duration)"></ValidationMessage></span>
+                        <label class="form-label">Código de Vuelo</label>
+                        <InputText class="form-control" @bind-Value="newFlight.FlightCode" style="font-size: 0.8rem;color: #507687"></InputText>
+                        <button class="button-code" type="button" @onclick="GenerateRandomCode">Generar Código</button>
+                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.FlightCode)"></ValidationMessage></span>
                     </div>
-                    <div class="input">
-                        <label class="form-label">Subir Imagen del Vuelo</label>
-                        <MudFileUpload T="IBrowserFile" FilesChanged="OnFileSelected">
-                            <ActivatorContent>
-                                <MudButton Variant="Variant.Filled" Style="margin-right: 10px; background-color:#41B3A2; color:white;border-radius:5px">
-                                    Subir imagen
-                                </MudButton>
-                                <i class="fa-solid fa-upload fa-lg"></i>
-                            </ActivatorContent>
-                        </MudFileUpload>
-                        @if (selectedFile != null)
-                        {
-                            <p>@selectedFile.Name</p>
-                        }
-                        
+                    <div class="input-check">
+                        <MudCheckBox @bind-Value="newFlight.IsInternational" Dense="true" Size="Size.Medium" Color="Color.Tertiary"></MudCheckBox>
+                        <label class="form-label">Vuelo Internacional</label>
+                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.IsInternational)"></ValidationMessage></span>
                     </div>
-                    
                </div>  
             </div>
             <div class="form-button">
@@ -155,13 +137,13 @@
         Image = string.Empty,
     };
 
-    private IBrowserFile? selectedFile; // Archivo de imagen seleccionado
-
     private AddFlights[]? addFlights;
 
     protected override async Task OnInitializedAsync()
     {
-        addFlights = await Http.GetFromJsonAsync<AddFlights[]>("sample-data/flights.json");
+        // Para usar el HttpClient para recursos locales
+        var localClient = HttpClientFactory.CreateClient("LocalClient");
+        addFlights = await localClient.GetFromJsonAsync<AddFlights[]>("sample-data/flights.json");
 
     }
 
@@ -186,23 +168,6 @@
                 return; 
             }
 
-            // Verificar si se seleccionó un archivo de imagen
-            if (selectedFile != null)
-            {
-                // Subir la imagen y obtener la URL
-                var imageUrl = await ImageUploadService.UploadImage(selectedFile);
-                Console.WriteLine(imageUrl);
-                if (!string.IsNullOrEmpty(imageUrl))
-                {
-                    newFlight.Image = imageUrl; // Asignar la URL de la imagen al usuario
-                                                // Snackbar.Add("La imagen se ha guardado correctamente.", Severity.Success);
-                }
-                else
-                {
-                    Snackbar.Add("Error al subir la imagen.", Severity.Error);
-                    return; // Detener el proceso si la imagen no se subió
-                }
-            }
             await FlightService.CreateFlight(newFlight);
             Snackbar.Add("Vuelo Registrado Correctamente", Severity.Success);
             newFlight = new FlightDTO
@@ -221,33 +186,10 @@
                     Duration = string.Empty,
                     Image = string.Empty,
                 };
-
-            selectedFile = null;
         }
         catch (ApplicationException ex)
         {
             Snackbar.Add($"Error al Registrar el Vuelo {ex.Message}", Severity.Error);
         }
     }
-    IList<IBrowserFile> _files = new List<IBrowserFile>();
-    private void UploadFiles(IBrowserFile file)
-    {
-        _files.Add(file);
-    }
-
-    private void OnFileSelected(IBrowserFile file)
-    {
-        if (file != null)
-        {
-            selectedFile = file; // Asignar el archivo seleccionado
-            Snackbar.Add("La imagen se ha cargado correctamente.", Severity.Info);
-        }
-        else
-        {
-            Snackbar.Add("Error al cargar la imagen.", Severity.Error);
-        }
-
-    }
-
-
 }

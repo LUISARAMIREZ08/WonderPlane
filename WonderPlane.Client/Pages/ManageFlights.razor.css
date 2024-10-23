@@ -1,0 +1,13 @@
+﻿.tittle {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding-top: 4%;
+    color: #071952;
+}
+.nav-item {
+    background-color: crimson;
+    font-size: 0.8rem;
+    color: white;
+    padding:10%;
+}
