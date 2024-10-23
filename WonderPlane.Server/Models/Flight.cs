@@ -41,10 +41,7 @@ public class Flight
     public required string FlightCode { get; set; }
     public string? Duration { get; set; }
 
-    public string? Image { get; set; }
-
-    public int? PromotionId { get; set; }
-    public Promotion? Promotion { get; set; }
+    public ICollection<Promotion> Promotions { get; } = new List<Promotion>();
 
     public ICollection<News> News { get; } = new List<News>();
 

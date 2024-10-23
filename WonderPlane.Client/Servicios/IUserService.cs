@@ -8,6 +8,8 @@ namespace WonderPlane.Client.Servicios
         Task<string> LoginUser(UserLoginDto user);
         Task<string> CreateAdmin(CreateAdminDto user);
         Task<UserInfo?> GetUserById(int id);
+        Task<string> UpdateUserAsync(UserInfo user);
+        Task<string> ChangePasswordAsync(ChangePasswordDto user);
 
     }
 }

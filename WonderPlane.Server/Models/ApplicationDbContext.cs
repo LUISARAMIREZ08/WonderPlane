@@ -9,6 +9,19 @@ public class ApplicationDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Forum> Forums { get; set; }
     public DbSet<Message> Messages { get; set; }
+    public DbSet<News> News { get; set; }
+    public DbSet<Flight> Flights { get; set; }
+    public DbSet<Seat> Seats { get; set; }
+    public DbSet<Ticket> Tickets { get; set; }
+    public DbSet<Purchase> Purchases { get; set; }
+    public DbSet<BoardingPass> BoardingPasses { get; set; }
+    public DbSet<Reservation> Reservations { get; set; }
+    public DbSet<Traveler> Travelers { get; set; }
+    public DbSet<Promotion> Promotions { get; set; }
+    public DbSet<FlightRecommendation> FlightRecommendations { get; set; }
+    public DbSet<Search> Searches { get; set; }
+    public DbSet<Card> Cards { get; set; }
+    public DbSet<Recommendation> Recommendations { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
@@ -104,15 +117,10 @@ public class ApplicationDbContext : DbContext
             .WithMany(t => t.Tickets)
             .HasForeignKey(t => t.TravelerId);
 
-        modelBuilder.Entity<Flight>()
-            .HasOne(f => f.Promotion)
-            .WithOne(p => p.Flight)
-            .HasForeignKey<Flight>(f => f.PromotionId);
-
         modelBuilder.Entity<Promotion>()
             .HasOne(p => p.Flight)
-            .WithOne(f => f.Promotion)
-            .HasForeignKey<Promotion>(p => p.FlightId);
+            .WithMany (f => f.Promotions)
+            .HasForeignKey(p => p.FlightId);
 
         modelBuilder.Entity<FlightRecommendation>()
             .HasOne(fr => fr.Flight)

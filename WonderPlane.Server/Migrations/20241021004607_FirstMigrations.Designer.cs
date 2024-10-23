@@ -12,8 +12,8 @@ using WonderPlane.Server.Models;
 namespace WonderPlane.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241005200427_MigrationComplete")]
-    partial class MigrationComplete
+    [Migration("20241021004607_FirstMigrations")]
+    partial class FirstMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,7 +48,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BoardingPass", "WonderPlane");
+                    b.ToTable("BoardingPasses", "WonderPlane");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.Models.Card", b =>
@@ -84,7 +84,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.HasIndex("RegisteredUserId");
 
-                    b.ToTable("Card", "WonderPlane");
+                    b.ToTable("Cards", "WonderPlane");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.Models.Flight", b =>
@@ -111,30 +111,30 @@ namespace WonderPlane.Server.Migrations
                     b.Property<TimeSpan>("DepartureTime")
                         .HasColumnType("time");
 
-                    b.Property<int>("Destination")
-                        .HasColumnType("int");
+                    b.Property<string>("Destination")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Duration")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FlightCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FlightStatus")
                         .HasColumnType("int");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsInternational")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Origin")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PromotionId")
-                        .HasColumnType("int");
+                    b.Property<string>("Origin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Flight", "WonderPlane");
+                    b.ToTable("Flights", "WonderPlane");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.Models.FlightRecommendation", b =>
@@ -157,7 +157,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.HasIndex("RecommendationId");
 
-                    b.ToTable("FlightRecommendation", "WonderPlane");
+                    b.ToTable("FlightRecommendations", "WonderPlane");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.Models.Forum", b =>
@@ -278,16 +278,17 @@ namespace WonderPlane.Server.Migrations
                     b.Property<int>("PromotionStatus")
                         .HasColumnType("int");
 
+                    b.Property<int>("PromotionType")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FlightId")
-                        .IsUnique()
-                        .HasFilter("[FlightId] IS NOT NULL");
+                    b.HasIndex("FlightId");
 
-                    b.ToTable("Promotion", "WonderPlane");
+                    b.ToTable("Promotions", "WonderPlane");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.Models.Purchase", b =>
@@ -315,7 +316,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.HasIndex("RegisteredUserId");
 
-                    b.ToTable("Purchase", "WonderPlane");
+                    b.ToTable("Purchases", "WonderPlane");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.Models.Recommendation", b =>
@@ -340,7 +341,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.HasIndex("RegisteredUserId");
 
-                    b.ToTable("Recommendation", "WonderPlane");
+                    b.ToTable("Recommendations", "WonderPlane");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.Models.Reservation", b =>
@@ -367,7 +368,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.HasIndex("RegisteredUserId");
 
-                    b.ToTable("Reservation", "WonderPlane");
+                    b.ToTable("Reservations", "WonderPlane");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.Models.Search", b =>
@@ -393,7 +394,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.HasIndex("RegisteredUserId");
 
-                    b.ToTable("Search", "WonderPlane");
+                    b.ToTable("Searches", "WonderPlane");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.Models.Seat", b =>
@@ -427,7 +428,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.HasIndex("FlightId");
 
-                    b.ToTable("Seat", "WonderPlane");
+                    b.ToTable("Seats", "WonderPlane");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.Models.Ticket", b =>
@@ -472,7 +473,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.HasIndex("TravelerId");
 
-                    b.ToTable("Ticket", "WonderPlane");
+                    b.ToTable("Tickets", "WonderPlane");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.Models.Traveler", b =>
@@ -510,7 +511,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Traveler", "WonderPlane");
+                    b.ToTable("Travelers", "WonderPlane");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.Models.User", b =>
@@ -659,8 +660,8 @@ namespace WonderPlane.Server.Migrations
             modelBuilder.Entity("WonderPlane.Server.Models.Promotion", b =>
                 {
                     b.HasOne("WonderPlane.Server.Models.Flight", "Flight")
-                        .WithOne("Promotion")
-                        .HasForeignKey("WonderPlane.Server.Models.Promotion", "FlightId");
+                        .WithMany("Promotions")
+                        .HasForeignKey("FlightId");
 
                     b.Navigation("Flight");
                 });
@@ -763,7 +764,7 @@ namespace WonderPlane.Server.Migrations
 
                     b.Navigation("News");
 
-                    b.Navigation("Promotion");
+                    b.Navigation("Promotions");
 
                     b.Navigation("Seats");
                 });

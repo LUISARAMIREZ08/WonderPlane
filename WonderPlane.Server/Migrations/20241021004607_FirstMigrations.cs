@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WonderPlane.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class FirstMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,7 @@ namespace WonderPlane.Server.Migrations
                 name: "WonderPlane");
 
             migrationBuilder.CreateTable(
-                name: "BoardingPass",
+                name: "BoardingPasses",
                 schema: "WonderPlane",
                 columns: table => new
                 {
@@ -28,11 +28,11 @@ namespace WonderPlane.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BoardingPass", x => x.Id);
+                    table.PrimaryKey("PK_BoardingPasses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Flight",
+                name: "Flights",
                 schema: "WonderPlane",
                 columns: table => new
                 {
@@ -47,18 +47,16 @@ namespace WonderPlane.Server.Migrations
                     FlightStatus = table.Column<int>(type: "int", nullable: false),
                     IsInternational = table.Column<bool>(type: "bit", nullable: false),
                     BagPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    flightCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Duration = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PromotionId = table.Column<int>(type: "int", nullable: true)
+                    FlightCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Duration = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Flight", x => x.Id);
+                    table.PrimaryKey("PK_Flights", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Traveler",
+                name: "Travelers",
                 schema: "WonderPlane",
                 columns: table => new
                 {
@@ -73,7 +71,7 @@ namespace WonderPlane.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Traveler", x => x.Id);
+                    table.PrimaryKey("PK_Travelers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -92,15 +90,15 @@ namespace WonderPlane.Server.Migrations
                 {
                     table.PrimaryKey("PK_News", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_News_Flight_FlightId",
+                        name: "FK_News_Flights_FlightId",
                         column: x => x.FlightId,
                         principalSchema: "WonderPlane",
-                        principalTable: "Flight",
+                        principalTable: "Flights",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Promotion",
+                name: "Promotions",
                 schema: "WonderPlane",
                 columns: table => new
                 {
@@ -111,21 +109,22 @@ namespace WonderPlane.Server.Migrations
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Discount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     PromotionStatus = table.Column<int>(type: "int", nullable: false),
+                    PromotionType = table.Column<int>(type: "int", nullable: false),
                     FlightId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Promotion", x => x.Id);
+                    table.PrimaryKey("PK_Promotions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Promotion_Flight_FlightId",
+                        name: "FK_Promotions_Flights_FlightId",
                         column: x => x.FlightId,
                         principalSchema: "WonderPlane",
-                        principalTable: "Flight",
+                        principalTable: "Flights",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Seat",
+                name: "Seats",
                 schema: "WonderPlane",
                 columns: table => new
                 {
@@ -140,12 +139,12 @@ namespace WonderPlane.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Seat", x => x.Id);
+                    table.PrimaryKey("PK_Seats", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Seat_Flight_FlightId",
+                        name: "FK_Seats_Flights_FlightId",
                         column: x => x.FlightId,
                         principalSchema: "WonderPlane",
-                        principalTable: "Flight",
+                        principalTable: "Flights",
                         principalColumn: "Id");
                 });
 
@@ -179,15 +178,15 @@ namespace WonderPlane.Server.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Traveler_TravelerId",
+                        name: "FK_Users_Travelers_TravelerId",
                         column: x => x.TravelerId,
                         principalSchema: "WonderPlane",
-                        principalTable: "Traveler",
+                        principalTable: "Travelers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Card",
+                name: "Cards",
                 schema: "WonderPlane",
                 columns: table => new
                 {
@@ -202,9 +201,9 @@ namespace WonderPlane.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Card", x => x.Id);
+                    table.PrimaryKey("PK_Cards", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Card_Users_RegisteredUserId",
+                        name: "FK_Cards_Users_RegisteredUserId",
                         column: x => x.RegisteredUserId,
                         principalSchema: "WonderPlane",
                         principalTable: "Users",
@@ -235,7 +234,7 @@ namespace WonderPlane.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Purchase",
+                name: "Purchases",
                 schema: "WonderPlane",
                 columns: table => new
                 {
@@ -248,9 +247,9 @@ namespace WonderPlane.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Purchase", x => x.Id);
+                    table.PrimaryKey("PK_Purchases", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Purchase_Users_RegisteredUserId",
+                        name: "FK_Purchases_Users_RegisteredUserId",
                         column: x => x.RegisteredUserId,
                         principalSchema: "WonderPlane",
                         principalTable: "Users",
@@ -258,7 +257,7 @@ namespace WonderPlane.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Recommendation",
+                name: "Recommendations",
                 schema: "WonderPlane",
                 columns: table => new
                 {
@@ -270,9 +269,9 @@ namespace WonderPlane.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Recommendation", x => x.Id);
+                    table.PrimaryKey("PK_Recommendations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Recommendation_Users_RegisteredUserId",
+                        name: "FK_Recommendations_Users_RegisteredUserId",
                         column: x => x.RegisteredUserId,
                         principalSchema: "WonderPlane",
                         principalTable: "Users",
@@ -280,7 +279,7 @@ namespace WonderPlane.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reservation",
+                name: "Reservations",
                 schema: "WonderPlane",
                 columns: table => new
                 {
@@ -293,9 +292,9 @@ namespace WonderPlane.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reservation", x => x.Id);
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservation_Users_RegisteredUserId",
+                        name: "FK_Reservations_Users_RegisteredUserId",
                         column: x => x.RegisteredUserId,
                         principalSchema: "WonderPlane",
                         principalTable: "Users",
@@ -303,7 +302,7 @@ namespace WonderPlane.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Search",
+                name: "Searches",
                 schema: "WonderPlane",
                 columns: table => new
                 {
@@ -315,9 +314,9 @@ namespace WonderPlane.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Search", x => x.Id);
+                    table.PrimaryKey("PK_Searches", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Search_Users_RegisteredUserId",
+                        name: "FK_Searches_Users_RegisteredUserId",
                         column: x => x.RegisteredUserId,
                         principalSchema: "WonderPlane",
                         principalTable: "Users",
@@ -354,7 +353,7 @@ namespace WonderPlane.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FlightRecommendation",
+                name: "FlightRecommendations",
                 schema: "WonderPlane",
                 columns: table => new
                 {
@@ -365,23 +364,23 @@ namespace WonderPlane.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FlightRecommendation", x => x.Id);
+                    table.PrimaryKey("PK_FlightRecommendations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FlightRecommendation_Flight_FlightId",
+                        name: "FK_FlightRecommendations_Flights_FlightId",
                         column: x => x.FlightId,
                         principalSchema: "WonderPlane",
-                        principalTable: "Flight",
+                        principalTable: "Flights",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_FlightRecommendation_Recommendation_RecommendationId",
+                        name: "FK_FlightRecommendations_Recommendations_RecommendationId",
                         column: x => x.RecommendationId,
                         principalSchema: "WonderPlane",
-                        principalTable: "Recommendation",
+                        principalTable: "Recommendations",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Ticket",
+                name: "Tickets",
                 schema: "WonderPlane",
                 columns: table => new
                 {
@@ -396,55 +395,55 @@ namespace WonderPlane.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Ticket", x => x.Id);
+                    table.PrimaryKey("PK_Tickets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ticket_BoardingPass_BoardingPassId",
+                        name: "FK_Tickets_BoardingPasses_BoardingPassId",
                         column: x => x.BoardingPassId,
                         principalSchema: "WonderPlane",
-                        principalTable: "BoardingPass",
+                        principalTable: "BoardingPasses",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Ticket_Purchase_PurchaseId",
+                        name: "FK_Tickets_Purchases_PurchaseId",
                         column: x => x.PurchaseId,
                         principalSchema: "WonderPlane",
-                        principalTable: "Purchase",
+                        principalTable: "Purchases",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Ticket_Reservation_ReservationId",
+                        name: "FK_Tickets_Reservations_ReservationId",
                         column: x => x.ReservationId,
                         principalSchema: "WonderPlane",
-                        principalTable: "Reservation",
+                        principalTable: "Reservations",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Ticket_Seat_SeatId",
+                        name: "FK_Tickets_Seats_SeatId",
                         column: x => x.SeatId,
                         principalSchema: "WonderPlane",
-                        principalTable: "Seat",
+                        principalTable: "Seats",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Ticket_Traveler_TravelerId",
+                        name: "FK_Tickets_Travelers_TravelerId",
                         column: x => x.TravelerId,
                         principalSchema: "WonderPlane",
-                        principalTable: "Traveler",
+                        principalTable: "Travelers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Card_RegisteredUserId",
+                name: "IX_Cards_RegisteredUserId",
                 schema: "WonderPlane",
-                table: "Card",
+                table: "Cards",
                 column: "RegisteredUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FlightRecommendation_FlightId",
+                name: "IX_FlightRecommendations_FlightId",
                 schema: "WonderPlane",
-                table: "FlightRecommendation",
+                table: "FlightRecommendations",
                 column: "FlightId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FlightRecommendation_RecommendationId",
+                name: "IX_FlightRecommendations_RecommendationId",
                 schema: "WonderPlane",
-                table: "FlightRecommendation",
+                table: "FlightRecommendations",
                 column: "RecommendationId");
 
             migrationBuilder.CreateIndex(
@@ -472,75 +471,73 @@ namespace WonderPlane.Server.Migrations
                 column: "FlightId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Promotion_FlightId",
+                name: "IX_Promotions_FlightId",
                 schema: "WonderPlane",
-                table: "Promotion",
-                column: "FlightId",
-                unique: true,
-                filter: "[FlightId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Purchase_RegisteredUserId",
-                schema: "WonderPlane",
-                table: "Purchase",
-                column: "RegisteredUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Recommendation_RegisteredUserId",
-                schema: "WonderPlane",
-                table: "Recommendation",
-                column: "RegisteredUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reservation_RegisteredUserId",
-                schema: "WonderPlane",
-                table: "Reservation",
-                column: "RegisteredUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Search_RegisteredUserId",
-                schema: "WonderPlane",
-                table: "Search",
-                column: "RegisteredUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Seat_FlightId",
-                schema: "WonderPlane",
-                table: "Seat",
+                table: "Promotions",
                 column: "FlightId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ticket_BoardingPassId",
+                name: "IX_Purchases_RegisteredUserId",
                 schema: "WonderPlane",
-                table: "Ticket",
+                table: "Purchases",
+                column: "RegisteredUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Recommendations_RegisteredUserId",
+                schema: "WonderPlane",
+                table: "Recommendations",
+                column: "RegisteredUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_RegisteredUserId",
+                schema: "WonderPlane",
+                table: "Reservations",
+                column: "RegisteredUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Searches_RegisteredUserId",
+                schema: "WonderPlane",
+                table: "Searches",
+                column: "RegisteredUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Seats_FlightId",
+                schema: "WonderPlane",
+                table: "Seats",
+                column: "FlightId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tickets_BoardingPassId",
+                schema: "WonderPlane",
+                table: "Tickets",
                 column: "BoardingPassId",
                 unique: true,
                 filter: "[BoardingPassId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ticket_PurchaseId",
+                name: "IX_Tickets_PurchaseId",
                 schema: "WonderPlane",
-                table: "Ticket",
+                table: "Tickets",
                 column: "PurchaseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ticket_ReservationId",
+                name: "IX_Tickets_ReservationId",
                 schema: "WonderPlane",
-                table: "Ticket",
+                table: "Tickets",
                 column: "ReservationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ticket_SeatId",
+                name: "IX_Tickets_SeatId",
                 schema: "WonderPlane",
-                table: "Ticket",
+                table: "Tickets",
                 column: "SeatId",
                 unique: true,
                 filter: "[SeatId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ticket_TravelerId",
+                name: "IX_Tickets_TravelerId",
                 schema: "WonderPlane",
-                table: "Ticket",
+                table: "Tickets",
                 column: "TravelerId");
 
             migrationBuilder.CreateIndex(
@@ -556,11 +553,11 @@ namespace WonderPlane.Server.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Card",
+                name: "Cards",
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
-                name: "FlightRecommendation",
+                name: "FlightRecommendations",
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
@@ -572,19 +569,19 @@ namespace WonderPlane.Server.Migrations
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
-                name: "Promotion",
+                name: "Promotions",
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
-                name: "Search",
+                name: "Searches",
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
-                name: "Ticket",
+                name: "Tickets",
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
-                name: "Recommendation",
+                name: "Recommendations",
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
@@ -592,19 +589,19 @@ namespace WonderPlane.Server.Migrations
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
-                name: "BoardingPass",
+                name: "BoardingPasses",
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
-                name: "Purchase",
+                name: "Purchases",
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
-                name: "Reservation",
+                name: "Reservations",
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
-                name: "Seat",
+                name: "Seats",
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
@@ -612,11 +609,11 @@ namespace WonderPlane.Server.Migrations
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
-                name: "Flight",
+                name: "Flights",
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
-                name: "Traveler",
+                name: "Travelers",
                 schema: "WonderPlane");
         }
     }

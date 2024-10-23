@@ -1,109 +1,14 @@
-
-/*.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #212f3c;
-    padding: 0px 20px;
-    position: fixed;
-    width: 100%;
-    height: 80px;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-
-}
-
-.navbar-logo {
-    display: flex;
-    align-items: center;
-
-}
-
-    .navbar-logo img {
-        height: 50px;
-        margin-right: 10px;
-    }
-
-    .navbar-logo span {
-        color: white;
-        font-size: 24px;
-    }
-
-.navbar-menu {
-    display: flex;
-    gap: 1px;
-    margin: 0;
-}
-
-    .navbar-menu a {
-        margin: 0;
-        color: white;
-        text-decoration: none;
-        font-size: 18px;
-        padding: 27px 10px;
-        transition: background-color 0.3s ease;
-        height: 100%;
-    }
-
-        .navbar-menu a:hover {
-            background-color: dodgerblue;
-        }
-
-
-.hamburger {
-    display: none;
-    font-size: 30px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color:white;
-}
-
-
-@media (max-width: 768px) {
-
-    .navbar-menu {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 80px;
-        left: 0;
-        width: 100%;
-        background-color: #212f3c;
-        padding: 0;
-        margin: 0;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: ease-out 0.3s;
-    }
-
-        .navbar-menu.active {
-            display: flex;
-        }
-
-        .navbar-menu a {
-            padding: 15px;
-            text-align: center;
-            width: 100%;
-        }
-
-    .hamburger {
-        display: block;
-    }
-
-}
-*/
-
 nav {
     width: 100%;
     height: 80px;
-    background-color: #333;
+    background-color: white;
     font-size: 18px;
     position:fixed;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-logo {
@@ -113,11 +18,11 @@ nav {
 
     .navbar-logo img {
         height: 50px;
-        margin-right: 10px;
+        margin: 0 5px 0 10px;
     }
 
     .navbar-logo span {
-        color: white;
+        color: dodgerblue;
         font-size: 24px;
     }
 
@@ -137,13 +42,17 @@ nav {
     .menu-horizontal > li > a {
         display: block;
         padding: 0px 20px;
-        color: white;
+        color: black;
         text-decoration: none;
     }
 
     .menu-horizontal > li:hover {
         background-color: dodgerblue;
         transition: background-color ease 0.5s;
+    }
+
+    .menu-horizontal > li:hover > a {
+        color: white;
     }
 
 .menu-vertical {
@@ -153,8 +62,8 @@ nav {
     width: 100%;
     top: 100%;
     left: 0;
-    background-color: rgba(0, 0, 0, .5);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para el submenú */
+    background-color: whitesmoke;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
     text-align: center;
     z-index: 1000;
 }
@@ -165,14 +74,18 @@ nav {
 }
 
 .menu-vertical li:hover {
-    background-color: black;
+    background-color: dodgerblue;
     transition: background-color ease 0.5s;
+}
+
+.menu-vertical li:hover a {
+    color: white;
 }
 
 .menu-vertical li a {
     display: block;
     font-size: 16px;
-    color: white;
+    color: black;
     text-decoration: none;
     padding: 15px 15px 15px 20px;
 }
