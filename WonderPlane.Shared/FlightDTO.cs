@@ -15,14 +15,16 @@ namespace WonderPlane.Shared
         public required DateTime DepartureDate { get; set; }
 
         [Required(ErrorMessage = "La hora de salida es obligatoria.")]
-        public required string DepartureTime { get; set; } = "00:00:00";
+        [DataType(DataType.Time, ErrorMessage = "Hora no valida")]
+        public required TimeSpan DepartureTime { get; set; }
 
         [Required(ErrorMessage = "La fecha de llegada es obligatoria.")]
         [DataType(DataType.Date, ErrorMessage = "Fecha no valida")]
         public required DateTime ArriveDate { get; set; }
 
         [Required(ErrorMessage = "La hora de llegada es obligatoria.")]
-        public required string ArriveTime { get; set; } = "00:00:00";
+        [DataType(DataType.Time, ErrorMessage = "Hora no valida")]
+        public required TimeSpan ArriveTime { get; set; }
 
         [Required(ErrorMessage = "Se debe decir si el vuelo es internacional o no.")]
         public required bool IsInternational { get; set; }
