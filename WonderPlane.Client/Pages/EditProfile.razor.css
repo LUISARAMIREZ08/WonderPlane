@@ -2,7 +2,7 @@
 
 .contain {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
     flex-direction:column;
     padding: 50px;
@@ -21,12 +21,13 @@
     height: 200px;
     width: 200px;
     border-radius: 50%;
-    margin-bottom: 20px;
 }
 
 .img-change {
     position: relative;
     display: inline-block;
+    cursor: pointer;
+    margin-bottom: 20px;
 }
 
     .img-change img {
@@ -38,6 +39,12 @@
 
     .img-change:hover img {
         filter: brightness(0.7);
+    }
+
+    img-change .profile-avatar {
+        height: 200px;
+        width: 200px;
+        font-size: 50px;
     }
 
 .img-change-button {
@@ -154,6 +161,12 @@ strong {
 .field-messages li {
     font-size: 0.5rem; 
     line-height: 1.2; 
+}
+
+.options-has-changes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /*Estilos para el formulario de cambio de contraseña*/

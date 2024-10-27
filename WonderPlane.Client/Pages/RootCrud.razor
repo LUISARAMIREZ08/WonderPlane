@@ -50,9 +50,19 @@
 
             <RowTemplate>
                 <MudTd DataLabel="Avatar">
-                    <MudAvatar>
-                        <MudImage Src="@context.Image" Alt="Imagen de perfil del administrador"></MudImage>
-                    </MudAvatar>
+                    @if (!string.IsNullOrWhiteSpace(context.Image))
+                    {
+                        <MudAvatar>
+                            <MudImage Src="@context.Image" Alt="Imagen de perfil del administrador"></MudImage>
+                        </MudAvatar>
+                    }
+                    else
+                    {
+                        <MudAvatar Color="@Color.Info" Size="Size.Medium" Style="margin-right:5px;">
+                            @GetInitials(context)
+                        </MudAvatar>
+                    }
+
                 </MudTd>
                 <MudTd DataLabel="Id">@context.Id</MudTd>
                 <MudTd DataLabel="Documento de Identidad">@context.Document</MudTd>
@@ -220,6 +230,17 @@
     {
         DeleteAdmin(id);
         showConfirmDelete();
+    }
+
+    // Método para obtener las iniciales del nombre del usuario
+    private string GetInitials(Admin admin)
+    {
+        if (string.IsNullOrWhiteSpace(admin.Name) || string.IsNullOrWhiteSpace(admin.LastName))
+        {
+            return "";
+        }
+
+        return $"{admin.Name[0]}{admin.LastName[0]}";
     }
 
 }

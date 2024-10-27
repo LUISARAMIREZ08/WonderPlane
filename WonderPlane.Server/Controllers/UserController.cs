@@ -50,6 +50,23 @@ public class UserController : ControllerBase
         return Ok(user);
     }
 
+    [HttpGet("user/email/{email}")]
+    public async Task<ActionResult<int>> GetUserIdByEmail(string email)
+    {
+        // Buscar al usuario por su email en la base de datos
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+
+        // Si el usuario no existe, retornar 404
+        if (user == null)
+        {
+            return NotFound(new { Message = "User not found" });
+        }
+
+        // Retornar el ID del usuario
+        return Ok(user.Id);
+    }
+
+
 
     [HttpPost("register")]
     public async Task<ActionResult<ResponseAPI<User>>> Register(UserRegisterDto registerDTO, TokenProvider tokenProvider)
@@ -283,6 +300,35 @@ public class UserController : ControllerBase
             return StatusCode(500, new { Message = "Ha ocurrido un error mientras se actualizaba la contraseña", Details = ex.Message });
         }
     }
+
+    [HttpPut("user/resetpassword")]
+    public async Task<ActionResult<ResponseAPI<string>>> ResetPassword([FromBody] UpdatePasswordDto updatePasswordDto)
+    {
+        // Buscar al usuario por su ID
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == updatePasswordDto.Id);
+
+        if (user == null)
+        {
+            return NotFound(new ResponseAPI<string> { EsCorrecto = false, Mensaje = "Usuario no encontrado" });
+        }
+
+        // Generar la nueva contraseña
+        var hmac = new HMACSHA512();
+        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(updatePasswordDto.NewPassword));
+        user.PasswordSalt = hmac.Key;
+
+        // Guardar los cambios en la base de datos
+        try
+        {
+            await _context.SaveChangesAsync();
+            return Ok(new ResponseAPI<string> { EsCorrecto = true, Mensaje = "Contraseña restablecida satisfactoriamente" });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new ResponseAPI<string> { EsCorrecto = false, Mensaje = "Error al restablecer la contraseña", Details = ex.Message});
+        }
+    }
+
 
 
     private async Task<bool> EmailExists(string Email)
