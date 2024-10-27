@@ -19,16 +19,28 @@
 
 <PageTitle>Perfil</PageTitle>
 
-<AsideMenu />
 
+<AsideMenu />
 <main class="contain poppins-light">
+
     <section class="edit-image">
         <div class="img-change">
-            <img src="@userInfo?.Image" alt="Profile Image" />
+
+            @if (!string.IsNullOrEmpty(userInfo?.Image))
+            {
+                <img src="@userInfo.Image" alt="Profile Image" class="profile-image" />
+            }
+            else
+            {
+                <MudAvatar Class="profile-avatar" Color="@Color.Info" style="height:200px; width:200px; font-size:6rem;">
+                    @GetInitials(userInfo)
+                </MudAvatar>
+            }
+
             <div class="img-change-button">
                 <MudFileUpload T="IBrowserFile" FilesChanged="OnFileSelected">
                     <ActivatorContent>
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Size="Size.Large"/>
                     </ActivatorContent>
                 </MudFileUpload>
             </div>
@@ -91,51 +103,54 @@
                     </table>
                 </article>
 
-                <hr class="vertical-hr" />
+                <AuthorizeView Roles="RegisteredUser" Context="authContext">
+                    <hr class="vertical-hr" />
+                    <article class="system-configuration">
+                        <h3>Configuración del Sistema</h3>
+                        <table>
+                            @if (userInfo != null)
+                            {
+                                <tr>
+                                    <td><span class="poppins-semibold">Recibir Notificaciones</span></td>
+                                    <td>
+                                        <MudSwitch @bind-Value="userInfo.ReciveNotifications" Color="Color.Info" @onclick="() => OnSwitchChange()" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="poppins-semibold">Suscrito a noticias</span></td>
+                                    <td>
+                                        <MudSwitch @bind-Value="userInfo.IsSuscribedToNews" Color="Color.Info" @onclick="() => OnSwitchChange()" />
+                                    </td>
+                                </tr>
+                            }
+                        </table>
 
-                <article class="system-configuration">
-                    <h3>Configuración del Sistema</h3>
-                    <table>
-                        @if (@userInfo != null)
-                        {
+                        <h3>Seguridad</h3>
+                        <table>
                             <tr>
-                                <td><span class="poppins-semibold">Recibir Notificaciones</span></td>
-                                <td>
-                                    <MudSwitch @bind-Value="@userInfo.ReciveNotifications" Color="Color.Info" @onclick="() => OnSwitchChange()" />
-                                </td>
+                                <td><span class="poppins-semibold">Contraseña</span></td>
+                                <td class="change-password" onclick="@(() => showChangePassword())">Cambiar contraseña</td>
                             </tr>
                             <tr>
-                                <td><span class="poppins-semibold">Suscrito a noticias</span></td>
-                                <td>
-                                    <MudSwitch @bind-Value="@userInfo.IsSuscribedToNews" Color="Color.Info" @onclick="() => OnSwitchChange()" />
-                                </td>
+                                <td><span class="poppins-semibold">Medios de pago</span></td>
+                                <td class="change-password">Gestionar tarjetas</td>
                             </tr>
-                        }
+                            <tr>
+                                <td class="poppins-regular delete-account-button" onclick="@(() => showConfirmDelete())">Eliminar cuenta</td>
+                            </tr>
+                        </table>
 
-                    </table>
-
-                    <h3>Seguridad</h3>
-                    <table>
-                        <tr>
-                            <td><span class="poppins-semibold">Contraseña</span></td>
-                            <td class="change-password" onclick="@(() => showChangePassword())">Cambiar contraseña</td>
-                        </tr>
-                        <tr>
-                            <td><span class="poppins-semibold">Medios de pago</span></td>
-                            <td class="change-password">Gestionar tarjetas</td>
-                        </tr>
-                        <tr>
-                            <td class="poppins-regular delete-account-button" onclick="@(() => showConfirmDelete())">Eliminar cuenta</td>
-                        </tr>
-                    </table>
-                    @if (_hasChanges)
-                    {
-                        <button class="button confirm-button" type="submit">Guardar</button>
-                        <button class="button discard-button" type="submit" @onclick="DiscardChanges">Descartar</button>
-                    }
-                    <ValidationSummary />
-                </article>
+                    </article>
+                </AuthorizeView>
+                <ValidationSummary />
             </section>
+            @if (_hasChanges)
+            {
+                <div class="options-has-changes">
+                    <button class="button confirm-button" type="submit">Guardar</button>
+                    <button class="button discard-button" type="submit" @onclick="DiscardChanges">Descartar</button>
+                </div>
+            }
         </EditForm>
     </section>
     
@@ -231,9 +246,9 @@
 
     private List<EditableField> basicInfoFields = new()
     {
-        new EditableField("Nombre", string.Empty, "text", new List<string> { "Debe tener entre 2 y 50 caracteres." }),
+        new EditableField("Nombre", string.Empty, "text", new List<string> { "Debe tener entre 2 y 20 caracteres." }),
         new EditableField("Apellidos", string.Empty, "text", new List<string> { "Debe tener entre 2 y 50 caracteres." }),
-        new EditableField("Nombre de usuario", string.Empty, "text", new List<string> { "Debe tener entre 5 y 20 caracteres.", "Solo se permiten letras y números." }),
+        new EditableField("Nombre de usuario", string.Empty, "text", new List<string> { "Debe tener entre 5 y 20 caracteres."}),
         new EditableField("Correo Electrónico", string.Empty, "text", new List<string> { "Debe ser un correo válido (ej: usuario@ejemplo.com)." }),
         new EditableField("Fecha de Nacimiento", string.Empty, "date"),
         new EditableField("Teléfono", string.Empty, "tel", new List<string> { "Debe contener solo números.", "Debe tener 10 dígitos." }),
@@ -364,6 +379,7 @@
         {
             selectedFile = file;
             _hasChanges = true;
+            Snackbar.Add("No olvides guardar tus cambios en el botón de abajo", Severity.Info);
 
             if (selectedFile != null)
             {
@@ -403,7 +419,8 @@
         field.IsEditing = true;
         await Task.Delay(1); 
         await field.InputRef.FocusAsync();
-        _hasChanges = true; 
+        _hasChanges = true;
+        Snackbar.Add("No olvides guardar tus cambios en el botón de abajo", Severity.Info);
     }
 
     private void FinishEditing(EditableField field)
@@ -496,6 +513,15 @@
         {
             Snackbar.Add(ex.Message, Severity.Error);
         }
+    }
+
+    // Método para obtener las iniciales del nombre del usuario
+    private string GetInitials(UserInfo? userInfo)
+    {
+        if (userInfo == null) return "NN";
+
+        var initials = $"{userInfo.Name?.FirstOrDefault()}{userInfo.LastName?.FirstOrDefault()}";
+        return initials.ToUpper();
     }
 
 }

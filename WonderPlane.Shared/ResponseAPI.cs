@@ -7,5 +7,6 @@ namespace WonderPlane.Shared
         public T? Valor { get; set; }
         public string? Mensaje { get; set; }
         public T? Data { get; set; }
+        public string? Details { get; set; }
     }
 }

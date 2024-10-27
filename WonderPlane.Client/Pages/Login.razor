@@ -18,8 +18,6 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 
-
-
 <main class="main-container poppins-light">
 
     <section class="login-container">
@@ -41,6 +39,8 @@
                     <label class="form-label">Contraseña</label>
                     <input type="password" class="form-control" @bind-value="User.Password" />
                     <span class="small-validation-message"><ValidationMessage For="@(() => User.Password)"></ValidationMessage></span>
+
+                    <label class="forgot-password"><a href="/recoverpassword">¿Olvidaste tu contraseña?</a></label>
                 </div>
 
             </div>
@@ -103,4 +103,6 @@
         }
     }
 }
+
+
 
