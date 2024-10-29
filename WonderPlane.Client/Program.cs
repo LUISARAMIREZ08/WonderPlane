@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using WonderPlane.Client;
 using MudBlazor.Services;
 
-using WonderPlane.Client.Servicios;
+using WonderPlane.Client.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
+using CurrieTechnologies.Razor.SweetAlert2;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -37,6 +38,8 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.ShowTransitionDuration = 500;
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
+
+builder.Services.AddSweetAlert2();
 
 
 // Application-specific services

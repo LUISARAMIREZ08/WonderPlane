@@ -1,7 +1,8 @@
-﻿@page "/create-flight"
+﻿@page "/manage-flights/flight"
+@page "/manage-flights/flight/{idFlight:int}"
 
 @using WonderPlane.Shared;
-@using WonderPlane.Client.Servicios;
+@using WonderPlane.Client.Services;
 @using System.ComponentModel.DataAnnotations;
 @using MudBlazor;
 
@@ -14,11 +15,20 @@
 <div class="main-container poppins-light">
     
     <div class="register-container">
-        <EditForm Model="newFlight" OnValidSubmit="OnValidSubmit" style="display:flex;flex-direction: column;justify-content: center;width:90%">
+        <EditForm Model="newFlight" OnValidSubmit="OnValidSubmit" style="display:flex;flex-direction: column;justify-content: center;width:80%">
             <DataAnnotationsValidator />
-
-            <h3>Crea Los Vuelos Disponibles</h3>
-
+            <div class="tittle">
+                <MudTooltip Text="Volver"><MudIconButton Icon="material-symbols-outlined/arrow_back" Color="Color.Info" OnClick="@(() => navigation.NavigateTo("/manage-flights"))" /></MudTooltip>
+                <h4>Crea Los Vuelos Disponibles</h4>
+            </div>
+            <div class="input-check">
+                <label class="form-label">Tipo de Vuelo</label>
+                <select class="form-control" @onchange="OnInternationalChange">
+                    <option value="false">Nacional</option>
+                    <option value="true">Internacional</option>
+                </select>
+                <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.IsInternational)"></ValidationMessage></span>
+            </div>
             <div class="form-container">
 
                 <div class="form-container-left">
@@ -47,7 +57,7 @@
                     </div>
                     <div class="input">
                         <label class="form-label">Hora de salida</label>
-                        <MudTimePicker  @bind-Time="newFlight.DepartureTime" Color="Color.Tertiary" style="font-size: 0.8rem;color: #507687;padding:2px;" />
+                        <MudTimePicker  @bind-Time="_departureTime" Color="Color.Info" style="font-size: 0.8rem;color: #507687;padding:2px;" />
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.DepartureTime)"></ValidationMessage></span>
                     </div>
                     <div class="input">
@@ -59,8 +69,8 @@
                 <div class="form-container-right">
                     <div class="input">
                         <label class="form-label">Destino</label>
-                        <select class="form-control" @bind="newFlight.Destination">
-                            <option value="">Seleccione el Origen</option>
+                        <select class="form-control" @bind="newFlight.Destination" disabled="@string.IsNullOrEmpty(newFlight.Origin)">
+                            <option value="">Seleccione el Destino</option>
                             @if (addFlights == null)
                             {
                                 <p><em>Cargando...</em></p>
@@ -69,8 +79,12 @@
                             {
                                 @foreach (var destination in addFlights)
                                 {
-                                    <option value="@destination.city (@destination.code) - @destination.country (@destination.country_code)">@destination.city (@destination.code) - @destination.country (@destination.country_code)</option>
+                                    @if (!newFlight.Origin.Contains(destination.city))
+                                    {
+                                        <option value="@destination.city (@destination.code) - @destination.country (@destination.country_code)">@destination.city (@destination.code) - @destination.country (@destination.country_code)</option>
+                                    }
                                 }
+                                
                             }
                         </select>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.Destination)"></ValidationMessage></span>
@@ -82,7 +96,7 @@
                     </div>
                     <div class="input">
                         <label class="form-label">Hora de Llegada</label>
-                        <MudTimePicker @bind-Time="newFlight.ArriveTime" Color="Color.Tertiary" style="font-size: 0.8rem;color: #507687;padding:2px;" />
+                        <MudTimePicker @bind-Time="_arriveTime" Color="Color.Info" style="font-size: 0.8rem;color: #507687;padding:2px;" />
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.ArriveTime)"></ValidationMessage></span>
                     </div>
                     <div class="input">
@@ -93,25 +107,37 @@
                 </div>
                 <div class="form-container-right-2">
                     <div class="input">
-                        <label class="form-label">Estado del Vuelo</label>
-                        <InputText class="form-control" Disabled="true" @bind-Value="newFlight.FlightStatus" style="font-size: 0.8rem;color: #507687"></InputText>
-                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.FlightStatus)"></ValidationMessage></span>
+                        <label class="form-label">Precio Primera Clase</label>
+                        <InputNumber class="form-control" @bind-Value="newFlight.FirstClassPrice" style="font-size: 0.8rem;color: #507687"></InputNumber>
+                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.FirstClassPrice)"></ValidationMessage></span>
+                    </div>
+                    <div class="input">
+                        <label class="form-label">Precio Clase Economica</label>
+                        <InputNumber class="form-control" @bind-Value="newFlight.EconomicClassPrice" style="font-size: 0.8rem;color: #507687"></InputNumber>
+                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.EconomicClassPrice)"></ValidationMessage></span>
                     </div>
                     <div class="input">
                         <label class="form-label">Código de Vuelo</label>
-                        <InputText class="form-control" @bind-Value="newFlight.FlightCode" style="font-size: 0.8rem;color: #507687"></InputText>
-                        <button class="button-code" type="button" @onclick="GenerateRandomCode">Generar Código</button>
+                        <InputText class="form-control" @bind-Value="newFlight.FlightCode" style="font-size: 0.8rem;color: #507687" disabled="true"></InputText>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.FlightCode)"></ValidationMessage></span>
-                    </div>
-                    <div class="input-check">
-                        <MudCheckBox @bind-Value="newFlight.IsInternational" Dense="true" Size="Size.Medium" Color="Color.Tertiary"></MudCheckBox>
-                        <label class="form-label">Vuelo Internacional</label>
-                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.IsInternational)"></ValidationMessage></span>
                     </div>
                </div>  
             </div>
             <div class="form-button">
-                <button class="submit-button" type="submit">Crear Vuelo</button>
+                <button class="submit-button" type="submit">
+                    @{
+                        string buttonText;
+                        if (idFlight.HasValue)
+                        {
+                            buttonText = "Actualizar Vuelo";
+                        }
+                        else
+                        {
+                            buttonText = "Crear Vuelo";
+                        }
+                    }
+                    @buttonText
+                </button>
             </div>
             
         </EditForm>
@@ -120,37 +146,93 @@
 </div>
 
 @code {
-    FlightDTO newFlight = new FlightDTO
-    {
-        Origin = string.Empty,
-        Destination = string.Empty,
-        DepartureDate = DateTime.Now,
-        DepartureTime = TimeSpan.Zero,
-        ArriveDate = DateTime.Now,
-        ArriveTime = TimeSpan.Zero,
-        FlightStatus = "Programado",
-        IsInternational = false,
-        BagPrice = 0,
-        FlightCode = string.Empty,
-        PromotionId = 0,
-        Duration = string.Empty,
-        Image = string.Empty,
-    };
+    [Parameter]
+    public int? idFlight { get; set; }
 
-    private AddFlights[]? addFlights;
+    FlightDTO newFlight = new FlightDTO
+        {
+            Origin = string.Empty,
+            Destination = string.Empty,
+            DepartureDate = DateTime.Now,
+            DepartureTime = "00:00",
+            ArriveDate = DateTime.Now,
+            ArriveTime = "00:00",
+            FirstClassPrice = 0,
+            IsInternational = false,
+            FlightStatus = 0,
+            BagPrice = 0,
+            FlightCode = string.Empty,
+            Duration = string.Empty,
+            EconomicClassPrice = 0,
+        };
+    private TimeSpan? _departureTime;
+    private TimeSpan? _arriveTime;
+
+    private List<AddFlights>? addFlights = new List<AddFlights>();
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadNationalFlights();
+        GenerateRandomCode();
+
+        if (idFlight.HasValue)
+        {
+            //Para cargar datos del vuelo existente
+            newFlight = await FlightService.SearchFlight(idFlight.Value);
+            _departureTime = TimeSpan.Parse(newFlight.DepartureTime);
+            _arriveTime = TimeSpan.Parse(newFlight.ArriveTime);
+        }
+
+    }
+    private async Task OnInternationalChange(ChangeEventArgs e)
+    {
+        bool isInternational = bool.Parse(e.Value.ToString());
+        newFlight.IsInternational = isInternational; 
+
+        if (isInternational)
+        {
+            await LoadInternationalFlights();
+        }
+        else
+        {
+            await LoadNationalFlights();
+        }
+
+        StateHasChanged();
+    }
+    
+    private async Task LoadInternationalFlights()
+    {
+        addFlights.Clear();
         // Para usar el HttpClient para recursos locales
         var localClient = HttpClientFactory.CreateClient("LocalClient");
-        addFlights = await localClient.GetFromJsonAsync<AddFlights[]>("sample-data/flights.json");
+        var nationalFlights = await localClient.GetFromJsonAsync<AddFlights[]>("sample-data/flightsNational.json");
+        var internationalFlights = await localClient.GetFromJsonAsync<AddFlights[]>("sample-data/flightsInternational.json");
+        if (nationalFlights != null)
+        {
+            addFlights.AddRange(nationalFlights);
+        }
+        if (internationalFlights != null)
+        {
+            addFlights.AddRange(internationalFlights);
+        }
+    }
 
+    private async Task LoadNationalFlights()
+    {
+        // Para usar el HttpClient para recursos locales
+        var localClient = HttpClientFactory.CreateClient("LocalClient");
+        var nationalFlights = await localClient.GetFromJsonAsync<AddFlights[]>("sample-data/flightsNational.json");
+        if (nationalFlights != null)
+        {
+            addFlights = nationalFlights.ToList();
+        }
     }
 
     private void GenerateRandomCode()
     {
         Random random = new Random();
-        int randomNumber = random.Next(1000, 10000); 
+        int randomNumber = random.Next(1000, 10000);
         newFlight.FlightCode = $"WP{randomNumber}";
     }
 
@@ -158,38 +240,64 @@
     {
         try
         {
-            // Para comparar Origen y Destino
-            var originCode = newFlight.Origin.Split(' ')[1].Trim('(', ')'); 
-            var destinationCode = newFlight.Destination.Split(' ')[1].Trim('(', ')');
-
-            if (originCode == destinationCode)
+            if (_departureTime.HasValue)
             {
-                Snackbar.Add("El origen y el destino no pueden ser iguales.", Severity.Error);
-                return; 
+                newFlight.DepartureTime = _departureTime.Value.ToString(@"hh\:mm");
+            }
+            else
+            {
+                Snackbar.Add("La hora de salida es obligatoria.", Severity.Error);
+                return;
             }
 
-            await FlightService.CreateFlight(newFlight);
-            Snackbar.Add("Vuelo Registrado Correctamente", Severity.Success);
-            newFlight = new FlightDTO
-                {
-                    Origin = string.Empty,
-                    Destination = string.Empty,
-                    DepartureDate = DateTime.Now,
-                    DepartureTime = TimeSpan.Zero,
-                    ArriveDate = DateTime.Now,
-                    ArriveTime = TimeSpan.Zero,
-                    FlightStatus = "Programado",
-                    IsInternational = false,
-                    BagPrice = 0,
-                    FlightCode = string.Empty,
-                    PromotionId = 0,
-                    Duration = string.Empty,
-                    Image = string.Empty,
-                };
+            if (_arriveTime.HasValue)
+            {
+                newFlight.ArriveTime = _arriveTime.Value.ToString(@"hh\:mm");
+            }
+            else
+            {
+                Snackbar.Add("La hora de llegada es obligatoria.", Severity.Error);
+                return;
+            }
+
+            if (idFlight.HasValue)
+            {
+                await FlightService.UpdateFlight(idFlight.Value, newFlight);
+                Snackbar.Add("Vuelo Actualizado Correctamente", Severity.Success);
+                navigation.NavigateTo("/manage-flights");
+
+            }
+
+            else
+            {
+                await FlightService.CreateFlight(newFlight);
+                Snackbar.Add("Vuelo Registrado Correctamente", Severity.Success);
+                newFlight = new FlightDTO
+                    {
+                        Origin = string.Empty,
+                        Destination = string.Empty,
+                        DepartureDate = DateTime.Now,
+                        DepartureTime = "00:00",
+                        ArriveDate = DateTime.Now,
+                        ArriveTime = "00:00",
+                        FirstClassPrice = 0,
+                        IsInternational = false,
+                        FlightStatus = 0,
+                        BagPrice = 0,
+                        FlightCode = string.Empty,
+                        Duration = string.Empty,
+                        EconomicClassPrice = 0,
+                    };
+                _departureTime = null; 
+                _arriveTime = null;
+                GenerateRandomCode();
+            }
+
         }
         catch (ApplicationException ex)
         {
-            Snackbar.Add($"Error al Registrar el Vuelo {ex.Message}", Severity.Error);
+            Snackbar.Add($"Error al Registrar/Actualizar el Vuelo: {ex.Message}", Severity.Error);
         }
     }
+   
 }

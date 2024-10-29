@@ -12,8 +12,8 @@ using WonderPlane.Server.Models;
 namespace WonderPlane.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241021004607_FirstMigrations")]
-    partial class FirstMigrations
+    [Migration("20241024034720_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -117,6 +117,14 @@ namespace WonderPlane.Server.Migrations
 
                     b.Property<string>("Duration")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("EconomicClassPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("FirstClassPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("FlightCode")
                         .IsRequired()

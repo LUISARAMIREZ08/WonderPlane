@@ -1,0 +1,92 @@
+[
+  {
+    "city": "Bogotá",
+    "code": "BOG",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "El Dorado International Airport",
+    "type": "national", 
+    "image": "https://media.istockphoto.com/id/2148178476/es/foto/hispanic-woman-programmer-engaged-in-coding-at-desk.jpg"
+  },
+  {
+    "city": "Cali",
+    "code": "CLO",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Alfonso Bonilla Aragon International Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/3/39/Aeropuerto_Alfonso_Bonilla_Arag%C3%B3n_%28CLO%29.jpg"
+  },
+  {
+    "city": "Medellín",
+    "code": "MDE",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "José María Córdova International Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Aeropuerto_Jos%C3%A9_Mar%C3%ADa_C%C3%B3rdova_%28MDE%29.jpg"
+  },
+  {
+    "city": "Cartagena",
+    "code": "CTG",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Rafael Núñez International Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/0/04/Aeropuerto_Rafael_N%C3%BA%C3%B1ez_%28CTG%29.jpg"
+  },
+  {
+    "city": "Barranquilla",
+    "code": "BAQ",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Ernesto Cortissoz International Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/2/20/Aeropuerto_Ernesto_Cortissoz_%28BAQ%29.jpg"
+  },
+  {
+    "city": "Bucaramanga",
+    "code": "BGA",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Palonegro International Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Aeropuerto_Palonegro_%28BGA%29.jpg"
+  },
+  {
+    "city": "Pereira",
+    "code": "PEI",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Matecaña International Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Aeropuerto_Mateca%C3%B1a_%28PEI%29.jpg"
+  },
+  {
+    "city": "Cúcuta",
+    "code": "CUC",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Camilo Daza International Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/6/63/Aeropuerto_Camilo_Daza_%28CUC%29.jpg"
+  },
+  {
+    "city": "Santa Marta",
+    "code": "SMR",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Simón Bolívar International Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/d/db/Aeropuerto_Sim%C3%B3n_Bol%C3%ADvar_%28SMR%29.jpg"
+  },
+  {
+    "city": "Manizales",
+    "code": "MZL",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "La Nubia Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Aeropuerto_La_Nubia_%28MZL%29.jpg"
+  }
+]

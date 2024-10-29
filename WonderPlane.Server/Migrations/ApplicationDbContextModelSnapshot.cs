@@ -115,6 +115,14 @@ namespace WonderPlane.Server.Migrations
                     b.Property<string>("Duration")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("EconomicClassPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("FirstClassPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("FlightCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

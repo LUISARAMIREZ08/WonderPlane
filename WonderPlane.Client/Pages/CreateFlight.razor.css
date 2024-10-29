@@ -8,12 +8,23 @@
     margin-block-end: 3%;
 }
 
+.tittle{
+    display:flex;
+    justify-content: start;
+    align-items:center;
+    flex-direction: row;
+}
+
+.tittle h4{
+    margin:0;
+}
+
 .register-container {
     display: flex;
     color: #071952;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 80%;
 }
 .register-container h3{
     margin-bottom: 1rem;
@@ -28,6 +39,7 @@
     color: #071952;
     border: 1px solid #ccc;
     border-radius: 5px;
+    margin-top:2%;
     padding: 15px;
 }
 .form-container-left{
@@ -48,12 +60,19 @@
 .input-check {
     display:flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
-    margin-bottom: 1rem;
-    width: 100%;
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
     font-weight: 400;
+    gap: 1%;
 }
+
+.input-check select{
+    width: 30%;
+}
+
+
 
 .input-check label{
     margin: 0;
@@ -96,7 +115,7 @@
 }
 
     .form-button .submit-button {
-        background-color: #41B3A2;
+        background-color: dodgerblue;
         color: white;
         padding: 10px 20px;
         border: none;
@@ -106,7 +125,7 @@
     }
 
         .form-button .submit-button:hover {
-            background-color: #00978b;
+            background-color: #256cff
         }
 
 @media (max-width: 768px) {
