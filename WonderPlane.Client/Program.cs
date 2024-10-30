@@ -6,6 +6,7 @@ using MudBlazor.Services;
 using WonderPlane.Client.Servicios;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
+using CurrieTechnologies.Razor.SweetAlert2;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -33,6 +34,7 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
 
+builder.Services.AddSweetAlert2();
 
 // Application-specific services
 builder.Services.AddScoped<IUserService, UserService>();

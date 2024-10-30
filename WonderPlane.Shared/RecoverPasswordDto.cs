@@ -10,6 +10,6 @@ namespace WonderPlane.Shared
         [RegularExpression(@"^(?!.*[Rr]oot)[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "El correo no puede contener 'root' o 'Root' y debe seguir el formato abcd@algo.com")]
         public string Email { get; set; } = string.Empty;
 
-        public string InputCode { get; set; } = string.Empty;
+        public int? InputCode { get; set; }
     }
 }

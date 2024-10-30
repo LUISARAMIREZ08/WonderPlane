@@ -250,6 +250,9 @@ public class UserController : ControllerBase
 
         if (user == null) return Unauthorized(new ResponseAPI<string> { EsCorrecto=false, Mensaje="El usuario no es valido"});
 
+        // Verifica si el usuario está activo
+        if (user.IsActive == false) return Unauthorized(new ResponseAPI<string> { EsCorrecto = false, Mensaje = "El usuario no existe en el sistema" });
+
         using var hmac = new HMACSHA512(user.PasswordSalt!);
 
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
