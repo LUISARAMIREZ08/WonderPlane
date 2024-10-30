@@ -48,20 +48,34 @@
     align-items:center;
     margin:20px;
 }
-.form-button .button {
-    background-color: dodgerblue;
+.button {
     border: none;
-    border-radius:5px;
-    color: white;
+    border-radius: 5px;
     padding: 10px 30px;
     text-align: center;
     text-decoration: none;
     font-size: 16px;
     cursor: pointer;
-    width: 100%;
+    margin: 0 10px 10px 10px;
 }
 
-.form-button .button:hover {
-    background-color: #555;
-    transition: ease 0.5s;
+.confirm-button {
+    background-color: dodgerblue;
+    color: white;
 }
+
+    .confirm-button:hover {
+        background: none;
+        color: black;
+        transition: ease 0.5s;
+    }
+
+.discard-button {
+    background-color: whitesmoke;
+}
+
+    .discard-button:hover {
+        background-color: red;
+        transition: ease 0.5s;
+        color: white;
+    }
