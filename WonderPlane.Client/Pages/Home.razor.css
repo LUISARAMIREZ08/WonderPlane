@@ -171,6 +171,7 @@
             margin-right: 20px;
             display: flex;
             justify-content: space-between;
+            border-radius:5px;
         }
 
             .services-container .services .services-item:hover {
@@ -199,11 +200,15 @@
                 width: 100%;
             }
 
-    .services-container .why-text {
+    .services-container .why-text img{
         width: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
+        background-color: dodgerblue;
+        margin-left: 30%;
+        padding: 5%;
+        border-radius: 10px;
     }
 
 

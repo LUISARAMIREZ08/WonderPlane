@@ -2,7 +2,7 @@
 using Microsoft.JSInterop;
 using System.Security.Claims;
 using System.Text.Json;
-using WonderPlane.Client.Servicios;
+using WonderPlane.Client.Services;
 
 namespace WonderPlane.Client
 {

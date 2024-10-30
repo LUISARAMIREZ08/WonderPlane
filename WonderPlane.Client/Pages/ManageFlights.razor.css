@@ -1,0 +1,25 @@
+﻿.container {
+    width: 80%;
+}
+
+.tittle {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding-top: 4%;
+    padding-block-end: 2%;
+    color: #071952;
+}
+.nav-item {
+    background-color: crimson;
+    font-size: 0.8rem;
+    color: white;
+    padding:10%;
+}
+
+.action{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center; 
+}

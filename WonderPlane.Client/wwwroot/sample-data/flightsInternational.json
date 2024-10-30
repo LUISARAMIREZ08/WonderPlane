@@ -1,0 +1,38 @@
+[
+  {
+    "city": "Londres",
+    "code": "LON",
+    "country": "Reino Unido",
+    "country_code": "UK",
+    "airport": "Aeropuerto Internacional de Londres Heathrow",
+    "type": "international",
+    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
+  },
+  {
+    "city": "New York",
+    "code": "NYC",
+    "country": "Estados Unidos",
+    "country_code": "US",
+    "airport": "Aeropuerto Internacional John F. Kennedy",
+    "type": "international",
+    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
+  },
+  {
+    "city": "Buenos Aires",
+    "code": "BUE",
+    "country": "Argentina",
+    "country_code": "AR",
+    "airport": "Aeropuerto Internacional Ezeiza",
+    "type": "international",
+    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
+  },
+  {
+    "city": "Miami",
+    "code": "MIA",
+    "country": "Estados Unidos",
+    "country_code": "US",
+    "airport": "Aeropuerto Internacional de Miami",
+    "type": "international",
+    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
+  }
+]

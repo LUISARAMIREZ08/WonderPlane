@@ -1,7 +1,7 @@
 ﻿using WonderPlane.Shared;
 using System.Net.Http.Json;
 
-namespace WonderPlane.Client.Servicios
+namespace WonderPlane.Client.Services
 {
     public class UserService : IUserService
     {
