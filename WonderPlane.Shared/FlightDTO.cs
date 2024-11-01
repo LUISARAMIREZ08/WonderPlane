@@ -34,11 +34,11 @@ namespace WonderPlane.Shared
         [Required(ErrorMessage = "El código del vuelo es obligatorio.")]
         public required string FlightCode { get; set; }
         [Required(ErrorMessage = "La duración del vuelo es obligatoria.")]
-        public string? Duration { get; set; }
+        public int Duration { get; set; }
         public required FlightStatusEnum FlightStatus { get; set; } = FlightStatusEnum.Scheduled;
 
         [Required(ErrorMessage = "El precio de asientos primera clase es obligatorio.")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "El precio de cprimera clase debe ser mayor que 0.")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "El precio de primera clase debe ser mayor que 0.")]
         public required decimal FirstClassPrice { get; set; }
 
         [Required(ErrorMessage = "El precio de asientos económicos es obligatorio.")]

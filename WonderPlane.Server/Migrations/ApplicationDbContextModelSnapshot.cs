@@ -112,8 +112,8 @@ namespace WonderPlane.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Duration")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("EconomicClassPrice")
                         .HasPrecision(18, 2)

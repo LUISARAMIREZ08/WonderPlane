@@ -34,5 +34,59 @@
     "airport": "Aeropuerto Internacional de Miami",
     "type": "international",
     "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
+  },
+  {
+    "city": "Madrid",
+    "code": "MAD",
+    "country": "España",
+    "country_code": "ES",
+    "airport": "Aeropuerto Adolfo Suárez Madrid-Barajas",
+    "type": "international",
+    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
+  },
+  {
+    "city": "Bogotá",
+    "code": "BOG",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "El Dorado International Airport",
+    "type": "national",
+    "image": "https://media.istockphoto.com/id/2148178476/es/foto/hispanic-woman-programmer-engaged-in-coding-at-desk.jpg"
+  },
+  {
+    "city": "Cali",
+    "code": "CLO",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Alfonso Bonilla Aragon International Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/3/39/Aeropuerto_Alfonso_Bonilla_Arag%C3%B3n_%28CLO%29.jpg"
+  },
+  {
+    "city": "Medellín",
+    "code": "MDE",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "José María Córdova International Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Aeropuerto_Jos%C3%A9_Mar%C3%ADa_C%C3%B3rdova_%28MDE%29.jpg"
+  },
+  {
+    "city": "Cartagena",
+    "code": "CTG",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Rafael Núñez International Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/0/04/Aeropuerto_Rafael_N%C3%BA%C3%B1ez_%28CTG%29.jpg"
+  },
+  {
+    "city": "Pereira",
+    "code": "PEI",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Matecaña International Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/2/20/Aeropuerto_Ernesto_Cortissoz_%28BAQ%29.jpg"
   }
 ]

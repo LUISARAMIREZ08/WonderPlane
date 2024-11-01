@@ -12,7 +12,7 @@ using WonderPlane.Server.Models;
 namespace WonderPlane.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241024034720_InitialCreate")]
+    [Migration("20241031042307_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -115,8 +115,8 @@ namespace WonderPlane.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Duration")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("EconomicClassPrice")
                         .HasPrecision(18, 2)

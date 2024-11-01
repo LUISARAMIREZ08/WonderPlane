@@ -1,9 +1,10 @@
 ﻿@page "/manage-flights"
 
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-@using System.Net.Http.Json
+
 @using WonderPlane.Shared;
 @using WonderPlane.Client.Services;
+@using WonderPlane.Client.Utils
 @using MudBlazor;
 @using CurrieTechnologies.Razor.SweetAlert2;
 
@@ -25,21 +26,21 @@
             <MudIcon Icon="material-symbols-outlined/table" Style="margin-right:1%"/>
             <MudText Typo="Typo.h6">Vuelos Programados</MudText>
             <MudSpacer />
-            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField @bind-Value="searchString1" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Acciones</MudTh>
-            <MudTh>Codigo del Vuelo</MudTh>
+            <MudTh># Vuelo</MudTh>
             <MudTh>Origen</MudTh>
-            <MudTh>Fecha de Salida</MudTh>
-            <MudTh>Hora de Salida</MudTh>
+            <MudTh>Fecha Salida</MudTh>
+            <MudTh>Hora Salida</MudTh>
             <MudTh>Destino</MudTh>
-            <MudTh>Fecha de Llegada</MudTh>
-            <MudTh>Hora de Llegada</MudTh>
-            <MudTh>Valor adicional por maleta</MudTh>
-            <MudTh>Duración del Vuelo</MudTh>
-            <MudTh>Precio Primera Clase</MudTh>
-            <MudTh>Precio Clase Economica</MudTh>
+            <MudTh>Fecha Llegada</MudTh>
+            <MudTh>Hora Llegada</MudTh>
+            <MudTh>Duración</MudTh>
+            <MudTh>$ Maleta</MudTh>
+            <MudTh>$ Primera Clase</MudTh>
+            <MudTh>$ Clase Economica</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Acciones">
@@ -51,15 +52,15 @@
             </MudTd>
             <MudTd DataLabel="Codigo del Vuelo">@context.FlightCode</MudTd>
             <MudTd DataLabel="Origen">@context.Origin</MudTd>
-            <MudTd DataLabel="Fecha de Salida">@context.DepartureDate.ToString("dd/MM/yyyy")</MudTd>
-            <MudTd DataLabel="Hora de Salida">@context.DepartureTime</MudTd>
+            <MudTd DataLabel="Fecha Salida">@context.DepartureDate.ToString("dd/MM/yyyy")</MudTd>
+            <MudTd DataLabel="Hora Salida">@context.DepartureTime.Substring(0, 5)</MudTd>
             <MudTd DataLabel="Destino">@context.Destination</MudTd>
-            <MudTd DataLabel="Fecha de Llegada">@context.ArriveDate.ToString("dd/MM/yyyy")</MudTd>
-            <MudTd DataLabel="Hora de Llegada">@context.ArriveTime</MudTd>
-            <MudTd DataLabel="Valor adicional por maleta">@context.BagPrice</MudTd>
-            <MudTd DataLabel="Duración del Vuelo">@context.Duration</MudTd>
-            <MudTd DataLabel="Precio Primera Clase">@context.FirstClassPrice</MudTd>
-            <MudTd DataLabel="Precio Clase Economica">@context.EconomicClassPrice</MudTd>
+            <MudTd DataLabel="Fecha Llegada">@context.ArriveDate.ToString("dd/MM/yyyy")</MudTd>
+            <MudTd DataLabel="Hora Llegada">@context.ArriveTime.Substring(0, 5)</MudTd>
+            <MudTd DataLabel="Duración">@FlightDuration.FormatDuration(context.Duration)</MudTd>
+            <MudTd DataLabel="$ Primera Clase">$@context.FirstClassPrice.ToString("N0")</MudTd>
+            <MudTd DataLabel="$ Primera Clase">$@context.FirstClassPrice.ToString("N0")</MudTd>
+            <MudTd DataLabel="$ Clase Economica">$@context.EconomicClassPrice.ToString("N0")</MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { 5, int.MaxValue }"
@@ -83,6 +84,7 @@
         border-block-end: solid 1px lightgray;
         color: #071952;
         text-align: center;
+        white-space: nowrap;
     }
 
     .mud-table-root .mud-table-head .mud-table-cell {
@@ -170,18 +172,19 @@
             if (flight != null)
             {
                 DateTime currentDateTime = DateTime.Now;
-                TimeSpan arriveTimeSpan;
+                TimeSpan departureTimeSpan;
 
-                if (!TimeSpan.TryParse(flight.ArriveTime, out arriveTimeSpan))
+                if (!TimeSpan.TryParse(flight.ArriveTime, out departureTimeSpan))
                 {
                     Snackbar.Add("Formato de hora de llegada no válido.", Severity.Error);
                     return;
                 }
-                DateTime arriveDateTime = flight.ArriveDate.Add(arriveTimeSpan);
-                double duration = (arriveDateTime - currentDateTime).TotalHours;
-                
+                DateTime departureDateTime = flight.DepartureDate.Add(departureTimeSpan);
+                double duration = (departureDateTime - currentDateTime).TotalHours;
+
                 if (duration >= 1)
                 {
+
                     flight.FlightStatus = FlightStatusEnum.Canceled;
                     await FlightService.UpdateFlight(idFlight, flight);
                     Snackbar.Add("El vuelo ha sido cancelado correctamente.", Severity.Success);
@@ -192,11 +195,11 @@
                 else
                 {
                     await Swal.FireAsync(new SweetAlertOptions
-                    {
-                        Title = "No se puede cancelar el vuelo",
-                        Text = "Ha pasado el tiempo permitido para la cancelación",
-                        Icon = SweetAlertIcon.Error,
-                    });
+                        {
+                            Title = "No se puede cancelar el vuelo",
+                            Text = "Ha pasado el tiempo permitido para la cancelación",
+                            Icon = SweetAlertIcon.Error,
+                        });
                 }
             }
             else

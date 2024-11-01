@@ -5,8 +5,8 @@
     "country": "Colombia",
     "country_code": "CO",
     "airport": "El Dorado International Airport",
-    "type": "national", 
-    "image": "https://media.istockphoto.com/id/2148178476/es/foto/hispanic-woman-programmer-engaged-in-coding-at-desk.jpg"
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Aeropuerto_El_Dorado_%28BOG%29.jpg/1920px-Aeropuerto_El_Dorado_%28BOG%29.jpg"
   },
   {
     "city": "Cali",
@@ -88,5 +88,59 @@
     "airport": "La Nubia Airport",
     "type": "national",
     "image": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Aeropuerto_La_Nubia_%28MZL%29.jpg"
+  },
+  {
+    "city": "Ibagué",
+    "code": "IBE",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Perales Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/6/60/Aeropuerto_Perales_%28IBE%29.jpg"
+  },
+  {
+    "city": "Pasto",
+    "code": "PSO",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Antonio Nariño Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/4/47/Aeropuerto_Antonio_Nari%C3%B1o_%28PSO%29.jpg"
+  },
+  {
+    "city": "Neiva",
+    "code": "NVA",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Benito Salas Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/7/77/Aeropuerto_Benito_Salas_%28NVA%29.jpg"
+  },
+  {
+    "city": "Sincelejo",
+    "code": "CZU",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Las Brujas Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/5/56/Aeropuerto_Las_Brujas_%28CZU%29.jpg"
+  },
+  {
+    "city": "Quibdó",
+    "code": "UIB",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "El Caraño Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/9/91/Aeropuerto_El_Cara%C3%B1o_%28UIB%29.jpg"
+  },
+  {
+    "city": "Valledupar",
+    "code": "VUP",
+    "country": "Colombia",
+    "country_code": "CO",
+    "airport": "Alfonso López Michelsen Airport",
+    "type": "national",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Aeropuerto_Alfonso_L%C3%B3pez_Michelsen_%28VUP%29.jpg"
   }
 ]
