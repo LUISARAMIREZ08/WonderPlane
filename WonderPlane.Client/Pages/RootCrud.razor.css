@@ -8,11 +8,10 @@
     flex-direction:column;
 }
 
-    .contain h1 {
-        margin-bottom: 50px;
-        margin-top: 50px;
-        color: #071952;
-    }
+.contain h1 {
+    margin-bottom:50px;
+    margin-top:50px;
+}
 
 .create-button {
     display:flex;
@@ -31,12 +30,16 @@
     border: none;
     border-radius:5px;
     color: white;
-    padding: 10px 32px;
+    padding: 10px 20px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
     cursor: pointer;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+
 }
 
 .cancel {
@@ -44,7 +47,7 @@
 }
 
 .button:hover {
-    background-color: #0067cc;
+    background-color: #555;
     transition: ease 0.5s;
 }
 
@@ -70,13 +73,13 @@
         transform: scale(1);
     }
 
-    .create-user-container span {
-        position: absolute;
-        top: 0;
-        right: 20px;
-        padding: 10px;
-        cursor: pointer;
-    }
+.create-user-container span {
+    position:absolute;
+    top:0;
+    right:20px;
+    padding:10px;
+    cursor:pointer;
+}
 
 
 

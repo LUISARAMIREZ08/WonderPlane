@@ -75,6 +75,15 @@ header {
    
 }
 
+.menu-vertical li:hover {
+    background-color: dodgerblue;
+    transition: background-color ease 0.5s;
+}
+
+.menu-vertical li:hover a {
+    color: white;
+}
+
 .menu-vertical li a {
     display: block;
     font-size: 16px;
@@ -89,12 +98,6 @@ header {
     transform: scale(0.8);
     border-radius: 8px;
 }
-
-.menu-vertical li:hover a {
-    color: white;
-}
-
-
 
 .profile {
     display: flex;
