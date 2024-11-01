@@ -18,7 +18,7 @@ namespace WonderPlane.Server.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("WonderPlane")
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);

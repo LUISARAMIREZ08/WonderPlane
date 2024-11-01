@@ -16,7 +16,6 @@
         <h2>Crear Usuario</h2>
 
         <div class="form-container">
-
             <div class="input">
                 <label class="form-label">Documento</label>
                 <InputText class="form-control" @bind-Value="newUser.Document"></InputText>
@@ -37,7 +36,7 @@
 
             <div class="input">
                 <label class="form-label">Nombre de usuario</label>
-                <InputText class="form-control" @bind-Value="newUser.UserName" ></InputText>
+                <InputText class="form-control" @bind-Value="newUser.UserName"></InputText>
                 <span class="small-validation-message"><ValidationMessage For="@(() => newUser.UserName)"></ValidationMessage></span>
             </div>
 
@@ -58,32 +57,29 @@
                 <InputText class="form-control" @bind-Value="newUser.Email" Placeholder="ejemplo@dominio.com"></InputText>
                 <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Email)"></ValidationMessage></span>
             </div>
-
         </div>
 
         <div class="form-button">
-            <button class="button" type="submit">Crear</button>
+            <button class="button confirm-button" type="submit">Crear</button>
+            <button class="button discard-button" type="button" @onclick="Cancel">Cancelar</button>
         </div>
     </EditForm>
 </article>
 
-
 @code {
-
-    // EventCallback que invocará una función desde el componente padre
     [Parameter]
     public EventCallback OnUserCreated { get; set; }
 
     CreateAdminDto newUser = new CreateAdminDto
-    {
-        Document = string.Empty,
-        Name = string.Empty,
-        LastName = string.Empty,
-        UserName = string.Empty,
-        Email = string.Empty,
-        Password = string.Empty,
-        ConfirmPassword = string.Empty
-    };
+        {
+            Document = string.Empty,
+            Name = string.Empty,
+            LastName = string.Empty,
+            UserName = string.Empty,
+            Email = string.Empty,
+            Password = string.Empty,
+            ConfirmPassword = string.Empty
+        };
 
     private async Task OnValidSubmit()
     {
@@ -103,5 +99,12 @@
             Snackbar.Add($"Error al crear administrador: {ex.Message}", Severity.Error);
         }
     }
-}
 
+    private async Task Cancel()
+    {
+        if (OnUserCreated.HasDelegate)
+        {
+            await OnUserCreated.InvokeAsync();
+        }
+    }
+}

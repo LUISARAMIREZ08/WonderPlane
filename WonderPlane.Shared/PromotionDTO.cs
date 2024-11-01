@@ -5,33 +5,44 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WonderPlane.Shared
+namespace WonderPlane.Shared;
+
+public class PromotionDTO
 {
-    public class PromotionDTO
-    {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "La descripción de la promoción es obligatoria.")]
-        public required string Description { get; set; }
+    [Required(ErrorMessage = "La descripción de la promoción es obligatoria.")]
+    public string Description { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "La fecha de inicio de la promoción es obligatoria.")]
-        [DataType(DataType.Date, ErrorMessage = "Fecha no válida.")]
-        public required DateTime StartDate { get; set; }
+    [Required(ErrorMessage = "La fecha de inicio es obligatoria.")]
+    [DataType(DataType.Date, ErrorMessage = "Fecha no válida.")]
+    public DateTime StartDate { get; set; }
 
-        [Required(ErrorMessage = "La fecha de fin de la promoción es obligatoria.")]
-        [DataType(DataType.Date, ErrorMessage = "Fecha no válida.")]
-        public required DateTime EndDate { get; set; }
+    [Required(ErrorMessage = "La fecha de fin es obligatoria.")]
+    [DataType(DataType.Date, ErrorMessage = "Fecha no válida.")]
+    public DateTime EndDate { get; set; }
 
-        [Required(ErrorMessage = "El descuento de la promoción es obligatorio.")]
-        public required decimal Discount { get; set; }
+    [Required(ErrorMessage = "El descuento es obligatorio.")]
+    public decimal Discount { get; set; }
 
-        [Required(ErrorMessage = "El estado de la promoción es obligatorio.")]
-        public required string PromotionStatus { get; set; }
+    [Required(ErrorMessage = "El estado de la promoción es obligatorio.")]
+    public PromotionStatus PromotionStatus { get; set; }
 
-        [Required(ErrorMessage = "El tipo de promoción es obligatorio.")]
-        public required string PromotionType { get; set; }
+    [Required(ErrorMessage = "El tipo de promoción es obligatorio.")]
+    public PromotionType PromotionType { get; set; }
 
-        public int? FlightId { get; set; }
-    }
+    public int? FlightId { get; set; } // Opcional
 }
 
+
+public enum PromotionStatus
+{
+    Active,
+    Inactive
+}
+
+public enum PromotionType
+{
+    Seat,
+    Bag,
+}

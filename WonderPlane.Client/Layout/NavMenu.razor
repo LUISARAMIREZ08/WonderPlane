@@ -38,9 +38,21 @@
         <AuthorizeView>
             <Authorized>
                 <li>
-                    <a class="profile" href="#"><img src="@userInfo?.Image" />@userInfo?.UserName</a>
+                    <a class="profile" href="#">
+                        @if (!string.IsNullOrEmpty(userInfo?.Image))
+                        {
+                            <img src="@userInfo?.Image" />
+                        }
+                        else
+                        {
+                            <MudAvatar Class="profile-avatar" Color="@Color.Info" Size="Size.Medium" Style="margin-right:5px;">
+                                @GetInitials(userInfo)
+                            </MudAvatar>
+                        }
+                        @userInfo?.UserName
+                    </a>
                     <ul class="menu-vertical">
-                        <li><a href="/viewprofile">Ver perfil</a></li>
+                        <li><a href="/editprofile">Ver perfil</a></li>
                         <li><a href="#" @onclick="Logout">Cerrar sesión</a></li>
                     </ul>
                 </li>
@@ -116,5 +128,14 @@
 
         // Redirigir al login
         navigation.NavigateTo("/login");
+    }
+
+    // Método para obtener las iniciales del nombre del usuario
+    private string GetInitials(UserInfo? userInfo)
+    {
+        if (userInfo == null) return "NN";
+
+        var initials = $"{userInfo.Name?.FirstOrDefault()}{userInfo.LastName?.FirstOrDefault()}";
+        return initials.ToUpper();
     }
 }
