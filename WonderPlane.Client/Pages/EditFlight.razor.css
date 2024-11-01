@@ -1,0 +1,160 @@
+﻿.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 3%;
+    margin-block-end: 3%;
+}
+
+.tittle {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+}
+
+    .tittle h4 {
+        margin: 0;
+    }
+
+.register-container {
+    display: flex;
+    color: #071952;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+}
+
+    .register-container h3 {
+        margin-bottom: 1rem;
+    }
+
+.form-container {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    gap: 30px;
+    width: 100%;
+    color: #071952;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 2%;
+    padding: 15px;
+}
+
+.form-container-left {
+    width: 100%;
+}
+
+.form-container-right {
+    width: 100%;
+}
+
+.form-container-right-2 {
+    width: 100%;
+}
+
+.input {
+    margin-bottom: 1rem;
+    width: 100%;
+    font-weight: 400;
+}
+
+.input-check {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    font-weight: 400;
+    gap: 1%;
+}
+
+    .input-check .form-label{
+        line-height: normal;
+        writing-mode: horizontal-tb;
+        white-space: nowrap;
+        margin: 0;
+    }
+
+.register {
+    margin-top: 20px;
+}
+
+.form-control {
+    font-size: 0.8rem;
+    color: #507687;
+}
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.input-group-text {
+    font-size: 0.8rem;
+    color: #507687;
+}
+
+.button-code {
+    background-color: #071952;
+    color: white;
+    padding: 8px 8px;
+    border: none;
+    margin-top: 6px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 2px;
+    font-size: 0.8rem;
+}
+
+    .button-code:hover {
+        background-color: #182e76;
+    }
+
+
+.form-button {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    margin-top: 20px;
+}
+
+    .form-button .submit-button {
+        background-color: dodgerblue;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 40%;
+    }
+
+        .form-button .submit-button:hover {
+            background-color: #256cff
+        }
+
+@media (max-width: 768px) {
+    .form-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-control {
+        font-size: 0.9rem;
+    }
+
+    .button-code {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+    }
+
+    .form-button .submit-button {
+        padding: 12px 24px;
+    }
+}

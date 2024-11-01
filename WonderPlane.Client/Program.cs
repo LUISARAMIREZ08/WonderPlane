@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using WonderPlane.Client;
 using MudBlazor.Services;
 
-using WonderPlane.Client.Servicios;
+using WonderPlane.Client.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using CurrieTechnologies.Razor.SweetAlert2;
@@ -16,6 +16,11 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 // HttpClient
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7056") });
 
+// HttpClient para recursos locales (en el cliente)
+builder.Services.AddHttpClient("LocalClient", client =>
+{
+    client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+});
 // Authentication and Authorization
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddAuthorizationCore();
@@ -35,6 +40,7 @@ builder.Services.AddMudServices(config =>
 });
 
 builder.Services.AddSweetAlert2();
+
 
 // Application-specific services
 builder.Services.AddScoped<IUserService, UserService>();

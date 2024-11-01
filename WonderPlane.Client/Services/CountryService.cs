@@ -2,7 +2,7 @@
 using System.Net.Http.Json;
 
 
-namespace WonderPlane.Client.Servicios;
+namespace WonderPlane.Client.Services;
 public class CountryService
 {
     private readonly HttpClient _httpClient;

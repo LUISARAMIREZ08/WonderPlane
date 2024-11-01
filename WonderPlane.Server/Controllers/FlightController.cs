@@ -37,14 +37,16 @@ public class FlightController : ControllerBase
                 Origin = flightDTO.Origin,
                 Destination = flightDTO.Destination,
                 DepartureDate = flightDTO.DepartureDate,
-                DepartureTime = flightDTO.DepartureTime,
+                DepartureTime = TimeSpan.Parse(flightDTO.DepartureTime),
                 ArriveDate = flightDTO.ArriveDate,
-                ArriveTime = flightDTO.ArriveTime,
+                ArriveTime = TimeSpan.Parse(flightDTO.ArriveTime),
                 FlightStatus = FlightStatus.Scheduled,
                 IsInternational = flightDTO.IsInternational,
                 BagPrice = flightDTO.BagPrice,
                 FlightCode = flightDTO.FlightCode,
                 Duration = flightDTO.Duration,
+                FirstClassPrice = flightDTO.FirstClassPrice,
+                EconomicClassPrice = flightDTO.EconomicClassPrice
             };
 
             _dbContext.Flights.Add(dbFlight);
@@ -127,13 +129,16 @@ public class FlightController : ControllerBase
             flight.Origin = flightDTO.Origin;
             flight.Destination = flightDTO.Destination;
             flight.DepartureDate = flightDTO.DepartureDate;
-            flight.DepartureTime = flightDTO.DepartureTime;
+            flight.DepartureTime = TimeSpan.Parse(flightDTO.DepartureTime);
             flight.ArriveDate = flightDTO.ArriveDate;
-            flight.ArriveTime = flightDTO.ArriveTime;
+            flight.ArriveTime = TimeSpan.Parse(flightDTO.ArriveTime);
             flight.IsInternational = flightDTO.IsInternational;
             flight.BagPrice = flightDTO.BagPrice;
             flight.FlightCode = flightDTO.FlightCode;
             flight.Duration = flightDTO.Duration;
+            flight.FirstClassPrice = flightDTO.FirstClassPrice;
+            flight.EconomicClassPrice = flightDTO.EconomicClassPrice;
+            flight.FlightStatus = (FlightStatus)flightDTO.FlightStatus;
 
             await _dbContext.SaveChangesAsync();
 
@@ -200,6 +205,35 @@ public class FlightController : ControllerBase
             seats.Add(seat);
         }
         return seats;
+    }
+
+    [HttpGet]
+    [Route("search-flight/{id}")]
+    public async Task<IActionResult> SearchFlight(int id)
+    {
+        var responseApi = new ResponseAPI<Flight>();
+        try
+        {
+            var flight = await _dbContext.Flights.FindAsync(id);
+
+            if (flight == null)
+            {
+                responseApi.EsCorrecto = false;
+                responseApi.Mensaje = "Vuelo no encontrado.";
+                return NotFound(responseApi);
+            }
+
+            responseApi.Data = flight;
+            responseApi.EsCorrecto = true;
+            responseApi.Mensaje = "Vuelo encontrado correctamente.";
+            return Ok(responseApi);
+        }
+        catch (Exception ex)
+        {
+            responseApi.EsCorrecto = false;
+            responseApi.Mensaje = $"Error inesperado: {ex.Message}";
+            return StatusCode(500, responseApi);
+        }
     }
 }
 

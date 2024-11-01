@@ -1,9 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace WonderPlane.Shared;
 
 public class PromotionDTO
 {
+        public int Id { get; set; }
+
     [Required(ErrorMessage = "La descripción de la promoción es obligatoria.")]
     public string Description { get; set; } = string.Empty;
 
