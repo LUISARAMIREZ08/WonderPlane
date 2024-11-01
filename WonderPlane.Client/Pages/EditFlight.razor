@@ -172,6 +172,14 @@
         {
             if (_departureTime.HasValue)
             {
+                var currentTime = DateTime.Now.TimeOfDay;
+
+                // Validar que la hora de salida no sea anterior a la hora actual
+                if (_departureTime.Value < currentTime)
+                {
+                    Snackbar.Add("La hora de salida no puede ser anterior a la hora actual.", Severity.Error);
+                    return;
+                }
                 newFlight.DepartureTime = _departureTime.Value.ToString(@"hh\:mm");
             }
 
