@@ -13,7 +13,6 @@
 @inject ISnackbar Snackbar;
 @inject IFlightService FlightService;
 
-<AsideMenu />
 <div class="main-container poppins-light">
     
     <div class="register-container">
@@ -99,7 +98,6 @@
                                     }
                                 }
                             }
-
                         </select>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.Destination)"></ValidationMessage></span>
                     </div>
@@ -138,7 +136,7 @@
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.ArriveDate)"></ValidationMessage></span>
                     </div>
                     <div class="input">
-                        <label class="form-label">Hora de llegada "Col"</label>
+                        <label class="form-label">Hora de llegada</label>
                         <div style="position: relative;">
                             <input type="text" class="form-control"
                                    value="@(_arriveTime.HasValue ? $"{_arriveTime.Value.Hours:D2}:{_arriveTime.Value.Minutes:D2}" : "")"
@@ -153,7 +151,7 @@
                 </div>
                 <div class="form-container-right-2">
                     <div class="input">
-                        <label class="form-label">Precio Primera Clase "Cop"</label>
+                        <label class="form-label">Precio Primera Clase</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span> 
                             <InputNumber class="form-control" @bind-Value="newFlight.FirstClassPrice" @oninput="e => UpdatePrice(e, price => newFlight.FirstClassPrice = price)" style="font-size: 0.8rem; color: #507687;" />
@@ -163,7 +161,7 @@
                         </span>
                     </div>
                     <div class="input">
-                        <label class="form-label">Precio Clase Economica "Cop"</label>
+                        <label class="form-label">Precio Clase Economica</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span> 
                             <InputNumber class="form-control" @bind-Value="newFlight.EconomicClassPrice" @oninput="e => UpdatePrice(e, price => newFlight.EconomicClassPrice = price)" style="font-size: 0.8rem; color: #507687;" />
@@ -173,7 +171,7 @@
                         </span>
                     </div>
                     <div class="input">
-                        <label class="form-label">Valor adicional por maleta "Cop"</label>
+                        <label class="form-label">Valor adicional por maleta</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
                             <InputNumber class="form-control" @bind-Value="newFlight.BagPrice" @oninput="e => UpdatePrice(e, price => newFlight.BagPrice = price)" style="font-size: 0.8rem; color: #507687;" />
@@ -195,9 +193,6 @@
 </div>
 
 @code {
-    [Parameter]
-    public int? idFlight { get; set; }
-
     FlightDTO newFlight = new FlightDTO
         {
             Origin = string.Empty,
@@ -237,7 +232,7 @@
             _arriveTime = newTime.Value;
             var resultadoLlegada = CalcularFechaHoraLlegada(newFlight.DepartureDate, _departureTime);
             newFlight.ArriveDate = resultadoLlegada.FechaLlegada;
-            _arriveTime = resultadoLlegada.HoraLlegada; 
+            _arriveTime = resultadoLlegada.HoraLlegada;
         }
         else
         {
@@ -289,14 +284,31 @@
             if (_departureTime.HasValue)
             {
                 var currentTime = DateTime.Now.TimeOfDay;
-
-                // Validar que la hora de salida no sea anterior a la hora actual
-                if (_departureTime.Value < currentTime)
+                var currentDate = DateTime.Now.Date;
+                var departureDate = newFlight.DepartureDate.Date;
+                if ((departureDate == currentDate) && (_departureTime.HasValue && _departureTime.Value < currentTime))
                 {
                     Snackbar.Add("La hora de salida no puede ser anterior a la hora actual.", Severity.Error);
                     return;
                 }
-                newFlight.DepartureTime = _departureTime.Value.ToString(@"hh\:mm");
+                double duration = (_departureTime - currentTime)?.TotalHours ?? 0;
+
+                if (newFlight.IsInternational)
+                {
+                    if ((departureDate == currentDate) && duration < 3)
+                    {
+                        Snackbar.Add("La hora de salida debe ser al menos 3 horas después de la hora actual.", Severity.Error);
+                        return;
+                    }
+                }
+                else
+                {
+                    if ((departureDate == currentDate) && duration < 1)
+                    {
+                        Snackbar.Add("La hora de salida debe ser al menos 1 hora después de la hora actual.", Severity.Error);
+                        return;
+                    }
+                }
             }
             else
             {
@@ -308,9 +320,16 @@
             {
                 newFlight.ArriveTime = _arriveTime.Value.ToString(@"hh\:mm");
             }
-            else
+
+            if (newFlight.FirstClassPrice < newFlight.EconomicClassPrice)
             {
-                Snackbar.Add("La hora de llegada es obligatoria.", Severity.Error);
+                Snackbar.Add("El precio de la clase económica no puede ser mayor al de Primera clase.", Severity.Error);
+                return;
+            }
+
+            if (newFlight.FirstClassPrice == newFlight.EconomicClassPrice)
+            {
+                Snackbar.Add("El precio de la clase económica no puede ser igual al de Primera clase.", Severity.Error);
                 return;
             }
 
@@ -338,7 +357,7 @@
         }
         catch (ApplicationException ex)
         {
-            Snackbar.Add($"Error al Registrar/Actualizar el Vuelo: {ex.Message}", Severity.Error);
+            Snackbar.Add($"Error al Registrar el Vuelo: {ex.Message}", Severity.Error);
         }
     }
 
@@ -355,9 +374,9 @@
         return (momentoLlegada.Date, momentoLlegada.TimeOfDay);
     }
 
-    private void UpdatePrice(ChangeEventArgs e, Action<decimal> setPriceAction)
+    private void UpdatePrice(ChangeEventArgs e, Action<int> setPriceAction)
     {
-        if (decimal.TryParse(e.Value.ToString(), NumberStyles.AllowThousands | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal result))
+        if (int.TryParse(e.Value.ToString(), NumberStyles.AllowThousands | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out int result))
         {
             setPriceAction(result);
         }

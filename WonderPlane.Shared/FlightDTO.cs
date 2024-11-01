@@ -28,22 +28,20 @@ namespace WonderPlane.Shared
         [Required(ErrorMessage = "Se debe decir si el vuelo es internacional o no.")]
         public required bool IsInternational { get; set; }
 
-        [Required(ErrorMessage = "El precio de la maleta es obligatorio.")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "El precio de la maleta debe ser mayor que 0.")]
-        public required decimal BagPrice { get; set; }
+        public int BagPrice { get; set; }
         [Required(ErrorMessage = "El código del vuelo es obligatorio.")]
         public required string FlightCode { get; set; }
         [Required(ErrorMessage = "La duración del vuelo es obligatoria.")]
         public int Duration { get; set; }
         public required FlightStatusEnum FlightStatus { get; set; } = FlightStatusEnum.Scheduled;
 
-        [Required(ErrorMessage = "El precio de asientos primera clase es obligatorio.")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "El precio de primera clase debe ser mayor que 0.")]
-        public required decimal FirstClassPrice { get; set; }
+        [Required(ErrorMessage = "El precio de asientos de primera clase es obligatorio.")]
+        [Range(1, int.MaxValue, ErrorMessage = "El precio de primera clase debe ser mayor que 0.")]
+        public required int FirstClassPrice { get; set; }
 
         [Required(ErrorMessage = "El precio de asientos económicos es obligatorio.")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "El precio de clase económica debe ser mayor que 0.")]
-        public required decimal EconomicClassPrice { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "El precio de clase económica debe ser mayor que 0.")]
+        public required int EconomicClassPrice { get; set; }
     }
 }
 
