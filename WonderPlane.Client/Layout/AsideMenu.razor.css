@@ -1,26 +1,26 @@
-﻿/* Menú lateral */
+﻿﻿ /* Menú lateral */
 #btn-menu {
     display: none;
 }
 
 .btn-menu {
-    background-color: black;
+    background-color: dodgerblue;
     padding: 10px;
     color: white;
     /*border-radius: 5px;*/
     margin: 0 0 0 5px;
     position: fixed;
     left: 0;
-    top: 100px;
+    top: 75px;
     z-index: 10;
     width: 40px;
 }
 
-.btn-menu:hover {
-    background-color:white;
-    color:black;
-    transition: ease 0.5s;
-}
+    .btn-menu:hover {
+        background-color: white;
+        color: black;
+        transition: ease 0.5s;
+    }
 
     .btn-menu span {
         font-size: 20px;
@@ -69,7 +69,7 @@
     transition: all 400ms ease;
 }
 
-.cont-menu a span {
+    .cont-menu a span {
         margin-right: 10px;
     }
 

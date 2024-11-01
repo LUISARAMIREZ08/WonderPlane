@@ -98,7 +98,6 @@
                                     }
                                 }
                             }
-
                         </select>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.Destination)"></ValidationMessage></span>
                     </div>
@@ -194,9 +193,6 @@
 </div>
 
 @code {
-    [Parameter]
-    public int? idFlight { get; set; }
-
     FlightDTO newFlight = new FlightDTO
         {
             Origin = string.Empty,
@@ -236,7 +232,7 @@
             _arriveTime = newTime.Value;
             var resultadoLlegada = CalcularFechaHoraLlegada(newFlight.DepartureDate, _departureTime);
             newFlight.ArriveDate = resultadoLlegada.FechaLlegada;
-            _arriveTime = resultadoLlegada.HoraLlegada; 
+            _arriveTime = resultadoLlegada.HoraLlegada;
         }
         else
         {
@@ -287,7 +283,32 @@
         {
             if (_departureTime.HasValue)
             {
-                newFlight.DepartureTime = _departureTime.Value.ToString(@"hh\:mm");
+                var currentTime = DateTime.Now.TimeOfDay;
+                var currentDate = DateTime.Now.Date;
+                var departureDate = newFlight.DepartureDate.Date;
+                if ((departureDate == currentDate) && (_departureTime.HasValue && _departureTime.Value < currentTime))
+                {
+                    Snackbar.Add("La hora de salida no puede ser anterior a la hora actual.", Severity.Error);
+                    return;
+                }
+                double duration = (_departureTime - currentTime)?.TotalHours ?? 0;
+
+                if (newFlight.IsInternational)
+                {
+                    if ((departureDate == currentDate) && duration < 3)
+                    {
+                        Snackbar.Add("La hora de salida debe ser al menos 3 horas después de la hora actual.", Severity.Error);
+                        return;
+                    }
+                }
+                else
+                {
+                    if ((departureDate == currentDate) && duration < 1)
+                    {
+                        Snackbar.Add("La hora de salida debe ser al menos 1 hora después de la hora actual.", Severity.Error);
+                        return;
+                    }
+                }
             }
             else
             {
@@ -299,9 +320,16 @@
             {
                 newFlight.ArriveTime = _arriveTime.Value.ToString(@"hh\:mm");
             }
-            else
+
+            if (newFlight.FirstClassPrice < newFlight.EconomicClassPrice)
             {
-                Snackbar.Add("La hora de llegada es obligatoria.", Severity.Error);
+                Snackbar.Add("El precio de la clase económica no puede ser mayor al de Primera clase.", Severity.Error);
+                return;
+            }
+
+            if (newFlight.FirstClassPrice == newFlight.EconomicClassPrice)
+            {
+                Snackbar.Add("El precio de la clase económica no puede ser igual al de Primera clase.", Severity.Error);
                 return;
             }
 
@@ -329,7 +357,7 @@
         }
         catch (ApplicationException ex)
         {
-            Snackbar.Add($"Error al Registrar/Actualizar el Vuelo: {ex.Message}", Severity.Error);
+            Snackbar.Add($"Error al Registrar el Vuelo: {ex.Message}", Severity.Error);
         }
     }
 
@@ -346,9 +374,9 @@
         return (momentoLlegada.Date, momentoLlegada.TimeOfDay);
     }
 
-    private void UpdatePrice(ChangeEventArgs e, Action<decimal> setPriceAction)
+    private void UpdatePrice(ChangeEventArgs e, Action<int> setPriceAction)
     {
-        if (decimal.TryParse(e.Value.ToString(), NumberStyles.AllowThousands | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal result))
+        if (int.TryParse(e.Value.ToString(), NumberStyles.AllowThousands | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out int result))
         {
             setPriceAction(result);
         }

@@ -31,7 +31,7 @@
 
         <AuthorizeView Roles="Admin">
             <Authorized>
-                <li><a href="/admin">Gestionar vuelos</a></li>
+                <li><a href="/manage-flights">Gestionar vuelos</a></li>
             </Authorized>
         </AuthorizeView>
 
@@ -45,7 +45,7 @@
                         }
                         else
                         {
-                            <MudAvatar Class="profile-avatar" Color="@Color.Info" Size="Size.Medium" Style="margin-right:5px;">
+                            <MudAvatar Class="profile-avatar" Size="Size.Medium" Style="margin-right:10px;background-color:#0CE8E6;color:white">
                                 @GetInitials(userInfo)
                             </MudAvatar>
                         }

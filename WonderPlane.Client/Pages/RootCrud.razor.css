@@ -8,10 +8,11 @@
     flex-direction:column;
 }
 
-.contain h1 {
-    margin-bottom:50px;
-    margin-top:50px;
-}
+    .contain h1 {
+        margin-bottom: 50px;
+        margin-top: 50px;
+        color: #071952;
+    }
 
 .create-button {
     display:flex;
@@ -30,7 +31,7 @@
     border: none;
     border-radius:5px;
     color: white;
-    padding: 15px 32px;
+    padding: 10px 32px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -43,7 +44,7 @@
 }
 
 .button:hover {
-    background-color: #555;
+    background-color: #0067cc;
     transition: ease 0.5s;
 }
 
@@ -69,13 +70,13 @@
         transform: scale(1);
     }
 
-.create-user-container span {
-    position:absolute;
-    top:0;
-    right:20px;
-    padding:10px;
-    cursor:pointer;
-}
+    .create-user-container span {
+        position: absolute;
+        top: 0;
+        right: 20px;
+        padding: 10px;
+        cursor: pointer;
+    }
 
 
 
