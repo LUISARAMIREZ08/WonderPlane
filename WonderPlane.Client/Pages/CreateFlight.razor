@@ -13,6 +13,7 @@
 @inject ISnackbar Snackbar;
 @inject IFlightService FlightService;
 
+<AsideMenu />
 <div class="main-container poppins-light">
     
     <div class="register-container">
@@ -137,7 +138,7 @@
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.ArriveDate)"></ValidationMessage></span>
                     </div>
                     <div class="input">
-                        <label class="form-label">Hora de llegada</label>
+                        <label class="form-label">Hora de llegada "Col"</label>
                         <div style="position: relative;">
                             <input type="text" class="form-control"
                                    value="@(_arriveTime.HasValue ? $"{_arriveTime.Value.Hours:D2}:{_arriveTime.Value.Minutes:D2}" : "")"
@@ -152,7 +153,7 @@
                 </div>
                 <div class="form-container-right-2">
                     <div class="input">
-                        <label class="form-label">Precio Primera Clase</label>
+                        <label class="form-label">Precio Primera Clase "Cop"</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span> 
                             <InputNumber class="form-control" @bind-Value="newFlight.FirstClassPrice" @oninput="e => UpdatePrice(e, price => newFlight.FirstClassPrice = price)" style="font-size: 0.8rem; color: #507687;" />
@@ -162,7 +163,7 @@
                         </span>
                     </div>
                     <div class="input">
-                        <label class="form-label">Precio Clase Economica</label>
+                        <label class="form-label">Precio Clase Economica "Cop"</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span> 
                             <InputNumber class="form-control" @bind-Value="newFlight.EconomicClassPrice" @oninput="e => UpdatePrice(e, price => newFlight.EconomicClassPrice = price)" style="font-size: 0.8rem; color: #507687;" />
@@ -172,7 +173,7 @@
                         </span>
                     </div>
                     <div class="input">
-                        <label class="form-label">Valor adicional por maleta</label>
+                        <label class="form-label">Valor adicional por maleta "Cop"</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
                             <InputNumber class="form-control" @bind-Value="newFlight.BagPrice" @oninput="e => UpdatePrice(e, price => newFlight.BagPrice = price)" style="font-size: 0.8rem; color: #507687;" />

@@ -21,10 +21,9 @@
     </label>
     <AuthorizeView Roles="Admin">
         <Authorized>
-            <a href="#"><span class="material-symbols-outlined">add</span>Crear vuelo</a>
-            <a href="#"><span class="material-symbols-outlined">flight</span>Vuelos programados</a>
+            <a href="/manage-flights/flight"><span class="material-symbols-outlined">add</span>Crear vuelo</a>
+            <a href="/manage-flights"><span class="material-symbols-outlined">flight</span>Vuelos programados</a>
             <a href="#"><span class="material-symbols-outlined">flight_land</span>Vuelos realizados</a>
-            <a href="#"><span class="material-symbols-outlined">edit</span>Editar vuelos</a>
         </Authorized>
     </AuthorizeView>
     <AuthorizeView Roles="RegisteredUser">

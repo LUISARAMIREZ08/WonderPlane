@@ -1,6 +1,8 @@
 ﻿@page "/rootcrud"
 @attribute [Authorize (Roles = "Root")]
 
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 @using System.Collections.Generic
@@ -18,9 +20,8 @@
 
 <PageTitle>Gestión de administradores</PageTitle>
 
-<aside>
-    <AsideMenu />
-</aside>
+
+<AsideMenu />
 
 <main class="contain poppins-light">
     <h1>Administradores</h1>
@@ -29,7 +30,9 @@
         <!-- Cabecera del formulario -->
         <div class="create-button">
 
-            <div class="button" onclick="@(() => showFormCreate())">Crear usuario</div>
+            <div class="button" onclick="@(() => showFormCreate())"><span class="material-symbols-outlined">add</span>Crear usuario
+            </div>
+           @*  <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AddBox" Color="Color.Info" onclick="@(() => showFormCreate())"><MudText>Añadir Administrador</MudText></MudButton> *@
 
             <MudTextField T="string" ValueChanged="@OnSearch" Immediate="true" Placeholder="Buscar"
                           Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
@@ -74,7 +77,7 @@
                 <MudTd DataLabel="Correo">@context.Email</MudTd>
 
                 <MudTd DataLabel="Acciones">
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => showConfirmDelete(context.Id, context.Name))" />
+                    <MudIconButton Icon="material-symbols-outlined/delete" aria-label="cancel" Color="Color.Error" OnClick="@(() => showConfirmDelete(context.Id, context.Name))" />
                 </MudTd>
             </RowTemplate>
 

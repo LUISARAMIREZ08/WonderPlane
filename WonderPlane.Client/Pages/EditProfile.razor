@@ -49,6 +49,9 @@
         </div>
         <h1>@FullName</h1>
         <h6>@userInfo?.UserName</h6>
+        <AuthorizeView Roles="Admin">
+            <span class="poppins-light">(Administrador)</span>
+        </AuthorizeView>
     </section>
 
 
@@ -76,6 +79,15 @@
                                                 {
                                                     <option value="@country">@country</option>
                                                 }
+                                            </select>
+                                        }
+                                        else if(field.InputType == "selectg")
+                                        {
+                                            <select class="form-control" @bind="field.Value" @ref="field.InputRef" @onblur="() => FinishEditing(field)">
+                                                <option value="Masculino">Masculino</option>
+                                                <option value="Femenino">Femenino</option>
+                                                <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+                                                <option value="Otro">Otro</option>
                                             </select>
                                         }
                                         else
@@ -241,6 +253,7 @@
     {
         new EditableField("Nombre", string.Empty, "text", new List<string> { "Debe tener entre 2 y 20 caracteres." }),
         new EditableField("Apellidos", string.Empty, "text", new List<string> { "Debe tener entre 2 y 50 caracteres." }),
+        new EditableField("Genero", string.Empty, "selectg"),
         new EditableField("Nombre de usuario", string.Empty, "text", new List<string> { "Debe tener entre 5 y 20 caracteres."}),
         new EditableField("Correo Electrónico", string.Empty, "text", new List<string> { "Debe ser un correo válido (ej: usuario@ejemplo.com)." }),
         new EditableField("Fecha de Nacimiento", string.Empty, "date"),
@@ -284,12 +297,13 @@
                         // Rellenar los campos con la información del objeto User
                         basicInfoFields[0].Value = userInfo.Name;
                         basicInfoFields[1].Value = userInfo.LastName;
-                        basicInfoFields[2].Value = userInfo.UserName;
-                        basicInfoFields[3].Value = userInfo.Email;
-                        basicInfoFields[4].Value = userInfo.BirthDate.ToString("yyyy-MM-dd");
-                        basicInfoFields[5].Value = userInfo?.PhoneNumber ?? string.Empty;
-                        basicInfoFields[6].Value = userInfo?.Address ?? string.Empty;
-                        basicInfoFields[7].Value = userInfo?.Country ?? string.Empty;
+                        basicInfoFields[2].Value = userInfo.Gender;
+                        basicInfoFields[3].Value = userInfo.UserName;
+                        basicInfoFields[4].Value = userInfo.Email;
+                        basicInfoFields[5].Value = userInfo.BirthDate.ToString("yyyy-MM-dd");
+                        basicInfoFields[6].Value = userInfo?.PhoneNumber ?? string.Empty;
+                        basicInfoFields[7].Value = userInfo?.Address ?? string.Empty;
+                        basicInfoFields[8].Value = userInfo?.Country ?? string.Empty;
 
                         //Guardamos el usuario original en caso de descartar los cambios
                         originalUserInfo = JsonSerializer.Deserialize<UserInfo>(userInfoClaim.Value);
@@ -328,12 +342,13 @@
         {
             userInfo.Name = basicInfoFields[0].Value;
             userInfo.LastName = basicInfoFields[1].Value;
-            userInfo.UserName = basicInfoFields[2].Value;
-            userInfo.Email = basicInfoFields[3].Value;
-            userInfo.BirthDate = DateTime.Parse(basicInfoFields[4].Value);
-            userInfo.PhoneNumber = basicInfoFields[5].Value;
-            userInfo.Address = basicInfoFields[6].Value;
-            userInfo.Country = basicInfoFields[7].Value;
+            userInfo.Gender = basicInfoFields[2].Value;
+            userInfo.UserName = basicInfoFields[3].Value;
+            userInfo.Email = basicInfoFields[4].Value;
+            userInfo.BirthDate = DateTime.Parse(basicInfoFields[5].Value);
+            userInfo.PhoneNumber = basicInfoFields[6].Value;
+            userInfo.Address = basicInfoFields[7].Value;
+            userInfo.Country = basicInfoFields[8].Value;
 
             // Llamar al servicio para actualizar la información en el backend
             var result = await Http.PutAsJsonAsync("api/user/update", userInfo);
@@ -342,6 +357,17 @@
             {
                 // Snackbar.Add("Información actualizada correctamente.", Severity.Success);
                 // Notificar el cambio de estado
+                _hasChanges = false;
+                ReloadEditableFields();
+                StateHasChanged();
+
+                var resultado = await Swal.FireAsync(new SweetAlertOptions
+                    {
+                        Title = "Cambios guardados",
+                        Text = "Los cambios se han guardado correctamente.",
+                        Icon = SweetAlertIcon.Success
+                    });
+
                 if (AuthenticationStateProvider is CustomAuthenticationStateProvider customProvider)
                 {
                     await customProvider.GetAuthenticationStateAsync();
@@ -367,16 +393,16 @@
             }
         }
 
-        _hasChanges = false;
-        ReloadEditableFields();
-        StateHasChanged();
+        // _hasChanges = false;
+        // ReloadEditableFields();
+        // StateHasChanged();
 
-        var resultado = await Swal.FireAsync(new SweetAlertOptions
-        {
-            Title = "Cambios guardados",
-            Text = "Los cambios se han guardado correctamente.",
-            Icon = SweetAlertIcon.Success
-        });
+        // var resultado = await Swal.FireAsync(new SweetAlertOptions
+        // {
+        //     Title = "Cambios guardados",
+        //     Text = "Los cambios se han guardado correctamente.",
+        //     Icon = SweetAlertIcon.Success
+        // });
     }
 
     // Manejo de archivos
@@ -465,12 +491,13 @@
         {
             basicInfoFields[0].Value = userInfo.Name;
             basicInfoFields[1].Value = userInfo.LastName;
-            basicInfoFields[2].Value = userInfo.UserName;
-            basicInfoFields[3].Value = userInfo.Email;
-            basicInfoFields[4].Value = userInfo.BirthDate.ToString("yyyy-MM-dd");
-            basicInfoFields[5].Value = userInfo?.PhoneNumber ?? string.Empty;
-            basicInfoFields[6].Value = userInfo?.Address ?? string.Empty;
-            basicInfoFields[7].Value = userInfo?.Country ?? string.Empty;
+            basicInfoFields[2].Value = userInfo.Gender;
+            basicInfoFields[3].Value = userInfo.UserName;
+            basicInfoFields[4].Value = userInfo.Email;
+            basicInfoFields[5].Value = userInfo.BirthDate.ToString("yyyy-MM-dd");
+            basicInfoFields[6].Value = userInfo?.PhoneNumber ?? string.Empty;
+            basicInfoFields[7].Value = userInfo?.Address ?? string.Empty;
+            basicInfoFields[8].Value = userInfo?.Country ?? string.Empty;
 
             _hasChanges = false;
             StateHasChanged();
@@ -563,11 +590,26 @@
         {
             var result = await UserService.ChangePasswordAsync(user);
             Snackbar.Clear();
-            Snackbar.Add("Contraseña cambiada con éxito.", Severity.Success);
+            // Snackbar.Add("Contraseña cambiada con éxito.", Severity.Success);
+            var resultado = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Contraseña cambiada",
+                Text = "Tu contraseña ha sido cambiada correctamente.",
+                Icon = SweetAlertIcon.Success
+            });
+
+            showChangePassword();
         }
         catch (ApplicationException ex)
         {
-            Snackbar.Add(ex.Message, Severity.Error);
+            // Snackbar.Add(ex.Message, Severity.Error);
+            var error = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Error al cambiar contraseña",
+                Text = ex.Message,
+                Icon = SweetAlertIcon.Error
+            });
+        
         }
     }
 
