@@ -127,7 +127,7 @@ public class UserController : ControllerBase
         var user = new User
         {
             Document = registerDTO.Document,
-            UserName = registerDTO.UserName.ToLower(),
+            UserName = registerDTO.UserName,
             Name = registerDTO.Name,
             LastName = registerDTO.LastName,
             BirthDate = DateTime.Now,
