@@ -45,6 +45,7 @@ builder.Services.AddSweetAlert2();
 // Application-specific services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ImageUploadService>();
+builder.Services.AddScoped<IFinanceService, FinanceService>();
 
 builder.Services.AddScoped<IFlightService, FlightService>();
 builder.Services.AddScoped<CountryService>();
