@@ -22,6 +22,8 @@ public class Card
     [Required(ErrorMessage = "El código de seguridad de la tarjeta es obligatorio.")]
     public required string SecurityCode { get; set; }
 
+    public decimal? Balance { get; set; } = 3000000;
+
     public int? RegisteredUserId { get; set; }
     public User? RegisteredUser { get; set; }
 }
