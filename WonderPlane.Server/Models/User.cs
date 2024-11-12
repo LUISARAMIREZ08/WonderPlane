@@ -57,6 +57,8 @@ namespace WonderPlane.Server.Models
 
         public UserRole? Role { get; set; }
 
+        public decimal? Balance { get; set; } = 0;
+
         public int? TravelerId { get; set; }
         public Traveler? Traveler { get; set; }
 

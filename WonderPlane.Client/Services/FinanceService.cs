@@ -28,5 +28,36 @@ namespace WonderPlane.Client.Services
             Console.WriteLine($"Respuesta del servidor: {jsonResponse}"); // Aquí se imprime la respuesta del servidor
             return "Tarjeta agregada exitosamente";
         }
+
+        // Método para obtener las tarjetas de un usuario
+        public async Task<List<CardDto>> GetCardsByUserId(int userId)
+        {
+            var response = await _http.GetFromJsonAsync<ResponseAPI<List<CardDto>>>($"api/getcards-by-id?userId={userId}");
+
+            if (response == null || !response.EsCorrecto)
+            {
+                var errorMensaje = response?.Mensaje ?? "Error al obtener las tarjetas";
+                throw new ApplicationException($"Error al obtener las tarjetas: {errorMensaje}");
+            }
+
+            return response.Data ?? new List<CardDto>();
+        }
+
+        // Método para eliminar una tarjeta por su id
+        public async Task<string> DeleteCardAsync(int cardId)
+        {
+            var response = await _http.DeleteAsync($"api/deletecard?cardId={cardId}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResponse = await response.Content.ReadFromJsonAsync<ResponseAPI<object>>();
+                var errorMensaje = errorResponse?.Mensaje ?? "Error al eliminar la tarjeta";
+                throw new ApplicationException($"Error al eliminar la tarjeta: {errorMensaje}");
+            }
+
+            return "Tarjeta eliminada correctamente";
+        }
+
+
     }
 }

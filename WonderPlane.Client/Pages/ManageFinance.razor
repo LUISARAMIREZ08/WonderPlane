@@ -1,0 +1,312 @@
+﻿@page "/manage-finance"
+
+<PageTitle>Gestor financiero</PageTitle>
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using WonderPlane.Shared;
+@using WonderPlane.Client.Services;
+@using WonderPlane.Client.Utils
+@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json
+@using MudBlazor;
+@using System.Security.Claims
+@using CurrieTechnologies.Razor.SweetAlert2
+
+@inject IFinanceService FinanceService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ISnackbar Snackbar;
+@inject NavigationManager NavigationManager
+@inject SweetAlertService Swal
+
+
+<AsideMenu />
+
+<main class="main-container poppins-light">
+    <h1>Gestor financiero</h1>
+
+    <section class="contain">
+
+        <!-- Administrar medios de pago -->
+        <article class="cards-section">
+            <h3>Medios de pago</h3>
+
+            <!-- Filtros -->
+            <div class="buttons-header">
+                <MudButtonGroup Color="Color.Info" Variant="Variant.Filled">
+                    <MudButton OnClick="@ShowAll">Todas</MudButton>
+                    <MudButton OnClick="@ShowCredit">Crédito</MudButton>
+                    <MudButton OnClick="@ShowDebit">Débito</MudButton>
+                </MudButtonGroup>
+
+                <a href="/add-card"><MudFab Color="Color.Info" StartIcon="@Icons.Material.Filled.Add" Label="Agregar tarjeta" /></a>
+            </div>
+
+            @if (filteredCards != null && filteredCards.Any())
+            {
+                @foreach (var card in filteredCards)
+                {
+                    <div class="view-card">
+                        <div class="card-preview">
+                            <div class="franq">
+                                @card.CardTypeDto.ToString()
+                                <img src="@GetFranchiseImage(card.Number)" alt="Franquicia de Tarjeta" />
+                            </div>
+                        </div>
+
+                        <!-- Información de tarjetas -->
+                        <div class="card-info">
+                            <h6>
+                                @if (showFullNumber.ContainsKey(card.Id) && showFullNumber[card.Id])
+                                {
+                                    @FormatCardNumber(card.Number)
+                                }
+                                else
+                                {
+                                    @GetMaskedCardNumber(card.Number)
+                                }
+                                
+                            </h6>
+                            <h6>@ToUpperCase(card.HolderName)</h6>
+                            @if (expandedCards.ContainsKey(card.Id) && expandedCards[card.Id])
+                            {
+                                <!-- Información adicional (acordeón) -->
+                                <h6><strong>Vence:</strong> @((card.ExpirationDate.HasValue) ? card.ExpirationDate.Value.ToString("MM/yy") : "MM/AA")</h6>
+                                <h6>
+                                    <strong>CVV: </strong>
+                                    @if (showFullNumber.ContainsKey(card.Id) && showFullNumber[card.Id])
+                                    {
+                                        @card.SecurityCode
+                                    }
+                                    else
+                                    {
+                                        <span>***</span>
+                                    }
+                                </h6>
+                            }
+
+                        </div>
+
+                        <!-- Acciones -->
+                        <div class="card-actions">
+                            <MudIconButton Icon="@((showFullNumber.ContainsKey(card.Id) && showFullNumber[card.Id]) ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+                                           OnClick="() => ToggleShowFullNumber(card.Id)" />
+                            <MudIconButton Icon="material-symbols-outlined/delete" aria-label="cancel" Color="Color.Error" OnClick="() => DeleteCard(card.Id)" />
+                            @if (expandedCards.ContainsKey(card.Id) && expandedCards[card.Id])
+                            {
+                                <MudIconButton Icon="material-symbols-outlined/keyboard_arrow_up" aria-label="show" Color="Color.Info" OnClick="() => ToggleCardDetails(card.Id)" />
+                            }
+                            else
+                            {
+                                <MudIconButton Icon="material-symbols-outlined/keyboard_arrow_down" aria-label="show" Color="Color.Info" OnClick="() => ToggleCardDetails(card.Id)" />
+                            }
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No tienes tarjetas asociadas.</p>
+            }
+
+        </article>
+
+
+        <!-- Balance de la cuenta -->
+        <article class="money-section">
+            <h3>Balance</h3>
+            <div class="money">
+                <span class="material-symbols-outlined">
+                    attach_money
+                </span>
+                <h4>@userBalance</h4>
+            </div>
+            <p>Recuerda que en tu balance se reflejará solamente el dinero reintegrado o reembolsado.</p>
+        </article>
+    </section>
+</main>
+
+
+@code
+{
+    private bool _showCredit = false;
+    private bool _showDebit = false;
+    private int userId;
+    private decimal? userBalance;
+    private List<CardDto>? cards;
+    private List<CardDto>? filteredCards;
+    private Dictionary<int, bool> expandedCards = new Dictionary<int, bool>(); // Estado de expansión de cada tarjeta
+    private Dictionary<int, bool> showFullNumber = new Dictionary<int, bool>(); // Estado de visualización completa de cada tarjeta
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user?.Identity?.IsAuthenticated == true)
+        {
+            var userInfoClaim = user.FindFirst("UserInfo");
+            if (userInfoClaim != null)
+            {
+                var userInfo = JsonSerializer.Deserialize<UserInfo>(userInfoClaim.Value);
+                if (userInfo != null)
+                {
+                    userId = userInfo.Id;
+                    userBalance = userInfo.Balance;
+                    Console.WriteLine($"User ID: {userId}");
+                }
+            }
+
+            await LoadUserCards();
+            FilterCards();
+        }
+    }
+
+    private async Task LoadUserCards()
+    {
+        try
+        {
+            cards = await FinanceService.GetCardsByUserId(userId);
+            filteredCards = new List<CardDto>(cards);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar las tarjetas: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteCard(int cardId)
+    {
+        var confirmResult = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "¿Estás seguro?",
+            Text = "Esta acción no se puede deshacer.",
+            Icon = SweetAlertIcon.Warning,
+            ShowCancelButton = true,
+            ConfirmButtonText = "Sí, eliminar",
+            CancelButtonText = "Cancelar"
+        });
+
+        if (confirmResult.IsConfirmed)
+        {
+            try
+            {
+                var result = await FinanceService.DeleteCardAsync(cardId);
+                await LoadUserCards();
+                var succesfullMessage = await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Tarjeta eliminada",
+                    Text = "La tarjeta ha sido eliminada correctamente.",
+                    Icon = SweetAlertIcon.Success
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar la tarjeta: {ex.Message}");
+                // Snackbar.Add("Error al eliminar la tarjeta", Severity.Error);
+                var errorMessage = await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Error al eliminar la tarjeta",
+                    Text = $"{Severity.Error}",
+                    Icon = SweetAlertIcon.Error
+                });
+            }
+        }
+    }
+
+    private void ToggleShowFullNumber(int cardId)
+    {
+        if (showFullNumber.ContainsKey(cardId))
+        {
+            showFullNumber[cardId] = !showFullNumber[cardId];
+        }
+        else
+        {
+            showFullNumber[cardId] = true;
+        }
+    }
+
+    private void ToggleCardDetails(int cardId)
+    {
+        if (expandedCards.ContainsKey(cardId))
+        {
+            expandedCards[cardId] = !expandedCards[cardId];
+        }
+        else
+        {
+            expandedCards[cardId] = true;
+        }
+    }
+
+    private void FilterCards()
+    {
+        if (_showCredit)
+            filteredCards = cards?.Where(card => card.CardTypeDto == CardTypeDto.Credit).ToList();
+        else if (_showDebit)
+            filteredCards = cards?.Where(card => card.CardTypeDto == CardTypeDto.Debit).ToList();
+        else
+            filteredCards = cards != null ? new List<CardDto>(cards) : new List<CardDto>();
+    }
+
+    private void ShowCredit()
+    {
+        _showCredit = true;
+        _showDebit = false;
+        FilterCards();
+    }
+
+    private void ShowDebit()
+    {
+        _showCredit = false;
+        _showDebit = true;
+        FilterCards();
+    }
+
+    private void ShowAll()
+    {
+        _showCredit = false;
+        _showDebit = false;
+        FilterCards();
+    }
+
+    
+    // Convierte el nombre del titular a mayúsculas
+    private string ToUpperCase(string text)
+    {
+        return !string.IsNullOrEmpty(text) ? text.ToUpper() : "NOMBRE TITULAR";
+    }
+
+    // Formatea el número de la tarjeta para mostrarlo en el campo de vista previa
+    private string FormatCardNumber(string cardNumber)
+    {
+        return !string.IsNullOrEmpty(cardNumber)
+            ? string.Join(" ", Enumerable.Range(0, (cardNumber.Length + 3) / 4)
+                                          .Select(i => cardNumber.Substring(i * 4, Math.Min(4, cardNumber.Length - i * 4))))
+            : "____ ____ ____ ____";
+    }
+
+    // Convierte el número de la tarjeta enmascarado
+    private string GetMaskedCardNumber(string cardNumber)
+    {
+        var masked = cardNumber.Length > 4
+            ? new string('*', cardNumber.Length - 4) + cardNumber[^4..]
+            : cardNumber;
+
+        return FormatCardNumber(masked);
+    }
+
+    // Obtiene la imagen de la franquicia de la tarjeta
+    private string GetFranchiseImage(string cardNumber)
+    {
+
+        if (cardNumber.StartsWith("4"))
+            return "img/visa.png";
+        if (cardNumber.StartsWith("5"))
+            return "img/Mastercard.png";
+        if (cardNumber.StartsWith("3"))
+            return "img/AmericanExpress.png";
+        return "img/mastercard.png";
+
+    }
+}
+
