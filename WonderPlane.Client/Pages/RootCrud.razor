@@ -30,10 +30,8 @@
         <!-- Cabecera del formulario -->
         <div class="create-button">
 
-            <div class="button" onclick="@(() => showFormCreate())"><span class="material-symbols-outlined">add</span>Crear usuario
-            </div>
-           @*  <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AddBox" Color="Color.Info" onclick="@(() => showFormCreate())"><MudText>Añadir Administrador</MudText></MudButton> *@
-
+            <div class="button" onclick="@(() => showFormCreate())"><span class="material-symbols-outlined">add</span>Crear usuario</div>
+    
             <MudTextField T="string" ValueChanged="@OnSearch" Immediate="true" Placeholder="Buscar"
                           Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
                           IconSize="Size.Medium"></MudTextField>

@@ -7,63 +7,59 @@
 @inject IJSRuntime JS
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<header class="poppins-light">
-    <div class="navbar-logo poppins-regular">
+<header class="poppins-regular">
+    <div class="navbar-logo">
         <img src="img/logoNuevo.svg" alt="Logo" />
         <span>WonderPlane</span>
     </div>
 
     <ul class="menu-horizontal">
-        <li><a href="/">Inicio</a></li>
-        <li>
+        <li class="header-option"><a href="/">Inicio</a></li>
+        <li class="header-option">
             <a href="#">Buscar vuelos</a>
-            <ul class="menu-vertical">
-                <li><a href="#">Nacional</a></li>
-                <li><a href="#">Internacional</a></li>
-            </ul>
         </li>
 
         <AuthorizeView Roles="Root">
             <Authorized>
-                <li><a href="/rootcrud">Gestionar Administradores</a></li>
+                <li class="header-option"><a href="/rootcrud">Gestionar Administradores</a></li>
             </Authorized>
         </AuthorizeView>
 
         <AuthorizeView Roles="Admin">
             <Authorized>
-                <li><a href="/manage-flights">Gestionar vuelos</a></li>
+                <li class="header-option"><a href="/manage-flights">Gestionar vuelos</a></li>
             </Authorized>
         </AuthorizeView>
 
         <AuthorizeView>
             <Authorized>
-                <li>
-                    <a class="profile" href="#">
-                        @if (!string.IsNullOrEmpty(userInfo?.Image))
-                        {
-                            <img src="@userInfo?.Image" />
-                        }
-                        else
-                        {
-                            <MudAvatar Class="profile-avatar" Size="Size.Medium" Style="margin-right:5px; background-color:#0CE8E6; color:white;">
-                                @GetInitials(userInfo)
-                            </MudAvatar>
-                        }
-                        @userInfo?.UserName
-                    </a>
-                    <ul class="menu-vertical">
-                        <li><a href="/editprofile">Ver perfil</a></li>
-                        <li><a href="#" @onclick="Logout">Cerrar sesión</a></li>
-                    </ul>
+                <li @onclick="NavigationToProfile">
+                    @if (!string.IsNullOrEmpty(userInfo?.Image))
+                    {
+                        <img class="avatar" src="@userInfo?.Image" />
+                    }
+                    else
+                    {
+                        <MudAvatar Class="avatar" Size="Size.Medium" Style="margin:0 5px; background-color:#0CE8E6; color:white;">
+                            @GetInitials(userInfo)
+                        </MudAvatar>
+                    }
+                    @* @userInfo?.UserName *@
+                </li>
+                <li @onclick="Logout">
+                    <span class="material-symbols-outlined">
+                        logout
+                    </span>
                 </li>
             </Authorized>
             <NotAuthorized>
-                <li><a href="/login">Iniciar sesión</a></li>
-                <li><a href="/register">Registrarse</a></li>
+                <li class="header-option"><a href="/login">Iniciar sesión</a></li>
+                <li class="header-option"><a href="/register">Registrarse</a></li>
             </NotAuthorized>
         </AuthorizeView>
 
     </ul>
+   
 </header>
 
 @code {
@@ -107,6 +103,11 @@
                 userInfo = JsonSerializer.Deserialize<UserInfo>(userInfoClaim.Value);
             }
         }
+    }
+
+    private void NavigationToProfile()
+    {
+        navigation.NavigateTo("/editprofile");
     }
 
     // Método para cerrar sesión
