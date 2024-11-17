@@ -26,22 +26,22 @@ public class PromotionDTO
     public decimal Discount { get; set; }
 
     [Required(ErrorMessage = "El estado de la promoción es obligatorio.")]
-    public PromotionStatusDto PromotionStatusDto { get; set; }
+    public PromotionStatusEnum PromotionStatus { get; set; }
 
     [Required(ErrorMessage = "El tipo de promoción es obligatorio.")]
-    public PromotionTypeDto PromotionTypeDto { get; set; }
+    public PromotionTypeEnum PromotionType { get; set; }
 
     public int? FlightId { get; set; } // Opcional
 }
 
 
-public enum PromotionStatusDto
+public enum PromotionStatusEnum
 {
     Active,
     Inactive
 }
 
-public enum PromotionTypeDto
+public enum PromotionTypeEnum
 {
     Seat,
     Bag,

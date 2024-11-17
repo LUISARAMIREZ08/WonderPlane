@@ -50,7 +50,13 @@ namespace WonderPlane.Server.Migrations
                     FlightCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
                     FirstClassPrice = table.Column<int>(type: "int", nullable: false),
-                    EconomicClassPrice = table.Column<int>(type: "int", nullable: false)
+                    FirstClassPricePromotion = table.Column<int>(type: "int", nullable: false),
+                    EconomicClassPrice = table.Column<int>(type: "int", nullable: false),
+                    EconomicClassPricePromotion = table.Column<int>(type: "int", nullable: false),
+                    HasPromotion = table.Column<bool>(type: "bit", nullable: false),
+                    CodePromotion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DiscountPercentage = table.Column<int>(type: "int", nullable: true),
+                    PromotionDescription = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

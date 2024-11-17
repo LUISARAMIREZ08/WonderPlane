@@ -44,6 +44,21 @@
     padding: 15px;
 }
 
+.container-promotion {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    background-color: #FF6699;
+    gap: 30px;
+    width: 100%;
+    color: white;
+    border: 1px solid #FF1F69;
+    border-radius: 5px;
+    margin-top: 2%;
+    padding: 15px;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+}
+
 .form-container-left {
     width: 100%;
 }

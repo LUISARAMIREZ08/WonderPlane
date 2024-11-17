@@ -28,7 +28,43 @@
                 <span class="small-validation-message">
                     <ValidationMessage For="@(() => newFlight.IsInternational)"></ValidationMessage>
                 </span>
+                @if (newFlight.HasPromotion)
+                {
+                    <MudSwitch @bind-Value="newFlight.HasPromotion" @onchange="CalculatePromotion" Color="Color.Secondary" Label="Retirar Promoción" />
+                }
+                else
+                {
+                    <MudSwitch @bind-Value="newFlight.HasPromotion" @onchange="CalculatePromotion" Color="Color.Secondary" Label="Aplicar Promoción" />
+                }
+                
+                
             </div>
+            @if (newFlight.HasPromotion)
+            {
+                <div class="container-promotion">
+                    <div class="input">
+                        <label class="form-label">Código de Promoción</label>
+                        <InputText class="form-control" @bind-Value="newFlight.CodePromotion" @onchange="CalculatePromotion" style="font-size: 0.8rem;color: #507687"></InputText>
+                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.CodePromotion)"></ValidationMessage></span>
+                    </div>
+                    <div class="input">
+                        <label class="form-label">Descuento</label>
+                        <div class="input-group">
+                            <InputNumber class="form-control" @bind-Value="newFlight.DiscountPercentage" style="font-size: 0.8rem; color: #507687;" />
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <span class="small-validation-message">
+                            <ValidationMessage For="@(() => newFlight.DiscountPercentage)" />
+                        </span>
+                    </div>
+                    <div class="input">
+                        <label class="form-label">Descripción de la Promoción</label>
+                        <InputText class="form-control" @bind-Value="newFlight.PromotionDescription" style="font-size: 0.8rem;color: #507687"></InputText>
+                        <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.PromotionDescription)"></ValidationMessage></span>
+                    </div>
+                </div>
+
+            }
             <div class="form-container">
 
                 <div class="form-container-left">
@@ -89,27 +125,26 @@
                             <ValidationMessage For="@(() => newFlight.ArriveTime)" />
                         </span>
                     </div>
-                    
                 </div>
                 <div class="form-container-right-2">
                     <div class="input">
                         <label class="form-label">Precio Primera Clase "Cop"</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span> <!-- Icono de dólar -->
-                            <InputNumber class="form-control" @bind-Value="newFlight.FirstClassPrice" style="font-size: 0.8rem; color: #507687;" />
+                            <InputNumber class="form-control" @bind-Value="newFlight.FirstClassPricePromotion" @onchange="CalculatePromotion" style="font-size: 0.8rem; color: #507687;" />
                         </div>
                         <span class="small-validation-message">
-                            <ValidationMessage For="@(() => newFlight.FirstClassPrice)" />
+                            <ValidationMessage For="@(() => newFlight.FirstClassPricePromotion)" />
                         </span>
                     </div>
                     <div class="input">
                         <label class="form-label">Precio Clase Economica "Cop"</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span> <!-- Icono de dólar -->
-                            <InputNumber class="form-control" @bind-Value="newFlight.EconomicClassPrice" style="font-size: 0.8rem; color: #507687;" />
+                            <InputNumber class="form-control" @bind-Value="newFlight.EconomicClassPricePromotion" @onchange="CalculatePromotion" style="font-size: 0.8rem; color: #507687;" />
                         </div>
                         <span class="small-validation-message">
-                            <ValidationMessage For="@(() => newFlight.EconomicClassPrice)" />
+                            <ValidationMessage For="@(() => newFlight.EconomicClassPricePromotion)" />
                         </span>
                     </div>
                     <div class="input">
@@ -127,7 +162,6 @@
             <div class="form-button">
                 <button class="submit-button" type="submit">Actualizar Vuelo</button>
             </div>
-
         </EditForm>
     </div>
 
@@ -146,12 +180,18 @@
             ArriveDate = DateTime.Now,
             ArriveTime = "00:00",
             FirstClassPrice = 0,
+            FirstClassPricePromotion = 0,
             IsInternational = false,
             FlightStatus = 0,
             BagPrice = 0,
             FlightCode = string.Empty,
             Duration = 0,
             EconomicClassPrice = 0,
+            EconomicClassPricePromotion = 0,
+            HasPromotion = false,
+            CodePromotion = string.Empty,
+            DiscountPercentage = 0,
+            PromotionDescription = string.Empty
         };
     private TimeSpan? _departureTime;
     private TimeSpan? _arriveTime;
@@ -173,18 +213,36 @@
             if (_departureTime.HasValue)
             {
                 var currentTime = DateTime.Now.TimeOfDay;
-
-                // Validar que la hora de salida no sea anterior a la hora actual
-                if (_departureTime.Value < currentTime)
+                var currentDate = DateTime.Now.Date;
+                var departureDate = newFlight.DepartureDate.Date;
+                if ((departureDate == currentDate) && (_departureTime.HasValue && _departureTime.Value < currentTime))
                 {
                     Snackbar.Add("La hora de salida no puede ser anterior a la hora actual.", Severity.Error);
                     return;
                 }
-                newFlight.DepartureTime = _departureTime.Value.ToString(@"hh\:mm");
+                double duration = (_departureTime - currentTime)?.TotalHours ?? 0;
+
+                if (newFlight.IsInternational)
+                {
+                    if ((departureDate == currentDate) && duration < 3)
+                    {
+                        Snackbar.Add("La hora de salida debe ser al menos 3 horas después de la hora actual.", Severity.Error);
+                        return;
+                    }
+                }
+                else
+                {
+                    if ((departureDate == currentDate) && duration < 1)
+                    {
+                        Snackbar.Add("La hora de salida debe ser al menos 1 hora después de la hora actual.", Severity.Error);
+                        return;
+                    }
+                }
             }
 
             if (idFlight.HasValue)
             {
+                CalculatePromotion();
                 await FlightService.UpdateFlight(idFlight.Value, newFlight);
                 Snackbar.Add("Vuelo Actualizado Correctamente", Severity.Success);
                 navigation.NavigateTo("/manage-flights");
@@ -199,18 +257,16 @@
     private void OnArriveTimeChanged(TimeSpan? newTime)
     {
         _departureTime = newTime ?? TimeSpan.Zero;
-
         if (newTime.HasValue)
         {
+            newFlight.DepartureTime = $"{_departureTime.Value.Hours:D2}:{_departureTime.Value.Minutes:D2}";
             var resultadoLlegada = CalcularFechaHoraLlegada(newFlight.DepartureDate, _departureTime);
             newFlight.ArriveDate = resultadoLlegada.FechaLlegada;
-            newFlight.ArriveTime = resultadoLlegada.HoraLlegada.ToString(@"hh\:mm");
-            _arriveTime = TimeSpan.Parse(newFlight.ArriveTime);
+            _arriveTime = resultadoLlegada.HoraLlegada;
         }
         else
         {
             _arriveTime = TimeSpan.Zero;
-            newFlight.ArriveTime = "00:00";
         }
     }
 
@@ -222,4 +278,21 @@
         return (momentoLlegada.Date, momentoLlegada.TimeOfDay);
     }
 
+    private void CalculatePromotion()
+    {
+        if (newFlight.HasPromotion)
+        {
+            newFlight.FirstClassPricePromotion = (int)(newFlight.FirstClassPrice * (1 - (newFlight.DiscountPercentage ?? 0) / 100.0));
+            newFlight.EconomicClassPricePromotion = (int)(newFlight.EconomicClassPrice * (1 - (newFlight.DiscountPercentage ?? 0) / 100.0));
+        }
+        else
+        {
+            newFlight.FirstClassPricePromotion = newFlight.FirstClassPrice;
+            newFlight.EconomicClassPricePromotion = newFlight.EconomicClassPrice;
+            newFlight.CodePromotion = string.Empty;
+            newFlight.DiscountPercentage = 0;
+            newFlight.PromotionDescription = string.Empty;
+        }
+
+    }
 }
