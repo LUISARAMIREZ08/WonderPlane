@@ -1,5 +1,5 @@
 ﻿@page "/rootcrud"
-@attribute [Authorize (Roles = "Root")]
+@* @attribute [Authorize (Roles = "Root")] *@
 
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 
@@ -21,7 +21,7 @@
 <PageTitle>Gestión de administradores</PageTitle>
 
 
-<AsideMenu />
+@* <AsideMenu />
 
 <main class="contain poppins-light">
     <h1>Administradores</h1>
@@ -31,15 +31,15 @@
         <div class="create-button">
 
             <div class="button" onclick="@(() => showFormCreate())"><span class="material-symbols-outlined">add</span>Crear usuario</div>
-    
+
             <MudTextField T="string" ValueChanged="@OnSearch" Immediate="true" Placeholder="Buscar"
-                          Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
-                          IconSize="Size.Medium"></MudTextField>
+            Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+            IconSize="Size.Medium"></MudTextField>
         </div>
 
         <!-- Formulario -->
         <MudTable Items="_admins" Striped="false" Hover="true" Bordered="false" RowsPerPage="5" ServerData="ServerReload" @ref="_table">
-            
+
             <HeaderContent>
                 <MudTh>Avatar</MudTh>
                 <MudTh>Id</MudTh>
@@ -95,12 +95,119 @@
         </div>
     }
 
+</main> *@
+
+<main class="container poppins-light">
+    <div class="tittle">
+        <h4>Gestión de administradores</h4>
+    </div>
+    <div>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AddBox" Color="Color.Info" OnClick="@(() => navigation.NavigateTo("/rootcrud/createadmin"))"><MudText>Añadir Administrador</MudText></MudButton>
+    </div>
+    <MudTable Items="_admins" FixedHeader=true Breakpoint="Breakpoint.Sm" Hover=true ServerData="ServerReload" @ref="_table" Style="margin-top:3%; margin-block-end:3%" Elevation="4">
+        <ToolBarContent>
+            <MudIcon Icon="material-symbols-outlined/table" Style="margin-right:1%" />
+            <MudText Typo="Typo.h6">Administradores activos</MudText>
+            <MudSpacer />
+            <MudTextField T="string" ValueChanged="@OnSearch" Immediate="true" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Acciones</MudTh>
+            <MudTh>Id</MudTh>
+            <MudTh>Avatar</MudTh>
+            <MudTh>Documento</MudTh>
+            <MudTh>Nombre</MudTh>
+            <MudTh>Apellidos</MudTh>
+            <MudTh>Usuario</MudTh>
+            <MudTh>Correo</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Acciones">
+                <div class="action">
+                    <MudTooltip Text="Desactivar administrador"><MudIconButton Icon="material-symbols-outlined/cancel" aria-label="cancel" Color="Color.Secondary" OnClick="@(() => showConfirmDelete(context.Id, context.Name))" /></MudTooltip>
+                </div>
+
+            </MudTd>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Avatar">
+                    @if (!string.IsNullOrWhiteSpace(context.Image))
+                    {
+                        <MudAvatar>
+                            <MudImage Src="@context.Image" Alt="Imagen de perfil del administrador"></MudImage>
+                        </MudAvatar>
+                    }
+                    else
+                    {
+                        <MudAvatar Color="@Color.Info" Size="Size.Medium" Style="margin-right:5px;">
+                            @GetInitials(context)
+                        </MudAvatar>
+                    }
+            </MudTd>
+            <MudTd DataLabel="Documento de identidad">@context.Document</MudTd>
+            <MudTd DataLabel="Nombre">@context.Name</MudTd>
+            <MudTd DataLabel="Apellidos">@context.LastName</MudTd>
+            <MudTd DataLabel="Nombre de usuario">@context.UserName</MudTd>
+            <MudTd DataLabel="Correo">@context.Email</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 5, int.MaxValue }"
+                           InfoFormat="@infoFormat"
+                           AllItemsText="@allItemsText"
+                           HorizontalAlignment="@horizontalAlignment"
+                           HideRowsPerPage="@hideRowsPerPage"
+                           HidePageNumber="@hidePageNumber"
+                           HidePagination="@hidePagination" />
+        </PagerContent>
+    </MudTable>
+
 </main>
+
+<style>
+    .mud-table-toolbar {
+        color: #071952;
+    }
+
+    .mud-table-sticky-header * .mud-table-root .mud-table-head * .mud-table-cell {
+        background-color: #EEEEEE;
+        border-block-end: solid 1px lightgray;
+        color: #071952;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .mud-table-root .mud-table-head .mud-table-cell {
+        font-size: smaller;
+        color: #071952;
+        text-align: center;
+    }
+
+    .mud-table-root .mud-table-body .mud-table-cell {
+        font-size: smaller;
+        color: #071952;
+        text-align: center;
+    }
+
+    .swal2-styled.swal2-confirm {
+        background-color: dodgerblue;
+    }
+
+    .swal2-styled.swal2-cancel {
+        background-color: #FF1F69;
+    }
+</style>
 
 @code {
 
+    bool fixedheader = true;
+    private string searchString1 = "";
+    private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center;
+    private bool hidePageNumber;
+    private bool hidePagination;
+    private bool hideRowsPerPage = true;
+    private string infoFormat = "{first_item}-{last_item} de {all_items}";
+    private string allItemsText = "Todos";
+
     private MudTable<Admin>? _table; // Referencia a la tabla de administradores
-    private bool _showCreateUser = false;
     private bool isFormVisible = false;
     private string _searchString = "";  
     private List<Admin> _admins = new List<Admin>();
@@ -119,11 +226,11 @@
         public string? Image { get; set; }
     }
 
-
     // Cargar administradores al inicializar
     protected override async Task OnInitializedAsync()
     {
         await LoadAdmins(); // Cargar los administradores al inicializar
+        
     }
 
     // Función para buscar administradores
@@ -169,6 +276,7 @@
     {
         var response = await Http.GetFromJsonAsync<List<Admin>>("api/admins"); // Llama a tu API para obtener la lista de administradores
         _admins = response ?? new List<Admin>();
+        Console.WriteLine(_admins);
     }
 
     // Función para borrar administrador
@@ -194,30 +302,6 @@
         else
         {
             Snackbar.Add("Error al desactivar administrador.", Severity.Error);
-        }
-    }
-
-
-    // Función para mostrar el formulario de crear usuario
-    public async Task showFormCreate()
-    {
-        if (_showCreateUser)
-        {
-            // Inicia la animación de salida al quitar la clase 'show'
-            _showCreateUser = false;
-            await Task.Delay(500); // Espera a que la animación se complete
-            StateHasChanged();
-        }
-        else
-        {
-            // Muestra el formulario añadiendo la clase 'show'
-            _showCreateUser = true;
-        }
-
-        // Recargar datos en la tabla si es necesario
-        if (_table != null)
-        {
-            await _table.ReloadServerData();
         }
     }
 

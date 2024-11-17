@@ -1,0 +1,38 @@
+﻿@page "/news"
+
+@using WonderPlane.Shared;
+@using WonderPlane.Client.Services;
+@using WonderPlane.Client.Components
+@using WonderPlane.Client.Utils
+@using MudBlazor;
+@using CurrieTechnologies.Razor.SweetAlert2;
+
+@inject NavigationManager navigation;
+@inject ISnackbar Snackbar;
+@inject SweetAlertService Swal;
+
+<PageTitle>Noticias</PageTitle>
+
+<AsideMenu />
+<div class="carousel-container">
+    <Carousel />
+</div>
+<main class="main-content poppins-light">
+   
+    <section class="filters">
+        <MudButtonGroup Color="Color.Info" Variant="Variant.Filled">
+            <MudButton>Todo</MudButton>
+            <MudButton StartIcon="material-symbols-outlined/flight_takeoff">Nuevos vuelos</MudButton>
+            <MudButton StartIcon="material-symbols-outlined/percent">Promociones</MudButton>
+        </MudButtonGroup>
+    </section>
+
+    <h2 class="filter-origin poppins-semibold">Promociones desde <span>Pereira</span></h2>
+    
+    <CardsInformation />
+
+</main>
+
+@code {
+
+}
