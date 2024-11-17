@@ -204,6 +204,11 @@
             newFlight = await FlightService.SearchFlight(idFlight.Value);
             _departureTime = TimeSpan.Parse(newFlight.DepartureTime);
             _arriveTime = TimeSpan.Parse(newFlight.ArriveTime);
+            if(newFlight.HasPromotion == false)
+            {
+                newFlight.FirstClassPricePromotion = newFlight.FirstClassPrice;
+                newFlight.EconomicClassPricePromotion = newFlight.EconomicClassPrice;
+            }
         }
     }
     private async Task OnValidSubmit()
