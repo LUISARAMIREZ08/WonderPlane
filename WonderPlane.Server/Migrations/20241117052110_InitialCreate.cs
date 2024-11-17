@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WonderPlane.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,11 +46,17 @@ namespace WonderPlane.Server.Migrations
                     ArriveTime = table.Column<TimeSpan>(type: "time", nullable: false),
                     FlightStatus = table.Column<int>(type: "int", nullable: false),
                     IsInternational = table.Column<bool>(type: "bit", nullable: false),
-                    BagPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    BagPrice = table.Column<int>(type: "int", nullable: false),
                     FlightCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
-                    FirstClassPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    EconomicClassPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
+                    FirstClassPrice = table.Column<int>(type: "int", nullable: false),
+                    FirstClassPricePromotion = table.Column<int>(type: "int", nullable: false),
+                    EconomicClassPrice = table.Column<int>(type: "int", nullable: false),
+                    EconomicClassPricePromotion = table.Column<int>(type: "int", nullable: false),
+                    HasPromotion = table.Column<bool>(type: "bit", nullable: false),
+                    CodePromotion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DiscountPercentage = table.Column<int>(type: "int", nullable: true),
+                    PromotionDescription = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

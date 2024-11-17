@@ -11,11 +11,11 @@ namespace WonderPlane.Client.Utils
             { "Londres (LON) - Reino Unido (UK):Cartagena (CTG) - Colombia (CO)", 840 },
             { "Londres (LON) - Reino Unido (UK):Pereira (PEI) - Colombia (CO)", 1020 },
             { "New York (NYC) - Estados Unidos (US):Bogotá (BOG) - Colombia (CO)", 360 },
-            { "New York (NYC) - Estados Unidos (US):Cali (CLO) - Colombia (CO)", 540 },
+            { "New York (NYC) - Estados Unidos (US):Cali (CLO) - Colombia (CO)", 343 },
             { "New York (NYC) - Estados Unidos (US):Medellín (MDE) - Colombia (CO)", 345 },
-            { "New York (NYC) - Estados Unidos (US):Cartagena (CTG) - Colombia (CO)", 540 },
-            { "New York (NYC) - Estados Unidos (US):Pereira (PEI) - Colombia (CO)", 540 },
-            { "Madrid (MAD) - España (ES):Bogotá (BOG) - Colombia (CO)", 300 },
+            { "New York (NYC) - Estados Unidos (US):Cartagena (CTG) - Colombia (CO)", 300 },
+            { "New York (NYC) - Estados Unidos (US):Pereira (PEI) - Colombia (CO)", 343 },
+            { "Madrid (MAD) - España (ES):Bogotá (BOG) - Colombia (CO)", 625 },
             { "Madrid (MAD) - España (ES):Cali (CLO) - Colombia (CO)", 780  },
             { "Madrid (MAD) - España (ES):Medellín (MDE) - Colombia (CO)", 600 },
             { "Madrid (MAD) - España (ES):Cartagena (CTG) - Colombia (CO)", 800 },
@@ -26,10 +26,10 @@ namespace WonderPlane.Client.Utils
             { "Buenos Aires (BUE) - Argentina (AR):Cartagena (CTG) - Colombia (CO)", 680 },
             { "Buenos Aires (BUE) - Argentina (AR):Pereira (PEI) - Colombia (CO)", 540  },
             { "Miami (MIA) - Estados Unidos (US):Bogotá (BOG) - Colombia (CO)", 220 },
-            { "Miami (MIA) - Estados Unidos (US):Cali (CLO) - Colombia (CO)", 360 },
+            { "Miami (MIA) - Estados Unidos (US):Cali (CLO) - Colombia (CO)", 235 },
             { "Miami (MIA) - Estados Unidos (US):Medellín (MDE) - Colombia (CO)", 220 },
-            { "Miami (MIA) - Estados Unidos (US):Cartagena (CTG) - Colombia (CO)", 370 },
-            { "Miami (MIA) - Estados Unidos (US):Pereira (PEI) - Colombia (CO)", 430 },
+            { "Miami (MIA) - Estados Unidos (US):Cartagena (CTG) - Colombia (CO)", 180 },
+            { "Miami (MIA) - Estados Unidos (US):Pereira (PEI) - Colombia (CO)", 180 },
         };
 
         public static int CalculateDuration(string origin, string destination, bool isInternational)
@@ -51,7 +51,7 @@ namespace WonderPlane.Client.Utils
             }
             else
             {
-                return 60; // Fixed duration for domestic flights
+                return 60; 
             }
         }
 
@@ -71,7 +71,6 @@ namespace WonderPlane.Client.Utils
             {
                 return $"{hours} h";
             }
-            
         }
     }
 }

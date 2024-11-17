@@ -17,7 +17,7 @@
 <AsideMenu />
 <main class="container poppins-light">
     <div class="tittle">
-        <h4>Gestión de Vuelos</h4>
+        <h3>Gestión de Vuelos</h3>
     </div>
     <div>
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AddBox" Color="Color.Info" OnClick="@(() => navigation.NavigateTo("/manage-flights/flight"))"><MudText>Añadir Vuelo</MudText></MudButton>
@@ -59,9 +59,13 @@
             <MudTd DataLabel="Fecha Llegada">@context.ArriveDate.ToString("dd/MM/yyyy")</MudTd>
             <MudTd DataLabel="Hora Llegada">@context.ArriveTime.Substring(0, 5)</MudTd>
             <MudTd DataLabel="Duración">@FlightDuration.FormatDuration(context.Duration)</MudTd>
-            <MudTd DataLabel="$ Primera Clase">$@context.FirstClassPrice.ToString("N0")</MudTd>
-            <MudTd DataLabel="$ Primera Clase">$@context.FirstClassPrice.ToString("N0")</MudTd>
-            <MudTd DataLabel="$ Clase Economica">$@context.EconomicClassPrice.ToString("N0")</MudTd>
+            <MudTd DataLabel="$ Maleta">$@context.BagPrice.ToString("N0")</MudTd>
+            <MudTd DataLabel="$ Primera Clase">
+                @(@context.HasPromotion ? @context.FirstClassPricePromotion.ToString("N0") : @context.FirstClassPrice.ToString("N0"))
+            </MudTd>
+            <MudTd DataLabel="$ Clase Economica">
+                @(@context.HasPromotion ? @context.EconomicClassPricePromotion.ToString("N0") : @context.EconomicClassPrice.ToString("N0"))
+            </MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { 5, int.MaxValue }"

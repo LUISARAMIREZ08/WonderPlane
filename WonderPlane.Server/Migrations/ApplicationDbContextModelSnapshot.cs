@@ -98,9 +98,11 @@ namespace WonderPlane.Server.Migrations
                     b.Property<TimeSpan>("ArriveTime")
                         .HasColumnType("time");
 
-                    b.Property<decimal>("BagPrice")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("BagPrice")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CodePromotion")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DepartureDate")
                         .HasColumnType("datetime2");
@@ -112,16 +114,23 @@ namespace WonderPlane.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("DiscountPercentage")
+                        .HasColumnType("int");
+
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("EconomicClassPrice")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("EconomicClassPrice")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("FirstClassPrice")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("EconomicClassPricePromotion")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FirstClassPrice")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FirstClassPricePromotion")
+                        .HasColumnType("int");
 
                     b.Property<string>("FlightCode")
                         .IsRequired()
@@ -130,11 +139,17 @@ namespace WonderPlane.Server.Migrations
                     b.Property<int>("FlightStatus")
                         .HasColumnType("int");
 
+                    b.Property<bool>("HasPromotion")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsInternational")
                         .HasColumnType("bit");
 
                     b.Property<string>("Origin")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PromotionDescription")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
