@@ -10,29 +10,303 @@
 @inject NavigationManager navigation;
 @inject ISnackbar Snackbar;
 @inject SweetAlertService Swal;
+@inject IFlightService FlightService;
+@inject IHttpClientFactory HttpClientFactory
 
 <PageTitle>Noticias</PageTitle>
 
 <AsideMenu />
-<div class="carousel-container">
-    <Carousel />
-</div>
+<aside class="admin-contact">
+    <MudFab Color="Color.Info" StartIcon="material-symbols-outlined/message" Size="Size.Large"/>
+</aside>
 <main class="main-content poppins-light">
-   
+    <div class="carousel-div">
+        <Carousel />
+    </div>
+
+    <h2 class="filter-origin poppins-semibold">Descubre lo que <span>WonderPlane</span> tiene para tí</h2>
     <section class="filters">
         <MudButtonGroup Color="Color.Info" Variant="Variant.Filled">
-            <MudButton>Todo</MudButton>
-            <MudButton StartIcon="material-symbols-outlined/flight_takeoff">Nuevos vuelos</MudButton>
-            <MudButton StartIcon="material-symbols-outlined/percent">Promociones</MudButton>
+            <MudButton OnClick="@(() => ApplyFilter("All"))">Todo</MudButton>
+            <MudButton StartIcon="material-symbols-outlined/flight_takeoff" OnClick="@(() => ApplyFilter("New"))">Nuevos vuelos</MudButton>
+            <MudButton StartIcon="material-symbols-outlined/percent" OnClick="@(() => ApplyFilter("Promotions"))">Promociones</MudButton>
         </MudButtonGroup>
     </section>
 
-    <h2 class="filter-origin poppins-semibold">Promociones desde <span>Pereira</span></h2>
-    
-    <CardsInformation />
+    <!-- Última Oportunidad -->
+    <h2 class="filter-origin poppins-semibold">
+        <img src="img/llamas.png" /><img src="img/llamas.png" /><img src="img/llamas.png" />
+        <span>Última</span> Oportunidad
+        <img src="img/llamas.png" /><img src="img/llamas.png" /><img src="img/llamas.png" />
+    </h2>
+    <ul class="cards">
+        @foreach (var flight in filteredFlights)
+        {
+            @if (lastChanceFlights.Contains(flight))
+            {
+                @if (flight.HasPromotion)
+                {
+                    <li>
+                        <a href="" class="card">
+                            <img src="@GetFlightImage(flight)" class="card__image" alt="@FormatNameCities(flight.Destination)" />
+                            <div class="card__overlay">
+                                <div class="card__header">
+                                    <svg class="card__arc" xmlns="http://www.w3.org/2000/svg"></svg>
+                                    <MudFab Color="Color.Info" StartIcon="material-symbols-outlined/percent" Size="Size.Medium"/>
+                                    <div class="card__header-text">
+                                        <h3 class="card__title color-red">¡Última Oportunidad!</h3>
+                                        <h3 class="card__title">Desde $@flight.EconomicClassPrice.ToString("N0") COP</h3>
+                                        <h4 class="card__title2">@FormatNameCities(flight.Origin) a @FormatNameCities(flight.Destination)</h4>
+                                        <span class="card__status">Despega el @flight.DepartureDate.ToShortDateString() a las @flight.DepartureTime.ToString()</span>
+                                    </div>
+                                </div>
+                                <p class="card__description">No pierdas la oportunidad de volar con un <span class="color-red">@flight.DiscountPercentage %</span> de descuento a @FormatNameCities(flight.Destination). <span class="call-to-action">COMPRA YA</span></p>
+                            </div>
+                        </a>
+                    </li>
+                }
+
+                else 
+                {
+                    <li>
+                        <a href="" class="card">
+                            <img src="@GetFlightImage(flight)" class="card__image" alt="@FormatNameCities(flight.Destination)" />
+                            <div class="card__overlay">
+                                <div class="card__header">
+                                    <svg class="card__arc" xmlns="http://www.w3.org/2000/svg"></svg>
+                                    <MudFab Color="Color.Info" StartIcon="material-symbols-outlined/flight" Size="Size.Medium" />
+                                    <div class="card__header-text">
+                                        <h3 class="card__title color-red">¡Última Oportunidad!</h3>
+                                        <h3 class="card__title">Desde $@flight.EconomicClassPrice.ToString("N0") COP</h3>
+                                        <h4 class="card__title2">@FormatNameCities(flight.Origin) a @FormatNameCities(flight.Destination)</h4>
+                                        <span class="card__status">Despega el @flight.DepartureDate.ToShortDateString() a las @flight.DepartureTime.ToString()</span>
+                                    </div>
+                                </div>
+                                <p class="card__description">No pierdas la oportunidad de volar a @FormatNameCities(flight.Destination). <span class="call-to-action">COMPRA YA</span></p>
+                            </div>
+                        </a>
+                    </li>
+                }
+
+            }
+           
+        }
+    </ul>
+
+    <!-- Publicado Recientemente -->
+    <h2 class="filter-origin poppins-semibold">Publicado<span> Recientemente...</span></h2>
+    <ul class="cards">
+        @foreach (var flight in filteredFlights)
+        {
+
+            @if (recentlyPublishedFlights.Contains(flight))
+            {
+                @if (flight.HasPromotion)
+                {
+                    <li>
+                        <a href="" class="card">
+                            <img src="@GetFlightImage(flight)" class="card__image" alt="@FormatNameCities(flight.Destination)" />
+                            <div class="card__overlay">
+                                <div class="card__header">
+                                    <svg class="card__arc" xmlns="http://www.w3.org/2000/svg"></svg>
+                                    <MudFab Color="Color.Info" StartIcon="material-symbols-outlined/percent" Size="Size.Medium" />
+                                    <div class="card__header-text">
+                                        <h3 class="card__title color-blue">Nueva promo!!!</h3>
+                                        <h3 class="card__title">Desde $@flight.EconomicClassPrice.ToString("N0") COP</h3>
+                                        <h4 class="card__title2">@FormatNameCities(flight.Origin) a @FormatNameCities(flight.Destination)</h4>
+                                        <span class="card__status">Despega el @flight.DepartureDate.ToShortDateString() a las @flight.DepartureTime.ToString()</span>
+                                    </div>
+                                </div>
+                                <p class="card__description">No pierdas la oportunidad de volar con un <span class="color-red">@flight.DiscountPercentage %</span> de descuento a @FormatNameCities(flight.Destination). <span class="call-to-action">RESERVAR AHORA</span></p>
+                            </div>
+                        </a>
+                    </li>
+                }
+
+                else 
+                {
+                    <li>
+                        <a href="" class="card">
+                            <img src="@GetFlightImage(flight)" class="card__image" alt="@FormatNameCities(flight.Destination)" />
+                            <div class="card__overlay">
+                                <div class="card__header">
+                                    <svg class="card__arc" xmlns="http://www.w3.org/2000/svg"></svg>
+                                    <MudFab Color="Color.Info" StartIcon="material-symbols-outlined/flight" Size="Size.Medium" />
+                                    <div class="card__header-text">
+                                        <h3 class="card__title color-blue">Nuevo vuelo!!!</h3>
+                                        <h3 class="card__title">Desde $@flight.EconomicClassPrice.ToString("N0") COP</h3>
+                                        <h4 class="card__title2">@FormatNameCities(flight.Origin) a @FormatNameCities(flight.Destination)</h4>
+                                        <span class="card__status">Despega el @flight.DepartureDate.ToShortDateString() a las @flight.DepartureTime.ToString()</span>
+                                    </div>
+                                </div>
+                                <p class="card__description">No pierdas la oportunidad de volar a @FormatNameCities(flight.Destination). <span class="call-to-action">RESERVAR AHORA</span></p>
+                            </div>
+                        </a>
+                    </li>
+                }
+
+            }
+            
+        }
+    </ul>
+
+    <h2 class="filter-origin poppins-semibold"><span>Prepárate</span> para viajar</h2>
+
+    <div class="tips">
+        <div class="card-tip card-1">
+            <div class="card__icon"><span class="material-symbols-outlined">luggage</span></div>
+            <p class="card_exit"><span class="material-symbols-outlined">close</span></p>
+            <h2 class="card_title">Empaca ligero, pero inteligente</h2>
+            <p>Prioriza ropa versátil y cómoda. Deja espacio en tu maleta para recuerdos o compras.</p>
+            <p class="card_apply">
+                <a class="card_link" href="#">Ver más</a>
+            </p>
+        </div>
+
+        <div class="card-tip card-2">
+            <div class="card__icon"><span class="material-symbols-outlined">public</span></div>
+            <p class="card_exit"><span class="material-symbols-outlined">close</span></p>
+            <h2 class="card_title">Investiga sobre tu destino</h2>
+            <p>Consulta información sobre el clima, la moneda y las costumbres locales para evitar sorpresas.</p>
+            <p class="card_apply">
+                <a class="card_link" href="#">Descubre más</a>
+            </p>
+        </div>
+
+        <div class="card-tip card-3">
+            <div class="card__icon"><span class="material-symbols-outlined">schedule</span></div>
+            <p class="card_exit"><span class="material-symbols-outlined">close</span></p>
+            <h2 class="card_title">Llega temprano al aeropuerto</h2>
+            <p>Evita el estrés. Para vuelos nacionales, llega 2 horas antes; para internacionales, 3 horas.</p>
+            <p class="card_apply">
+                <a class="card_link" href="#">Saber más</a>
+            </p>
+        </div>
+
+        <div class="card-tip card-4">
+            <div class="card__icon"><span class="material-symbols-outlined">credit_card</span></div>
+            <p class="card_exit"><span class="material-symbols-outlined">close</span></p>
+            <h2 class="card_title">Verifica tus medios de pago</h2>
+            <p>Asegúrate de que tu tarjeta sea aceptada en el destino y lleva algo de efectivo por si acaso.</p>
+            <p class="card_apply">
+                <a class="card_link" href="#">Más consejos</a>
+            </p>
+        </div>
+
+        <div class="card-tip card-5">
+            <div class="card__icon"><span class="material-symbols-outlined">health_and_safety</span></div>
+            <p class="card_exit"><span class="material-symbols-outlined">close</span></p>
+            <h2 class="card_title">No olvides un seguro de viaje</h2>
+            <p>Protege tu salud y tus pertenencias con un seguro. Es mejor prevenir que lamentar.</p>
+            <p class="card_apply">
+                <a class="card_link" href="#">Contratar seguro</a>
+            </p>
+        </div>
+    </div>
+
+
+    <h2 class="filter-origin poppins-semibold">¿Aún tienes dudas?<span> Resuelvelas aquí</span></h2>
+    <h3 class="filter-origin poppins-semibold">Foro implementado proximamente....</h3>
 
 </main>
 
 @code {
 
+    private string selectedFilter = "All";
+    private List<FlightDTO> filteredFlights = new();
+    private List<FlightDTO> _flights = new List<FlightDTO>();
+    private List<AddFlights> allCities = new();
+    private List<AddFlights> nationalCities = new();
+    private List<AddFlights> internationalCities = new();
+    private List<FlightDTO> lastChanceFlights = new();
+    private List<FlightDTO> recentlyPublishedFlights = new();
+
+
+    // Cargamos los  vuelos
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _flights = (await FlightService.ListFlight())
+                            .Where(f => f.FlightStatus == FlightStatusEnum.Scheduled)
+                            .ToList();
+
+
+            // Lista de vuelos con el primer filtro
+            filteredFlights = _flights;
+            // Filtrar vuelos según el tiempo restante para despegar
+            DateTime now = DateTime.UtcNow;
+            lastChanceFlights = _flights.Where(f => (f.DepartureDate - now).TotalHours <= 8).ToList();
+            recentlyPublishedFlights = _flights.Where(f => (f.DepartureDate - now).TotalHours > 8).ToList();
+
+            // Cargar ciudades nacionales e internacionales
+            var localClient = HttpClientFactory.CreateClient("LocalClient");
+            var nationalList = await localClient.GetFromJsonAsync<List<AddFlights>>("sample-data/flightsNational.json?nocache=" + DateTime.Now.Ticks);
+
+            if (nationalList != null)
+            {
+                nationalCities.AddRange(nationalList);
+                allCities.AddRange(nationalList);
+            }
+
+            var internationalList = await localClient.GetFromJsonAsync<List<AddFlights>>("sample-data/flightsInternational.json?noncache=" + DateTime.Now.Ticks);
+            if (internationalList != null)
+            {
+                internationalCities.AddRange(internationalList.Where(city => city.type == "international"));
+                allCities.AddRange(internationalList);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar los vuelos: {ex.Message}");
+        }
+    }
+
+
+
+    private string FormatNameCities(string name)
+    {
+        int index = name.IndexOf("(");
+        string newName = index >= 0 ? name.Substring(0, index) : name;
+        return newName;
+    }
+
+    private string GetFlightCode(string destination)
+    {
+        // Extraer el texto entre paréntesis
+        int startIndex = destination.IndexOf("(") + 1;
+        int endIndex = destination.IndexOf(")");
+        if (startIndex > 0 && endIndex > startIndex)
+        {
+            return destination.Substring(startIndex, endIndex - startIndex);
+        }
+
+        // Retornar una cadena vacía si no se encuentra un código válido
+        return string.Empty;
+    }
+
+    private string GetFlightImage(FlightDTO flight)
+    {
+        // Obtener el código de vuelo desde el destino
+        var flightCode = GetFlightCode(flight.Destination);
+
+        // Buscar la ciudad en la lista de todas las ciudades por su código
+        var city = allCities.FirstOrDefault(c => c.code.Equals(flightCode, StringComparison.OrdinalIgnoreCase));
+
+        // Retornar la URL de la imagen si se encuentra, de lo contrario retornar una imagen por defecto
+        Console.WriteLine($"Código de vuelo: {flightCode}, URL obtenida: {city?.image}");
+        return city?.image ?? "img/view-3d-airplane.jpg";
+    }
+
+    private void ApplyFilter(string filter)
+    {
+        selectedFilter = filter;
+
+        filteredFlights = filter switch
+        {
+            "New" => _flights.Where(f => !f.HasPromotion).ToList(),
+            "Promotions" => _flights.Where(f => f.HasPromotion).ToList(),
+            _ => _flights
+        };
+    }
 }

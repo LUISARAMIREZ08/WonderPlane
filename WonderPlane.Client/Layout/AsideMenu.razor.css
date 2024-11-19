@@ -8,10 +8,10 @@
     padding: 10px;
     color: white;
     border-radius: 10px;
-    margin: 0 0 0 5px;
+    margin: 10px 5px;
     position: fixed;
     left: 0;
-    top: 75px;
+    top: 95px;
     z-index: 10;
     width: 40px;
 }
