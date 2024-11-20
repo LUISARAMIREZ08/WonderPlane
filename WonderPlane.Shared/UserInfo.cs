@@ -61,5 +61,8 @@ namespace WonderPlane.Shared
         public byte[]? PasswordSalt { get; set; }
 
         public string? Image { get; set; }
+
+        public decimal? Balance { get; set; }
+
     }
 }

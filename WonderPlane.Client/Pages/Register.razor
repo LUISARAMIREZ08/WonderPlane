@@ -3,7 +3,7 @@
 <PageTitle>Registro</PageTitle>
 
 @using WonderPlane.Shared;
-@using WonderPlane.Client.Servicios;
+@using WonderPlane.Client.Services;
 @using System.ComponentModel.DataAnnotations;
 @using MudBlazor;
 
@@ -15,12 +15,14 @@
 @inject ImageUploadService ImageUploadService
 
 <main class="main-container poppins-light">
-    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+        <path fill="#fff" fill-opacity="1" d="M0,96L30,106.7C60,117,120,139,180,165.3C240,192,300,224,360,218.7C420,213,480,171,540,144C600,117,660,107,720,133.3C780,160,840,224,900,250.7C960,277,1020,267,1080,240C1140,213,1200,171,1260,160C1320,149,1380,171,1410,181.3L1440,192L1440,0L1410,0C1380,0,1320,0,1260,0C1200,0,1140,0,1080,0C1020,0,960,0,900,0C840,0,780,0,720,0C660,0,600,0,540,0C480,0,420,0,360,0C300,0,240,0,180,0C120,0,60,0,30,0L0,0Z"></path>
+    </svg>
     <section class="register-container">
         <EditForm Model="newUser" OnValidSubmit="OnValidSubmit">
             <DataAnnotationsValidator />
 
-            <h1>¡Únete ahora!</h1>
+            <h1>¡Únete <span style="color:dodgerblue;">ahora</span>!</h1>
 
             <div class="form-container">
 
@@ -46,10 +48,10 @@
                     <div class="input">
                         <label class="form-label">Genero</label>
                         <select class="form-control" @bind="newUser.Gender">
-                            <option value="Male">Masculino</option>
-                            <option value="Female">Femenino</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
                             <option value="Prefiero no decirlo">Prefiero no decirlo</option>
-                            <option value="Other">Otro</option>
+                            <option value="Otro">Otro</option>
                         </select>
                         <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Gender)"></ValidationMessage></span>
                     </div>
@@ -116,10 +118,9 @@
 
             <div class="form-button">
                 <div class="input">
-                    <label class="form-label">Seleccionar Imagen de Perfi</label>
                     <MudFileUpload T="IBrowserFile" FilesChanged="OnFileSelected">
                         <ActivatorContent>
-                            <MudButton Variant="Variant.Filled" Color="Color.Info">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Info">
                                 Subir imagen
                             </MudButton>
                         </ActivatorContent>
@@ -135,7 +136,7 @@
                     }
 
                 </div>
-                <button class="submit-button" type="submit">Registrar</button>
+                <button class="submit-button" type="submit">Registrarme</button>
                 <ul>
                     <li>
                         <a>¿Ya tienes una cuenta?</a>
@@ -145,13 +146,11 @@
             </div>
         </EditForm>
     </section>
+
+    <svg class="svg-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+        <path fill="#fff" fill-opacity="1" d="M0,96L30,106.7C60,117,120,139,180,165.3C240,192,300,224,360,218.7C420,213,480,171,540,144C600,117,660,107,720,133.3C780,160,840,224,900,250.7C960,277,1020,267,1080,240C1140,213,1200,171,1260,160C1320,149,1380,171,1410,181.3L1440,192L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z"></path>
+    </svg>
     
-    <section class="info-container">
-        <img src="img/WLogo.png" /><br />
-        <h1>¡Únete a Nuestra Comunidad!</h1>
-        <p>En nuestro formulario de registro, te invitamos a ser parte de una experiencia única. Al completar tu inscripción, podrás acceder a una variedad de servicios y beneficios diseñados especialmente para ti. Solo necesitas proporcionarnos algunos datos básicos, y en pocos minutos estarás listo para disfrutar de todo lo que ofrecemos. Tu información será tratada con la máxima seguridad y confidencialidad. ¡Esperamos verte pronto!</p>
-    </section>
-     
 </main>
 
 @code {

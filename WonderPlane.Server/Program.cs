@@ -27,6 +27,9 @@ builder.Services.AddSingleton(cloudinary);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Servicio de envio de correos
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+
 // Configuración JwT
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();

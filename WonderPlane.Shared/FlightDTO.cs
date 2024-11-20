@@ -4,6 +4,7 @@ namespace WonderPlane.Shared
 {
     public class FlightDTO
     {
+        public int Id { get; set; } = 0;
         [Required(ErrorMessage = "El origen es obligatorio.")]
         public required string Origin { get; set; }
 
@@ -15,32 +16,39 @@ namespace WonderPlane.Shared
         public required DateTime DepartureDate { get; set; }
 
         [Required(ErrorMessage = "La hora de salida es obligatoria.")]
-        [DataType(DataType.Time, ErrorMessage = "Hora no valida")]
-        public required TimeSpan DepartureTime { get; set; }
+        public required string DepartureTime { get; set; }
 
         [Required(ErrorMessage = "La fecha de llegada es obligatoria.")]
         [DataType(DataType.Date, ErrorMessage = "Fecha no valida")]
         public required DateTime ArriveDate { get; set; }
 
         [Required(ErrorMessage = "La hora de llegada es obligatoria.")]
-        [DataType(DataType.Time, ErrorMessage = "Hora no valida")]
-        public required TimeSpan ArriveTime { get; set; }
+        public required string ArriveTime { get; set; }
 
         [Required(ErrorMessage = "Se debe decir si el vuelo es internacional o no.")]
         public required bool IsInternational { get; set; }
 
-        [Required(ErrorMessage = "El precio de la maleta es obligatorio.")]
-        public required decimal BagPrice { get; set; }
+        public int BagPrice { get; set; }
         [Required(ErrorMessage = "El código del vuelo es obligatorio.")]
         public required string FlightCode { get; set; }
         [Required(ErrorMessage = "La duración del vuelo es obligatoria.")]
-        public string? Duration { get; set; }
+        public int Duration { get; set; }
+        public required FlightStatusEnum FlightStatus { get; set; } = FlightStatusEnum.Scheduled;
 
-        [Required(ErrorMessage = "El precio de asientos primera clase es obligatorio.")]
-        public required decimal FirstClassPrice { get; set; }
+        [Required(ErrorMessage = "El precio de asientos de primera clase es obligatorio.")]
+        [Range(1, int.MaxValue, ErrorMessage = "El precio de primera clase debe ser mayor que 0.")]
+        public required int FirstClassPrice { get; set; }
 
         [Required(ErrorMessage = "El precio de asientos económicos es obligatorio.")]
-        public required decimal EconomicClassPrice { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "El precio de clase económica debe ser mayor que 0.")]
+        public required int EconomicClassPrice { get; set; }
     }
+}
+
+public enum FlightStatusEnum
+{
+    Scheduled,
+    Completed,
+    Canceled
 }
 

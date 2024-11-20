@@ -1,6 +1,6 @@
 ﻿using WonderPlane.Shared;
 
-namespace WonderPlane.Client.Servicios
+namespace WonderPlane.Client.Services
 {
     public interface IUserService
     {

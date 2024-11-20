@@ -7,9 +7,9 @@
 @inject IJSRuntime JS
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<nav class="poppins-light">
+<header class="poppins-light">
     <div class="navbar-logo poppins-regular">
-        <img src="img/Wblack.png" alt="Logo" />
+        <img src="img/logoNuevo.svg" alt="Logo" />
         <span>WonderPlane</span>
     </div>
 
@@ -31,16 +31,28 @@
 
         <AuthorizeView Roles="Admin">
             <Authorized>
-                <li><a href="/admin">Gestionar vuelos</a></li>
+                <li><a href="/manage-flights">Gestionar vuelos</a></li>
             </Authorized>
         </AuthorizeView>
 
         <AuthorizeView>
             <Authorized>
                 <li>
-                    <a class="profile" href="#"><img src="@userInfo?.Image" />@userInfo?.UserName</a>
+                    <a class="profile" href="#">
+                        @if (!string.IsNullOrEmpty(userInfo?.Image))
+                        {
+                            <img src="@userInfo?.Image" />
+                        }
+                        else
+                        {
+                            <MudAvatar Class="profile-avatar" Size="Size.Medium" Style="margin-right:5px; background-color:#0CE8E6; color:white;">
+                                @GetInitials(userInfo)
+                            </MudAvatar>
+                        }
+                        @userInfo?.UserName
+                    </a>
                     <ul class="menu-vertical">
-                        <li><a href="/viewprofile">Ver perfil</a></li>
+                        <li><a href="/editprofile">Ver perfil</a></li>
                         <li><a href="#" @onclick="Logout">Cerrar sesión</a></li>
                     </ul>
                 </li>
@@ -52,7 +64,7 @@
         </AuthorizeView>
 
     </ul>
-</nav>
+</header>
 
 @code {
     private UserInfo? userInfo;
@@ -116,5 +128,14 @@
 
         // Redirigir al login
         navigation.NavigateTo("/login");
+    }
+
+    // Método para obtener las iniciales del nombre del usuario
+    private string GetInitials(UserInfo? userInfo)
+    {
+        if (userInfo == null) return "NN";
+
+        var initials = $"{userInfo.Name?.FirstOrDefault()}{userInfo.LastName?.FirstOrDefault()}";
+        return initials.ToUpper();
     }
 }

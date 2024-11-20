@@ -1,25 +1,26 @@
-﻿/* Menú lateral */
+﻿﻿ /* Menú lateral */
 #btn-menu {
     display: none;
 }
 
 .btn-menu {
-    background-color: black;
+    background-color: dodgerblue;
     padding: 10px;
     color: white;
     border-radius: 5px;
-    margin: 10px;
+    margin: 0 0 0 5px;
     position: fixed;
     left: 0;
-    top: 85px;
+    top: 75px;
     z-index: 10;
+    width: 40px;
 }
 
-.btn-menu:hover {
-    background-color:white;
-    color:black;
-    transition: ease 0.5s;
-}
+    .btn-menu:hover {
+        background-color: white;
+        color: black;
+        transition: ease 0.5s;
+    }
 
     .btn-menu span {
         font-size: 20px;
@@ -28,21 +29,20 @@
 
 /* Nav para el menú */
 .cont-menu {
-    width: 250px;
+    width: 230px;
+    height: 100%;
     background: white;
     border: 1px solid whitesmoke;
-    border-radius: 10px;
-    padding: 0px 0 20px 0;
-    position: fixed;
+    padding: 0px 0 20px 5px;
     left: 0;
-    top: 80px;
+    top: 70px;
     transition: transform 800ms cubic-bezier(0.25, 0.8, 0.25, 1);
     transform: translateX(-120%);
     box-shadow: 5px 0 5px -2px rgba(0, 0, 0, 0.3);
 }
 
 #btn-menu:checked ~ .cont-menu {
-    transform: translateX(0%);
+    transform: translateX(-5%);
 }
 
 .cont-menu label {
@@ -69,7 +69,7 @@
     transition: all 400ms ease;
 }
 
-.cont-menu a span {
+    .cont-menu a span {
         margin-right: 10px;
     }
 

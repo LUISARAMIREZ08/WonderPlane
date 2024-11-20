@@ -34,12 +34,17 @@ public class Flight
 
     [Required(ErrorMessage = "Se debe decir si el vuelo es internacional o no.")]
     public required bool IsInternational { get; set; }
-
-    [Required(ErrorMessage = "El precio de la maleta es obligatorio.")]
-    public required decimal BagPrice { get; set; }
+    public int BagPrice { get; set; }
     [Required(ErrorMessage = "El código del vuelo es obligatorio.")]
     public required string FlightCode { get; set; }
-    public string? Duration { get; set; }
+    public int Duration { get; set; }
+    [Required(ErrorMessage = "El precio de asientos primera clase es obligatorio.")]
+    public required int FirstClassPrice { get; set; }
+
+    [Required(ErrorMessage = "El precio de asientos económicos es obligatorio.")]
+    public required int EconomicClassPrice { get; set; }
+
+    public int AvailableSeats { get; set; } = 0;
 
     public ICollection<Promotion> Promotions { get; } = new List<Promotion>();
 

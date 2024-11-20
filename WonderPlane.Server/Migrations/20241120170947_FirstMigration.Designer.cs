@@ -12,8 +12,8 @@ using WonderPlane.Server.Models;
 namespace WonderPlane.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241021004607_FirstMigrations")]
-    partial class FirstMigrations
+    [Migration("20241120170947_FirstMigration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,7 +21,7 @@ namespace WonderPlane.Server.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("WonderPlane")
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -58,6 +58,9 @@ namespace WonderPlane.Server.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal?>("Balance")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("CardType")
                         .HasColumnType("int");
@@ -101,9 +104,11 @@ namespace WonderPlane.Server.Migrations
                     b.Property<TimeSpan>("ArriveTime")
                         .HasColumnType("time");
 
-                    b.Property<decimal>("BagPrice")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("AvailableSeats")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BagPrice")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DepartureDate")
                         .HasColumnType("datetime2");
@@ -115,8 +120,14 @@ namespace WonderPlane.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Duration")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EconomicClassPrice")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FirstClassPrice")
+                        .HasColumnType("int");
 
                     b.Property<string>("FlightCode")
                         .IsRequired()
@@ -266,7 +277,6 @@ namespace WonderPlane.Server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Discount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("EndDate")
@@ -309,7 +319,6 @@ namespace WonderPlane.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -412,7 +421,6 @@ namespace WonderPlane.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("SeatStatus")
@@ -525,6 +533,9 @@ namespace WonderPlane.Server.Migrations
                     b.Property<string>("Address")
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
+
+                    b.Property<decimal?>("Balance")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");

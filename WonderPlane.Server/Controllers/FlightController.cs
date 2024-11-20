@@ -37,14 +37,18 @@ public class FlightController : ControllerBase
                 Origin = flightDTO.Origin,
                 Destination = flightDTO.Destination,
                 DepartureDate = flightDTO.DepartureDate,
-                DepartureTime = flightDTO.DepartureTime,
+                DepartureTime = TimeSpan.Parse(flightDTO.DepartureTime),
                 ArriveDate = flightDTO.ArriveDate,
-                ArriveTime = flightDTO.ArriveTime,
+                ArriveTime = TimeSpan.Parse(flightDTO.ArriveTime),
                 FlightStatus = FlightStatus.Scheduled,
                 IsInternational = flightDTO.IsInternational,
+                //if is international available seat = 250 else 150
+                AvailableSeats = flightDTO.IsInternational ? 250 : 150,
                 BagPrice = flightDTO.BagPrice,
                 FlightCode = flightDTO.FlightCode,
                 Duration = flightDTO.Duration,
+                FirstClassPrice = flightDTO.FirstClassPrice,
+                EconomicClassPrice = flightDTO.EconomicClassPrice
             };
 
             _dbContext.Flights.Add(dbFlight);
@@ -127,13 +131,16 @@ public class FlightController : ControllerBase
             flight.Origin = flightDTO.Origin;
             flight.Destination = flightDTO.Destination;
             flight.DepartureDate = flightDTO.DepartureDate;
-            flight.DepartureTime = flightDTO.DepartureTime;
+            flight.DepartureTime = TimeSpan.Parse(flightDTO.DepartureTime);
             flight.ArriveDate = flightDTO.ArriveDate;
-            flight.ArriveTime = flightDTO.ArriveTime;
+            flight.ArriveTime = TimeSpan.Parse(flightDTO.ArriveTime);
             flight.IsInternational = flightDTO.IsInternational;
             flight.BagPrice = flightDTO.BagPrice;
             flight.FlightCode = flightDTO.FlightCode;
             flight.Duration = flightDTO.Duration;
+            flight.FirstClassPrice = flightDTO.FirstClassPrice;
+            flight.EconomicClassPrice = flightDTO.EconomicClassPrice;
+            flight.FlightStatus = (FlightStatus)flightDTO.FlightStatus;
 
             await _dbContext.SaveChangesAsync();
 
@@ -201,6 +208,135 @@ public class FlightController : ControllerBase
         }
         return seats;
     }
+
+    [HttpGet]
+    [Route("search-flight/{id}")]
+    public async Task<IActionResult> SearchFlight(int id)
+    {
+        var responseApi = new ResponseAPI<Flight>();
+        try
+        {
+            var flight = await _dbContext.Flights.FindAsync(id);
+
+            if (flight == null)
+            {
+                responseApi.EsCorrecto = false;
+                responseApi.Mensaje = "Vuelo no encontrado.";
+                return NotFound(responseApi);
+            }
+
+            responseApi.Data = flight;
+            responseApi.EsCorrecto = true;
+            responseApi.Mensaje = "Vuelo encontrado correctamente.";
+            return Ok(responseApi);
+        }
+        catch (Exception ex)
+        {
+            responseApi.EsCorrecto = false;
+            responseApi.Mensaje = $"Error inesperado: {ex.Message}";
+            return StatusCode(500, responseApi);
+        }
+    }
+
+    [HttpGet]
+    [Route("search/one-way")]
+    public async Task<IActionResult> GetOneWayFlight(
+    [FromQuery] string origin,
+    [FromQuery] string destination,
+    [FromQuery] DateTime departureDate,
+    [FromQuery] int passengers)
+    {
+        var responseApi = new ResponseAPI<List<Flight>>();
+        try
+        {
+            var flights = await _dbContext.Flights
+            .Where(f => f.Origin == origin &&
+                        f.Destination == destination &&
+                        f.DepartureDate.Date == departureDate.Date &&
+                        f.AvailableSeats >= passengers)
+            .ToListAsync();
+
+            if (flights.Count == 0)
+            {
+                responseApi.EsCorrecto = false;
+                responseApi.Mensaje = "No hay vuelos disponibles con los criterios solicitados.";
+                return NotFound(responseApi);
+            }
+
+            responseApi.Data = flights;
+            responseApi.EsCorrecto = true;
+            responseApi.Mensaje = "Vuelos encontrados correctamente.";
+            return Ok(responseApi);
+        }
+        catch (Exception ex)
+        {
+            responseApi.EsCorrecto = false;
+            responseApi.Mensaje = $"Error inesperado: {ex.Message}";
+            return StatusCode(500, responseApi);
+        }
+    }
+
+    [HttpGet]
+    [Route("search/round-trip")]
+    public async Task<IActionResult> GetRoundTripFlight(
+    [FromQuery] string origin,
+    [FromQuery] string destination,
+    [FromQuery] DateTime departureDate,
+    [FromQuery] DateTime returnDate,
+    [FromQuery] int passengers)
+    {
+        var responseApi = new ResponseAPI<List<object>>();
+        try
+        {
+            // Buscar vuelos de ida
+            var outboundFlights = await _dbContext.Flights
+                .Where(f => f.Origin == origin &&
+                            f.Destination == destination &&
+                            f.DepartureDate.Date == departureDate.Date &&
+                            f.AvailableSeats >= passengers)
+                .ToListAsync();
+
+            // Buscar vuelos de vuelta
+            var returnFlights = await _dbContext.Flights
+                .Where(f => f.Origin == destination &&
+                            f.Destination == origin &&
+                            f.DepartureDate.Date == returnDate.Date &&
+                            f.AvailableSeats >= passengers)
+                .ToListAsync();
+
+            if (outboundFlights.Count == 0 || returnFlights.Count == 0)
+            {
+                responseApi.EsCorrecto = false;
+                responseApi.Mensaje = "No hay vuelos disponibles para el ida y vuelta con los criterios solicitados.";
+                return NotFound(responseApi);
+            }
+
+            // Generar combinaciones de ida y vuelta como objetos anónimos
+            var flightPackages = new List<object>();
+            foreach (var outbound in outboundFlights)
+            {
+                foreach (var returnFlight in returnFlights)
+                {
+                    flightPackages.Add(new
+                    {
+                        OutboundFlight = outbound,
+                        ReturnFlight = returnFlight
+                    });
+                }
+            }
+
+            responseApi.Data = flightPackages;
+            responseApi.EsCorrecto = true;
+            responseApi.Mensaje = "Combinaciones de vuelos de ida y vuelta encontradas correctamente.";
+            return Ok(responseApi);
+        }
+        catch (Exception ex)
+        {
+            responseApi.EsCorrecto = false;
+            responseApi.Mensaje = $"Error inesperado: {ex.Message}";
+            return StatusCode(500, responseApi);
+        }
+    }
+
+
 }
-
-

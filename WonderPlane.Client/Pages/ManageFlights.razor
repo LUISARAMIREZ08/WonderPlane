@@ -1,0 +1,212 @@
+﻿@page "/manage-flights"
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+@using WonderPlane.Shared;
+@using WonderPlane.Client.Services;
+@using WonderPlane.Client.Utils
+@using MudBlazor;
+@using CurrieTechnologies.Razor.SweetAlert2;
+
+
+@inject NavigationManager navigation;
+@inject ISnackbar Snackbar;
+@inject SweetAlertService Swal;
+@inject IFlightService FlightService;
+
+<AsideMenu />
+<main class="container poppins-light">
+    <div class="tittle">
+        <h3>Gestión de Vuelos</h3>
+    </div>
+    <div>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AddBox" Color="Color.Info" OnClick="@(() => navigation.NavigateTo("/manage-flights/flight"))"><MudText>Añadir Vuelo</MudText></MudButton>
+    </div>
+    <MudTable Items="_flights" FixedHeader=true Breakpoint="Breakpoint.Sm" Hover=true Filter="new Func<FlightDTO,bool>(FilterFunc1)" Style="margin-top:3%; margin-block-end:3%" Elevation="4">
+        <ToolBarContent> 
+            <MudIcon Icon="material-symbols-outlined/table" Style="margin-right:1%"/>
+            <MudText Typo="Typo.h6">Vuelos Programados</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString1" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Acciones</MudTh>
+            <MudTh># Vuelo</MudTh>
+            <MudTh>Origen</MudTh>
+            <MudTh>Fecha Salida</MudTh>
+            <MudTh>Hora Salida</MudTh>
+            <MudTh>Destino</MudTh>
+            <MudTh>Fecha Llegada</MudTh>
+            <MudTh>Hora Llegada</MudTh>
+            <MudTh>Duración</MudTh>
+            <MudTh>$ Maleta</MudTh>
+            <MudTh>$ Primera Clase</MudTh>
+            <MudTh>$ Clase Economica</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Acciones">
+                <div class="action">
+                    <MudTooltip Text="Editar Vuelo"><MudIconButton Icon="material-symbols-outlined/edit" aria-label="cancel" Color="Color.Info" OnClick="@(() => EditFlight(@context.Id))" /></MudTooltip>
+                    <MudTooltip Text="Cancelar Vuelo"><MudIconButton Icon="material-symbols-outlined/cancel" aria-label="cancel" Color="Color.Secondary" OnClick="@(() => CancelFlight(@context.Id))" /></MudTooltip>
+                </div>
+                
+            </MudTd>
+            <MudTd DataLabel="Codigo del Vuelo">@context.FlightCode</MudTd>
+            <MudTd DataLabel="Origen">@context.Origin</MudTd>
+            <MudTd DataLabel="Fecha Salida">@context.DepartureDate.ToString("dd/MM/yyyy")</MudTd>
+            <MudTd DataLabel="Hora Salida">@context.DepartureTime.Substring(0, 5)</MudTd>
+            <MudTd DataLabel="Destino">@context.Destination</MudTd>
+            <MudTd DataLabel="Fecha Llegada">@context.ArriveDate.ToString("dd/MM/yyyy")</MudTd>
+            <MudTd DataLabel="Hora Llegada">@context.ArriveTime.Substring(0, 5)</MudTd>
+            <MudTd DataLabel="Duración">@FlightDuration.FormatDuration(context.Duration)</MudTd>
+            <MudTd DataLabel="$ Primera Clase">$@context.FirstClassPrice.ToString("N0")</MudTd>
+            <MudTd DataLabel="$ Primera Clase">$@context.FirstClassPrice.ToString("N0")</MudTd>
+            <MudTd DataLabel="$ Clase Economica">$@context.EconomicClassPrice.ToString("N0")</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 5, int.MaxValue }"
+                           InfoFormat="@infoFormat"
+                           AllItemsText="@allItemsText"
+                           HorizontalAlignment="@horizontalAlignment"
+                           HideRowsPerPage="@hideRowsPerPage"
+                           HidePageNumber="@hidePageNumber"
+                           HidePagination="@hidePagination" />
+        </PagerContent>
+    </MudTable>
+</main>
+
+<style>
+    .mud-table-toolbar {
+        color: #071952;
+    }
+
+    .mud-table-sticky-header * .mud-table-root .mud-table-head * .mud-table-cell{
+        background-color: #EEEEEE;
+        border-block-end: solid 1px lightgray;
+        color: #071952;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .mud-table-root .mud-table-head .mud-table-cell {
+        font-size: smaller;
+        color: #071952;
+        text-align: center;
+    }
+
+    .mud-table-root .mud-table-body .mud-table-cell {
+        font-size: smaller;
+        color: #071952;
+        text-align: center;
+    }
+    .swal2-styled.swal2-confirm{
+        background-color: dodgerblue;
+    }
+
+    .swal2-styled.swal2-cancel{
+        background-color: #FF1F69;
+    }
+</style>
+
+
+@code {
+    bool fixedheader = true;
+    private string searchString1 = "";
+    private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center;
+    private bool hidePageNumber;
+    private bool hidePagination;
+    private bool hideRowsPerPage = true;
+    private string infoFormat = "{first_item}-{last_item} de {all_items}";
+    private string allItemsText = "Todos";
+    private MudTable<FlightDTO>? _table;
+    private List<FlightDTO> _flights = new List<FlightDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _flights = (await FlightService.ListFlight())
+                            .Where(f => f.FlightStatus == FlightStatusEnum.Scheduled)
+                            .ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar los vuelos: {ex.Message}");
+
+        }
+    }
+
+    private bool FilterFunc1(FlightDTO element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(FlightDTO element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Origin.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Destination.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.FlightCode.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private void EditFlight(int idFlight)
+    {
+        navigation.NavigateTo($"/manage-flights/flight/{idFlight}");
+    }
+
+    private async Task CancelFlight(int idFlight)
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "¿Estás seguro?",
+                Text = "No Podrás Cambiar Su Estado De Nuevo!",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                ConfirmButtonText = "Sí, Cancelar",
+                CancelButtonText = "Cancelar"
+            });
+        if (result.IsConfirmed)
+        {
+            var flight = _flights.FirstOrDefault(f => f.Id == idFlight);
+            if (flight != null)
+            {
+                DateTime currentDateTime = DateTime.Now;
+                TimeSpan departureTimeSpan;
+
+                if (!TimeSpan.TryParse(flight.ArriveTime, out departureTimeSpan))
+                {
+                    Snackbar.Add("Formato de hora de llegada no válido.", Severity.Error);
+                    return;
+                }
+                DateTime departureDateTime = flight.DepartureDate.Add(departureTimeSpan);
+                double duration = (departureDateTime - currentDateTime).TotalHours;
+
+                if (duration >= 1)
+                {
+
+                    flight.FlightStatus = FlightStatusEnum.Canceled;
+                    await FlightService.UpdateFlight(idFlight, flight);
+                    Snackbar.Add("El vuelo ha sido cancelado correctamente.", Severity.Success);
+                    _flights = (await FlightService.ListFlight())
+                            .Where(f => f.FlightStatus == FlightStatusEnum.Scheduled)
+                            .ToList();
+                }
+                else
+                {
+                    await Swal.FireAsync(new SweetAlertOptions
+                        {
+                            Title = "No se puede cancelar el vuelo",
+                            Text = "Ha pasado el tiempo permitido para la cancelación",
+                            Icon = SweetAlertIcon.Error,
+                        });
+                }
+            }
+            else
+            {
+                Snackbar.Add("No se encontró el vuelo a cancelar.", Severity.Error);
+            }
+        }
+    }
+}

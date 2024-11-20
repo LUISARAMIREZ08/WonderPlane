@@ -4,9 +4,10 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Text.Json
 @using WonderPlane.Shared
-@using WonderPlane.Client.Servicios
+@using WonderPlane.Client.Services
 @using System.Net.Http.Json
 @using MudBlazor
+@using CurrieTechnologies.Razor.SweetAlert2
 
 @inject NavigationManager navigation
 @inject IJSRuntime JS
@@ -16,25 +17,41 @@
 @inject HttpClient Http;
 @inject ImageUploadService ImageUploadService
 @inject CountryService CountryService;
+@inject SweetAlertService Swal
 
 <PageTitle>Perfil</PageTitle>
 
-<AsideMenu />
 
+<AsideMenu />
 <main class="contain poppins-light">
+
     <section class="edit-image">
         <div class="img-change">
-            <img src="@userInfo?.Image" alt="Profile Image" />
+
+            @if (!string.IsNullOrEmpty(userInfo?.Image))
+            {
+                <img src="@userInfo.Image" alt="Profile Image" class="profile-image" />
+            }
+            else
+            {
+                <MudAvatar Class="profile-avatar" Color="@Color.Info" style="height:150px; width:150px; font-size:3rem;">
+                    @GetInitials(userInfo)
+                </MudAvatar>
+            }
+
             <div class="img-change-button">
                 <MudFileUpload T="IBrowserFile" FilesChanged="OnFileSelected">
                     <ActivatorContent>
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Size="Size.Large"/>
                     </ActivatorContent>
                 </MudFileUpload>
             </div>
         </div>
         <h1>@FullName</h1>
         <h6>@userInfo?.UserName</h6>
+        <AuthorizeView Roles="Admin">
+            <span class="poppins-light">(Administrador)</span>
+        </AuthorizeView>
     </section>
 
 
@@ -64,6 +81,15 @@
                                                 }
                                             </select>
                                         }
+                                        else if(field.InputType == "selectg")
+                                        {
+                                            <select class="form-control" @bind="field.Value" @ref="field.InputRef" @onblur="() => FinishEditing(field)">
+                                                <option value="Masculino">Masculino</option>
+                                                <option value="Femenino">Femenino</option>
+                                                <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+                                                <option value="Otro">Otro</option>
+                                            </select>
+                                        }
                                         else
                                         {
                                             <input type="@field.InputType" min="1940-01-01" max="2006-12-31" @bind="field.Value" @ref="field.InputRef" @onblur="() => FinishEditing(field)" class="input-no-border" />
@@ -91,69 +117,64 @@
                     </table>
                 </article>
 
-                <hr class="vertical-hr" />
-
-                <article class="system-configuration">
-                    <h3>Configuración del Sistema</h3>
-                    <table>
-                        @if (@userInfo != null)
-                        {
-                            <tr>
-                                <td><span class="poppins-semibold">Recibir Notificaciones</span></td>
-                                <td>
-                                    <MudSwitch @bind-Value="@userInfo.ReciveNotifications" Color="Color.Info" @onclick="() => OnSwitchChange()" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span class="poppins-semibold">Suscrito a noticias</span></td>
-                                <td>
-                                    <MudSwitch @bind-Value="@userInfo.IsSuscribedToNews" Color="Color.Info" @onclick="() => OnSwitchChange()" />
-                                </td>
-                            </tr>
-                        }
-
-                    </table>
-
-                    <h3>Seguridad</h3>
-                    <table>
+                
+                    <hr class="vertical-hr" />
+                    <article class="system-configuration">
+                    <AuthorizeView Roles="RegisteredUser" Context="authContext">
+                        <h3>Configuración del Sistema</h3>
+                        <table>
+                            @if (userInfo != null)
+                            {
+                                <tr>
+                                    <td><span class="poppins-semibold">Recibir Notificaciones</span></td>
+                                    <td>
+                                        <MudSwitch @bind-Value="userInfo.ReciveNotifications" Color="Color.Info" @onclick="() => OnSwitchChange()" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="poppins-semibold">Suscrito a noticias</span></td>
+                                    <td>
+                                        <MudSwitch @bind-Value="userInfo.IsSuscribedToNews" Color="Color.Info" @onclick="() => OnSwitchChange()" />
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </AuthorizeView>
+                        <h3>Seguridad</h3>
+                        <table>
                         <tr>
                             <td><span class="poppins-semibold">Contraseña</span></td>
                             <td class="change-password" onclick="@(() => showChangePassword())">Cambiar contraseña</td>
                         </tr>
-                        <tr>
-                            <td><span class="poppins-semibold">Medios de pago</span></td>
-                            <td class="change-password">Gestionar tarjetas</td>
-                        </tr>
-                        <tr>
-                            <td class="poppins-regular delete-account-button" onclick="@(() => showConfirmDelete())">Eliminar cuenta</td>
-                        </tr>
-                    </table>
-                    @if (_hasChanges)
-                    {
-                        <button class="button confirm-button" type="submit">Guardar</button>
-                        <button class="button discard-button" type="submit" @onclick="DiscardChanges">Descartar</button>
-                    }
-                    <ValidationSummary />
-                </article>
+                        <AuthorizeView Roles="RegisteredUser" Context="authContext">
+                            <Authorized>
+                                
+                            <tr>
+                                <td><span class="poppins-semibold">Medios de pago</span></td>
+                                <td><a class="change-password" href="/manage-finance">Gestionar tarjetas</a></td>
+                            </tr>
+                            <tr>
+                                @if(userInfo != null)
+                                {
+                                    <td class="poppins-regular delete-account-button" onclick="@(() => confirmDelete(userInfo.Id))">Eliminar cuenta</td>
+                                }
+                            </tr>
+                            </Authorized>
+                        </AuthorizeView>
+                        </table>
+                    </article>
+                
+                <ValidationSummary />
             </section>
+            @if (_hasChanges)
+            {
+                <div class="options-has-changes">
+                    <button class="button confirm-button" type="submit">Guardar</button>
+                    <button class="button discard-button" type="submit" @onclick="DiscardChanges">Descartar</button>
+                </div>
+            }
         </EditForm>
     </section>
-    
-
-    @if (_showDeleteUser)
-    {
-        <div class="confirm-delete">
-            <h3>Confirmación</h3>
-            <h6 class="poppins-regular">¿Esta seguro de que desea eliminar su cuenta?</h6>
-            <div class="options-delete">
-                @if (userInfo != null)
-                {
-                    <div class="button discard-button" onclick="@(() => showConfirmDelete())">Cancelar</div>
-                    <div class="button confirm-button" onclick="@(() => confirmDelete(userInfo.Id))">Eliminar</div>
-                }
-            </div>
-        </div>
-    }
 
     @if (_showChangePassword)
     {
@@ -205,7 +226,6 @@
     private List<string> countries = new List<string>();
     private IBrowserFile? selectedFile;
     IList<IBrowserFile> _files = new List<IBrowserFile>();
-    private bool _showDeleteUser = false;
     private bool _showChangePassword = false;
     private bool _hasChanges = false;
 
@@ -231,9 +251,10 @@
 
     private List<EditableField> basicInfoFields = new()
     {
-        new EditableField("Nombre", string.Empty, "text", new List<string> { "Debe tener entre 2 y 50 caracteres." }),
+        new EditableField("Nombre", string.Empty, "text", new List<string> { "Debe tener entre 2 y 20 caracteres." }),
         new EditableField("Apellidos", string.Empty, "text", new List<string> { "Debe tener entre 2 y 50 caracteres." }),
-        new EditableField("Nombre de usuario", string.Empty, "text", new List<string> { "Debe tener entre 5 y 20 caracteres.", "Solo se permiten letras y números." }),
+        new EditableField("Genero", string.Empty, "selectg"),
+        new EditableField("Nombre de usuario", string.Empty, "text", new List<string> { "Debe tener entre 5 y 20 caracteres."}),
         new EditableField("Correo Electrónico", string.Empty, "text", new List<string> { "Debe ser un correo válido (ej: usuario@ejemplo.com)." }),
         new EditableField("Fecha de Nacimiento", string.Empty, "date"),
         new EditableField("Teléfono", string.Empty, "tel", new List<string> { "Debe contener solo números.", "Debe tener 10 dígitos." }),
@@ -276,12 +297,13 @@
                         // Rellenar los campos con la información del objeto User
                         basicInfoFields[0].Value = userInfo.Name;
                         basicInfoFields[1].Value = userInfo.LastName;
-                        basicInfoFields[2].Value = userInfo.UserName;
-                        basicInfoFields[3].Value = userInfo.Email;
-                        basicInfoFields[4].Value = userInfo.BirthDate.ToString("yyyy-MM-dd");
-                        basicInfoFields[5].Value = userInfo?.PhoneNumber ?? string.Empty;
-                        basicInfoFields[6].Value = userInfo?.Address ?? string.Empty;
-                        basicInfoFields[7].Value = userInfo?.Country ?? string.Empty;
+                        basicInfoFields[2].Value = userInfo.Gender;
+                        basicInfoFields[3].Value = userInfo.UserName;
+                        basicInfoFields[4].Value = userInfo.Email;
+                        basicInfoFields[5].Value = userInfo.BirthDate.ToString("yyyy-MM-dd");
+                        basicInfoFields[6].Value = userInfo?.PhoneNumber ?? string.Empty;
+                        basicInfoFields[7].Value = userInfo?.Address ?? string.Empty;
+                        basicInfoFields[8].Value = userInfo?.Country ?? string.Empty;
 
                         //Guardamos el usuario original en caso de descartar los cambios
                         originalUserInfo = JsonSerializer.Deserialize<UserInfo>(userInfoClaim.Value);
@@ -320,20 +342,32 @@
         {
             userInfo.Name = basicInfoFields[0].Value;
             userInfo.LastName = basicInfoFields[1].Value;
-            userInfo.UserName = basicInfoFields[2].Value;
-            userInfo.Email = basicInfoFields[3].Value;
-            userInfo.BirthDate = DateTime.Parse(basicInfoFields[4].Value);
-            userInfo.PhoneNumber = basicInfoFields[5].Value;
-            userInfo.Address = basicInfoFields[6].Value;
-            userInfo.Country = basicInfoFields[7].Value;
+            userInfo.Gender = basicInfoFields[2].Value;
+            userInfo.UserName = basicInfoFields[3].Value;
+            userInfo.Email = basicInfoFields[4].Value;
+            userInfo.BirthDate = DateTime.Parse(basicInfoFields[5].Value);
+            userInfo.PhoneNumber = basicInfoFields[6].Value;
+            userInfo.Address = basicInfoFields[7].Value;
+            userInfo.Country = basicInfoFields[8].Value;
 
             // Llamar al servicio para actualizar la información en el backend
             var result = await Http.PutAsJsonAsync("api/user/update", userInfo);
 
             if (result.IsSuccessStatusCode)
             {
-                Snackbar.Add("Información actualizada correctamente.", Severity.Success);
+                // Snackbar.Add("Información actualizada correctamente.", Severity.Success);
                 // Notificar el cambio de estado
+                _hasChanges = false;
+                ReloadEditableFields();
+                StateHasChanged();
+
+                var resultado = await Swal.FireAsync(new SweetAlertOptions
+                    {
+                        Title = "Cambios guardados",
+                        Text = "Los cambios se han guardado correctamente.",
+                        Icon = SweetAlertIcon.Success
+                    });
+
                 if (AuthenticationStateProvider is CustomAuthenticationStateProvider customProvider)
                 {
                     await customProvider.GetAuthenticationStateAsync();
@@ -341,14 +375,34 @@
             }
             else
             {
-                Snackbar.Add("Error al actualizar la información. Porfavor revisa que los datos sean correctos. hemos restaurado los datos originales", Severity.Error);
-                DiscardChanges();
+                // Snackbar.Add("Error al actualizar la información. Porfavor revisa que los datos sean correctos. hemos restaurado los datos originales", Severity.Error);
+
+                var error = await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Error al actualizar",
+                    Text = "Por favor revisa que los datos sean correctos.",
+                    Icon = SweetAlertIcon.Error
+                });
+
+                if (originalUserInfo != null)
+                {
+                    userInfo = JsonSerializer.Deserialize<UserInfo>(JsonSerializer.Serialize(originalUserInfo));
+
+                    ReloadEditableFields();
+                }
             }
         }
 
-        _hasChanges = false;
-        ReloadEditableFields();
-        StateHasChanged();
+        // _hasChanges = false;
+        // ReloadEditableFields();
+        // StateHasChanged();
+
+        // var resultado = await Swal.FireAsync(new SweetAlertOptions
+        // {
+        //     Title = "Cambios guardados",
+        //     Text = "Los cambios se han guardado correctamente.",
+        //     Icon = SweetAlertIcon.Success
+        // });
     }
 
     // Manejo de archivos
@@ -364,6 +418,7 @@
         {
             selectedFile = file;
             _hasChanges = true;
+            Snackbar.Add("No olvides guardar tus cambios en el botón de abajo", Severity.Info);
 
             if (selectedFile != null)
             {
@@ -403,7 +458,7 @@
         field.IsEditing = true;
         await Task.Delay(1); 
         await field.InputRef.FocusAsync();
-        _hasChanges = true; 
+        _hasChanges = true;
     }
 
     private void FinishEditing(EditableField field)
@@ -421,6 +476,13 @@
 
             ReloadEditableFields();
         }
+
+        var resultado = Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Cambios descartados",
+            Text = "Los cambios no se han realizado.",
+            Icon = SweetAlertIcon.Info
+        });
     }
 
     private void ReloadEditableFields()
@@ -429,12 +491,13 @@
         {
             basicInfoFields[0].Value = userInfo.Name;
             basicInfoFields[1].Value = userInfo.LastName;
-            basicInfoFields[2].Value = userInfo.UserName;
-            basicInfoFields[3].Value = userInfo.Email;
-            basicInfoFields[4].Value = userInfo.BirthDate.ToString("yyyy-MM-dd");
-            basicInfoFields[5].Value = userInfo?.PhoneNumber ?? string.Empty;
-            basicInfoFields[6].Value = userInfo?.Address ?? string.Empty;
-            basicInfoFields[7].Value = userInfo?.Country ?? string.Empty;
+            basicInfoFields[2].Value = userInfo.Gender;
+            basicInfoFields[3].Value = userInfo.UserName;
+            basicInfoFields[4].Value = userInfo.Email;
+            basicInfoFields[5].Value = userInfo.BirthDate.ToString("yyyy-MM-dd");
+            basicInfoFields[6].Value = userInfo?.PhoneNumber ?? string.Empty;
+            basicInfoFields[7].Value = userInfo?.Address ?? string.Empty;
+            basicInfoFields[8].Value = userInfo?.Country ?? string.Empty;
 
             _hasChanges = false;
             StateHasChanged();
@@ -455,17 +518,54 @@
             Snackbar.Add("Error al eliminar usuario.", Severity.Error);
         }
 
+        await Logout();
+
     }
 
-    public void showConfirmDelete()
+    // Método para cerrar sesión
+    private async Task Logout()
     {
-        _showDeleteUser = !_showDeleteUser;
+        // Eliminar token y limpiar estado local
+        await JS.InvokeVoidAsync("localStorage.removeItem", "Token");
+
+        // Notificar al proveedor de autenticación que el usuario ha cerrado sesión
+        var authStateProvider = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
+        authStateProvider.NotifyUserLogout();
+
+        // Limpiar información del usuario en memoria
+        userInfo = null;
+
+        // Volver a cargar el estado de autenticación y actualizar la UI
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        StateHasChanged();
+
+        // Redirigir al login
+        navigation.NavigateTo("/login");
     }
 
     private void confirmDelete(int id)
     {
-        DeleteUser(id);
-        showConfirmDelete();
+        var delete = Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Eliminar cuenta",
+            Text = "¿Estás seguro de que deseas eliminar tu cuenta?",
+            Icon = SweetAlertIcon.Warning,
+            ShowCancelButton = true,
+            ConfirmButtonText = "Eliminar",
+            CancelButtonText = "Cancelar"
+        });
+
+        if (delete.Result.IsConfirmed)
+        {
+            DeleteUser(id);
+            var confirmdelete = Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Cuenta eliminada",
+                Text = "Tu cuenta ha sido eliminada correctamente.",
+                Icon = SweetAlertIcon.Success
+            });
+        }
+
     }
 
     // Cambiar contraseña
@@ -490,12 +590,36 @@
         {
             var result = await UserService.ChangePasswordAsync(user);
             Snackbar.Clear();
-            Snackbar.Add("Contraseña cambiada con éxito.", Severity.Success);
+            // Snackbar.Add("Contraseña cambiada con éxito.", Severity.Success);
+            var resultado = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Contraseña cambiada",
+                Text = "Tu contraseña ha sido cambiada correctamente.",
+                Icon = SweetAlertIcon.Success
+            });
+
+            showChangePassword();
         }
         catch (ApplicationException ex)
         {
-            Snackbar.Add(ex.Message, Severity.Error);
+            // Snackbar.Add(ex.Message, Severity.Error);
+            var error = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Error al cambiar contraseña",
+                Text = ex.Message,
+                Icon = SweetAlertIcon.Error
+            });
+        
         }
+    }
+
+    // Método para obtener las iniciales del nombre del usuario
+    private string GetInitials(UserInfo? userInfo)
+    {
+        if (userInfo == null) return "NN";
+
+        var initials = $"{userInfo.Name?.FirstOrDefault()}{userInfo.LastName?.FirstOrDefault()}";
+        return initials.ToUpper();
     }
 
 }

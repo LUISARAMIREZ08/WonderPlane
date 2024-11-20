@@ -1,7 +1,30 @@
-﻿
+﻿.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 3%;
+    margin-block-end: 3%;
+}
+
+.tittle{
+    display:flex;
+    justify-content: start;
+    align-items:center;
+    flex-direction: row;
+}
+
+.tittle h4{
+    margin:0;
+}
+
 .register-container {
     display: flex;
     color: #071952;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
 }
 .register-container h3{
     margin-bottom: 1rem;
@@ -12,9 +35,11 @@
     flex-direction: row;
     align-items: start;
     gap: 30px;
+    width: 100%;
     color: #071952;
     border: 1px solid #ccc;
     border-radius: 5px;
+    margin-top:2%;
     padding: 15px;
 }
 .form-container-left{
@@ -32,12 +57,42 @@
     width: 100%;
     font-weight: 400;
 }
+.input-check {
+    display:flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    font-weight: 400;
+    gap: 1%;
+}
+
+.input-check select{
+    width: 30%;
+}
+
+
+
+.input-check label{
+    margin: 0;
+}
 
 .register {
     margin-top: 20px;
 }
 
 .form-control {
+    font-size: 0.8rem;
+    color: #507687;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.input-group-text {
     font-size: 0.8rem;
     color: #507687;
 }
@@ -70,17 +125,17 @@
 }
 
     .form-button .submit-button {
-        background-color: #41B3A2;
+        background-color: dodgerblue;
         color: white;
         padding: 10px 20px;
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        width: 60%;
+        width: 40%;
     }
 
         .form-button .submit-button:hover {
-            background-color: #00978b;
+            background-color: #256cff
         }
 
 @media (max-width: 768px) {

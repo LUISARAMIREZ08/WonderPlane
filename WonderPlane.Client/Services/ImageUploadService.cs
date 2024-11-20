@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace WonderPlane.Client.Servicios
+namespace WonderPlane.Client.Services
 {
     public class ImageUploadService
     {

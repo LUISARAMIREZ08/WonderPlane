@@ -36,8 +36,8 @@ public class PromotionController : ControllerBase
                 StartDate = promotionDTO.StartDate,
                 EndDate = promotionDTO.EndDate,
                 Discount = promotionDTO.Discount,
-                PromotionStatus = promotionDTO.PromotionStatus,
-                PromotionType = promotionDTO.PromotionType,
+                PromotionStatus = PromotionStatus.Active,
+                PromotionType = (PromotionType)promotionDTO.PromotionTypeDto,
                 FlightId = promotionDTO.FlightId
             };
 
@@ -53,7 +53,7 @@ public class PromotionController : ControllerBase
         {
             responseApi.EsCorrecto = false;
             responseApi.Mensaje = $"Error de base de datos: {dbEx.Message}";
-        }
+        } 
         catch (Exception ex)
         {
             responseApi.EsCorrecto = false;
