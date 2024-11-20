@@ -56,6 +56,9 @@ namespace WonderPlane.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal?>("Balance")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("CardType")
                         .HasColumnType("int");
 
@@ -97,6 +100,9 @@ namespace WonderPlane.Server.Migrations
 
                     b.Property<TimeSpan>("ArriveTime")
                         .HasColumnType("time");
+
+                    b.Property<int>("AvailableSeats")
+                        .HasColumnType("int");
 
                     b.Property<int>("BagPrice")
                         .HasColumnType("int");
@@ -268,7 +274,6 @@ namespace WonderPlane.Server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Discount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("EndDate")
@@ -311,7 +316,6 @@ namespace WonderPlane.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -414,7 +418,6 @@ namespace WonderPlane.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("SeatStatus")
@@ -527,6 +530,9 @@ namespace WonderPlane.Server.Migrations
                     b.Property<string>("Address")
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
+
+                    b.Property<decimal?>("Balance")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");

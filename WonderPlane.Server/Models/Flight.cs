@@ -44,6 +44,8 @@ public class Flight
     [Required(ErrorMessage = "El precio de asientos económicos es obligatorio.")]
     public required int EconomicClassPrice { get; set; }
 
+    public int AvailableSeats { get; set; } = 0;
+
     public ICollection<Promotion> Promotions { get; } = new List<Promotion>();
 
     public ICollection<News> News { get; } = new List<News>();

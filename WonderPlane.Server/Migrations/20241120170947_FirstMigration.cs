@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WonderPlane.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,7 +50,8 @@ namespace WonderPlane.Server.Migrations
                     FlightCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
                     FirstClassPrice = table.Column<int>(type: "int", nullable: false),
-                    EconomicClassPrice = table.Column<int>(type: "int", nullable: false)
+                    EconomicClassPrice = table.Column<int>(type: "int", nullable: false),
+                    AvailableSeats = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -109,7 +110,7 @@ namespace WonderPlane.Server.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Discount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Discount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PromotionStatus = table.Column<int>(type: "int", nullable: false),
                     PromotionType = table.Column<int>(type: "int", nullable: false),
                     FlightId = table.Column<int>(type: "int", nullable: true)
@@ -135,7 +136,7 @@ namespace WonderPlane.Server.Migrations
                     Number = table.Column<int>(type: "int", nullable: false),
                     SeatType = table.Column<int>(type: "int", nullable: false),
                     SeatStatus = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     FlightId = table.Column<int>(type: "int", nullable: true),
                     TicketId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -174,6 +175,7 @@ namespace WonderPlane.Server.Migrations
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     TravelerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -199,6 +201,7 @@ namespace WonderPlane.Server.Migrations
                     ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CardType = table.Column<int>(type: "int", nullable: false),
                     SecurityCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     RegisteredUserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -243,7 +246,7 @@ namespace WonderPlane.Server.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PurchaseStatus = table.Column<int>(type: "int", nullable: false),
                     RegisteredUserId = table.Column<int>(type: "int", nullable: true)
                 },
