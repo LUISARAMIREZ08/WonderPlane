@@ -1,0 +1,296 @@
+﻿@page "/add-card"
+
+<PageTitle>Añadir medio de pago</PageTitle>
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using WonderPlane.Shared;
+@using WonderPlane.Client.Services;
+@using WonderPlane.Client.Utils
+@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json
+@using MudBlazor;
+@using System.Security.Claims
+@using CurrieTechnologies.Razor.SweetAlert2
+
+@inject IFinanceService FinanceService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ISnackbar Snackbar;
+@inject NavigationManager NavigationManager
+@inject SweetAlertService Swal
+
+
+<AsideMenu />
+
+<main class="main-container poppins-light">
+    <a href="/manage-finance"><MudIcon Icon="@Icons.Material.Filled.ArrowBack" Color="Color.Info" Style="margin-bottom:1%" /></a>
+    <h2>Agregar tarjeta</h2>
+    <div class="add-card-container">
+        <div class="card-preview-container">
+
+            <!-- Tarjeta frontal -->
+            <div class="card-preview card-preview-front">
+
+                <!-- Franquicia y tipo de la Tarjeta -->
+                <div class="franq">
+                    @cardDto.CardTypeDto.ToString()
+                    <img src="@GetFranchiseImage()" alt="Franquicia de Tarjeta" />
+                </div>
+
+                <!-- Chip -->
+                <div class="chip-img"><img src="img/chip.png" /></div>
+
+                <!-- Número de Tarjeta -->
+                <div class="card-number">@FormatCardNumber(cardDto.Number)</div>
+
+                <div class="footer-card-preview">
+                    <!-- Nombre del Titular -->
+                    <div class="card-holder-name">@ToUpperCase(cardDto.HolderName)</div>
+
+                    <!-- Fecha de Expiración -->
+                    <div class="expiration-date"> <span>Vence el</span> @((cardDto.ExpirationDate.HasValue) ? cardDto.ExpirationDate.Value.ToString("MM/yy") : "MM/AA")</div>
+                </div>
+            </div>
+
+            <!-- Tarjeta Trasera -->
+            <div class="card-preview card-preview-back">
+
+                <!-- CVV -->
+                <div class="cvv">CVV: @(!string.IsNullOrEmpty(cardDto.SecurityCode) ? cardDto.SecurityCode : " ")</div>
+
+            </div>
+        </div>
+
+        <!-- Formulario de Tarjeta -->
+        <EditForm Model="@cardDto" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+
+            <div class="form-container">
+
+                <!-- Tipo de Tarjeta -->
+                <div class="form-item">
+                    <label>Tipo de Tarjeta</label>
+                    <select @bind="cardDto.CardTypeDto">
+                        <option value="Credit">Crédito</option>
+                        <option value="Debit">Débito</option>
+                    </select>
+                    <span class="small-validation-message">
+                        <ValidationMessage For="@(() => cardDto.CardTypeDto)" />
+                    </span>
+                </div>
+
+                <!-- Número de Tarjeta -->
+                <div class="form-item">
+                    <label>Número de Tarjeta</label>
+                    <input type="text" @bind-value="cardDto.Number" maxlength="16" placeholder="Número de Tarjeta"
+                           @oninput="@(e => UpdateCardField("Number", e.Value?.ToString() ?? string.Empty))" />
+                    <span class="small-validation-message">
+                        <ValidationMessage For="@(() => cardDto.Number)" />
+                    </span>
+                </div>
+                
+                <!-- Nombre del Titular -->
+                <div class="form-item">
+                    <label>Nombre del Titular</label>
+                    <input type="text" @bind-value="cardDto.HolderName" maxlength="27" placeholder="Nombre en la tarjeta"
+                           @oninput="@(e => UpdateCardField("HolderName", e.Value?.ToString() ?? string.Empty))" />
+                    <span class="small-validation-message">
+                        <ValidationMessage For="@(() => cardDto.HolderName)" />
+                    </span>
+                </div>
+
+                <!-- Fecha de Expiración -->
+                <div class="form-item">
+                    <label>Fecha de Expiración</label>
+                    <div style="display: flex; gap: 10px;">
+                        <select @onchange="@(e => UpdateCardField("ExpirationMonth", e.Value?.ToString() ?? string.Empty))">
+                            <option value="">Mes</option>
+                            @for (int month = 1; month <= 12; month++)
+                            {
+                                <option value="@month.ToString("D2")">@month.ToString("D2")</option>
+                            }
+                        </select>
+                        <select @onchange="@(e => UpdateCardField("ExpirationYear", e.Value?.ToString() ?? string.Empty))">
+                            <option value="">Año</option>
+                            @for (int year = DateTime.Now.Year; year <= DateTime.Now.Year + 10; year++)
+                            {
+                                <option value="@year.ToString()">@year</option>
+                            }
+                        </select>
+                    </div>
+                    <span class="small-validation-message">
+                        <ValidationMessage For="@(() => cardDto.ExpirationDate)" />
+                    </span>
+                </div>
+
+                <!-- CVV -->
+                <div class="form-item">
+                    <label>CVV</label>
+                    <input type="number" @bind-value="cardDto.SecurityCode" placeholder="CVV" min="100" max="999" title="Debe contener exactamente 3 dígitos"
+                           @oninput="@(e => UpdateCardField("SecurityCode", e.Value?.ToString() ?? string.Empty))" />
+
+                    <span class="small-validation-message">
+                        <ValidationMessage For="@(() => cardDto.SecurityCode)" />
+                    </span>
+                </div>
+
+                <!-- Botón para enviar el formulario -->
+                <div class="form-item">
+                    <button type="submit">Agregar Tarjeta</button>
+                </div>
+            </div>
+        </EditForm>
+
+    </div>
+
+</main>
+
+@code {
+    private int userId;
+    private string franchise = string.Empty;
+
+    private CardDto cardDto = new CardDto
+    {
+        Id = 0,
+        Number = string.Empty,
+        HolderName = string.Empty,
+        ExpirationDate = null,
+        SecurityCode = string.Empty,
+        CardTypeDto = CardTypeDto.Credit
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Obtener el estado de autenticación
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // Verificar si el usuario está autenticado
+        if (user?.Identity?.IsAuthenticated == true)
+        {
+            // Obtener la claim "UserInfo" y extraer el ID
+            var userInfoClaim = user.FindFirst("UserInfo");
+            if (userInfoClaim != null)
+            {
+                var userInfo = JsonSerializer.Deserialize<UserInfo>(userInfoClaim.Value);
+                if (userInfo != null)
+                {
+                    userId = userInfo.Id; //Asigna el ID del usuario autenticado
+                    Console.WriteLine($"User ID: {userId}");
+                }
+            }
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            cardDto.RegisteredUserId = userId;
+            var result = await FinanceService.AddCard(cardDto);
+            if (result != null)
+            {
+                // Snackbar.Add("Tarjeta agregada correctamente", Severity.Success);
+
+                var resultado = await Swal.FireAsync(new SweetAlertOptions
+                    {
+                        Title = "Agregaste un nuevo medio de pago",
+                        Text = "La información de tu tarjeta se ha guardado correctamente.",
+                        Icon = SweetAlertIcon.Success
+                    });
+                NavigationManager.NavigateTo("/manage-finance");
+            }
+            else
+            {
+                // Snackbar.Add("Error al agregar la tarjeta", Severity.Error);
+                var resultado = await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Error al agregar la tarjeta",
+                    Text = "Ocurrió un error al intentar guardar la información de tu tarjeta, revisa que los datos sean correctos.",
+                    Icon = SweetAlertIcon.Error
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    // Actualiza el valor de un campo de la tarjeta
+    private void UpdateCardField(string fieldName, string value)
+    {
+        switch (fieldName)
+        {
+            case "Number":
+                cardDto.Number = value.Replace(" ", "");
+                franchise = GetCardFranchise(cardDto.Number);
+                break;
+            case "HolderName":
+                cardDto.HolderName = value;
+                break;
+            case "ExpirationMonth":
+                if (int.TryParse(value, out int month))
+                {
+                    UpdateExpirationDate(month, cardDto.ExpirationDate?.Year ?? DateTime.Now.Year);
+                }
+                break;
+            case "ExpirationYear":
+                if (int.TryParse(value, out int year))
+                {
+                    UpdateExpirationDate(cardDto.ExpirationDate?.Month ?? DateTime.Now.Month, year);
+                }
+                break;
+            case "SecurityCode":
+                cardDto.SecurityCode = value;
+                break;
+        }
+    }
+
+    // Actualiza la fecha de expiración de la tarjeta y la guarda en el objeto cardDto
+    private void UpdateExpirationDate(int month, int year)
+    {
+        if (month >= 1 && month <= 12)
+        {
+            cardDto.ExpirationDate = new DateTime(year, month, 1);
+        }
+    }
+
+    // Formatea el número de la tarjeta para mostrarlo en el campo de vista previa
+    private string FormatCardNumber(string cardNumber)
+    {
+        return !string.IsNullOrEmpty(cardNumber)
+            ? string.Join(" ", Enumerable.Range(0, (cardNumber.Length + 3) / 4)
+                                          .Select(i => cardNumber.Substring(i * 4, Math.Min(4, cardNumber.Length - i * 4))))
+            : "____ ____ ____ ____";
+    }
+
+    // Convierte el nombre del titular a mayúsculas
+    private string ToUpperCase(string text)
+    {
+        return !string.IsNullOrEmpty(text) ? text.ToUpper() : "NOMBRE TITULAR";
+    }
+
+    // Obtiene la franquicia de la tarjeta a partir del primer número
+    private string GetCardFranchise(string cardNumber)
+    {
+        if (cardNumber.StartsWith("4"))
+            return "Visa";
+        if (cardNumber.StartsWith("5"))
+            return "Mastercard";
+        if (cardNumber.StartsWith("3"))
+            return "AmericanExpress";
+        return "Unknown";
+    }
+
+    // Obtiene la imagen de la franquicia de la tarjeta
+    private string GetFranchiseImage()
+    {
+        return franchise switch
+        {
+            "Visa" => "img/visa.png",
+            "Mastercard" => "img/mastercard.png",
+            "AmericanExpress" => "img/americanexpress.png",
+            _ => "img/mastercard.png"
+        };
+    }
+}

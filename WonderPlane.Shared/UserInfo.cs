@@ -62,5 +62,7 @@ namespace WonderPlane.Shared
 
         public string? Image { get; set; }
 
+        public decimal? Balance { get; set; }
+
     }
 }
