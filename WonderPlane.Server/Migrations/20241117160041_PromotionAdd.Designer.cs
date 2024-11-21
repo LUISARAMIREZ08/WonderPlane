@@ -12,8 +12,13 @@ using WonderPlane.Server.Models;
 namespace WonderPlane.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
+<<<<<<<< HEAD:WonderPlane.Server/Migrations/20241117160041_PromotionAdd.Designer.cs
     [Migration("20241117160041_PromotionAdd")]
     partial class PromotionAdd
+========
+    [Migration("20241120170947_FirstMigration")]
+    partial class FirstMigration
+>>>>>>>> Aguirrex:WonderPlane.Server/Migrations/20241120170947_FirstMigration.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,7 +65,10 @@ namespace WonderPlane.Server.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal?>("Balance")
+<<<<<<<< HEAD:WonderPlane.Server/Migrations/20241117160041_PromotionAdd.Designer.cs
                         .HasPrecision(18, 2)
+========
+>>>>>>>> Aguirrex:WonderPlane.Server/Migrations/20241120170947_FirstMigration.Designer.cs
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("CardType")
@@ -104,6 +112,9 @@ namespace WonderPlane.Server.Migrations
 
                     b.Property<TimeSpan>("ArriveTime")
                         .HasColumnType("time");
+
+                    b.Property<int>("AvailableSeats")
+                        .HasColumnType("int");
 
                     b.Property<int>("BagPrice")
                         .HasColumnType("int");
@@ -293,7 +304,6 @@ namespace WonderPlane.Server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Discount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("EndDate")
@@ -336,7 +346,6 @@ namespace WonderPlane.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -439,7 +448,6 @@ namespace WonderPlane.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("SeatStatus")
@@ -554,7 +562,10 @@ namespace WonderPlane.Server.Migrations
                         .HasColumnType("nvarchar(40)");
 
                     b.Property<decimal?>("Balance")
+<<<<<<<< HEAD:WonderPlane.Server/Migrations/20241117160041_PromotionAdd.Designer.cs
                         .HasPrecision(18, 2)
+========
+>>>>>>>> Aguirrex:WonderPlane.Server/Migrations/20241120170947_FirstMigration.Designer.cs
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("BirthDate")
