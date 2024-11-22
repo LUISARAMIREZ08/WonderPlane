@@ -17,7 +17,7 @@ public class Reservation
     public required DateTime PaymentLimitDate { get; set; }
 
     [Required(ErrorMessage = "El estado de la reserva es obligatorio.")]
-    public required ReservationStatus ReservationStatus { get; set; }
+    public ReservationStatus ReservationStatus { get; set; }
 
     public int? RegisteredUserId { get; set; }
     public User? RegisteredUser { get; set; }
