@@ -1,0 +1,218 @@
+﻿<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+@using WonderPlane.Shared;
+@using MudBlazor;
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components
+@using WonderPlane.Client.Services;
+
+@inject IFlightService FlightService
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
+
+
+<main class="main-container poppins-light">
+<h5>¡Descubre una nueva forma de volar con WonderPlane!</h5>
+<div Class="flight-search-card">
+        <EditForm Model="@searchModel" OnValidSubmit="SearchFlight" Style="width:100%">
+            <div class="radio-group">
+                <MudRadioGroup @bind-Value="Dense_Radio">
+                    <MudRadio Value="true" Color="Color.Info" Dense="true">Ida y Vuelta</MudRadio>
+                    <MudRadio Value="false" Color="Color.Info" Dense="false">Solo ida</MudRadio>
+                </MudRadioGroup>
+            </div>
+            <div class="form-search">
+                <div class="input">
+                    <div class="autocomplete-container">
+                        <label class="form-label">Origen</label>
+                        <input type="text" class="form-control"
+                                @bind="searchModel.Origin"
+                                @oninput="FilterCities"
+                               placeholder="Ingresa el Destino" />
+                        <ul class="autocomplete-results" style="display:@(filteredCities.Any() ? "block" : "none")">
+                            @foreach (var city in filteredCities)
+                            {
+                                <li @onclick="() => SelectCity(city)">
+                                    @if (!string.IsNullOrEmpty(city.image))
+                                    {
+                                        <img src="@city.image" alt="@city.city" class="city-image" />
+                                    }
+                                    <div class="cities">
+                                        <span>@city.city - @city.country (@city.country_code)</span>
+                                        <h7>@city.airport</h7>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="input">
+                    <div class="autocomplete-container">
+                        <label class="form-label">Destino</label>
+                        <input type="text" class="form-control"
+                               @bind="searchModel.Destination"
+                               @oninput="FliterCitiesDestination"
+                               placeholder="Ingresa el Destino" />
+                        <ul class="autocomplete-results" style="display:@(filterCitiesDestination.Any() ? "block" : "none")">
+                            @foreach (var city in filterCitiesDestination)
+                            {
+                                <li @onclick="() => SelectCityDestination(city)">
+                                    @if (!string.IsNullOrEmpty(city.image))
+                                    {
+                                        <img src="@city.image" alt="@city.city" class="city-image" />
+                                    }
+                                    <div class="cities">
+                                        <span>@city.city - @city.country (@city.country_code)</span>
+                                        <h7>@city.airport</h7>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <MudDivider Vertical="true" FlexItem="true" />
+                <div class="input">
+                    <label class="form-label">Ida</label>
+                    <InputDate @bind-Value="searchModel.DepartureDate" class="form-control" style="font-size: 0.9rem;color: #507687"></InputDate>
+                </div>
+                @if (Dense_Radio == true)
+                {
+                    <div class="input">
+                        <label class="form-label">Regreso</label>
+                        <InputDate @bind-Value="ReturnDate" class="form-control" style="font-size: 0.9rem;color: #507687"></InputDate>
+                    </div>
+                }
+                <MudDivider Vertical="true" FlexItem="true" />
+                <div class="input">
+                    <label class="form-label">Pasajeros</label>
+                    <div class="input-group">
+                        <span class="material-symbols-outlined">
+                            person
+                        </span>
+                        <InputNumber @bind-Value="searchModel.Passengers" class="form-control" style="font-size: 0.9rem;color: #507687" Min="1" Max="10"></InputNumber>
+                    </div>
+                </div>
+                <div class="form-button">
+                    <button class="submit-button" @onclick="SearchFlight" type="button">Buscar</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</main>
+
+<style>
+    .mud-radio > .mud-radio-content {
+        font-weight: 600;
+        color: #071952;
+        font-family: 'Poppins', sans-serif;
+    }
+</style>
+
+
+@code {
+    FlightSearchRequest searchModel = new FlightSearchRequest
+        {
+            Origin = string.Empty,
+            Destination = string.Empty,
+            DepartureDate = DateTime.Today,
+            Passengers = 1,
+        };
+
+    private bool isValid;
+    public bool Dense_Radio { get; set; } = true;
+    public DateTime ReturnDate { get; set; } = DateTime.Today;
+
+
+    private List<AddFlights> allCities = new();
+    private List<AddFlights> nationalCities = new();
+    private List<AddFlights> internationalCities = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var localClient = HttpClientFactory.CreateClient("LocalClient");
+        var nationalList = await localClient.GetFromJsonAsync<List<AddFlights>>("sample-data/flightsNational.json");
+        if (nationalList != null)
+        {
+            foreach (var city in nationalList)
+            {
+                allCities.Add(city);
+            }
+        }
+
+        var internationalList = await localClient.GetFromJsonAsync<List<AddFlights>>("sample-data/flightsInternational.json");
+        if (internationalList != null)
+        {
+            foreach (var city in internationalList)
+            {
+                if (city.type == "international")
+                {
+                    allCities.Add(city);
+                }
+            }
+        }
+    }
+
+    private async Task SearchFlight()
+    {
+        
+        var response = await FlightService.GetOneWayFlightAsync(
+            searchModel.Origin,
+            searchModel.Destination,
+            searchModel.DepartureDate,
+            searchModel.Passengers);
+
+        if (response.EsCorrecto)
+        {
+            Navigation.NavigateTo($"/flights-found?origin={Uri.EscapeDataString(searchModel.Origin)}" +
+            $"&destination={Uri.EscapeDataString(searchModel.Destination)}" +
+            $"&departureDate={searchModel.DepartureDate:yyyy-MM-dd}" +
+            $"&passengers={searchModel.Passengers}" +
+            $"&returnDate={(Dense_Radio ? Uri.EscapeDataString(ReturnDate.ToString("yyyy-MM-dd")) : string.Empty)}" +
+            $"&roundTrip={Dense_Radio}");
+        }
+        else
+        {
+            Navigation.NavigateTo($"/flights-found?origin={Uri.EscapeDataString(searchModel.Origin)}" +
+            $"&destination={Uri.EscapeDataString(searchModel.Destination)}" +
+            $"&departureDate={searchModel.DepartureDate:yyyy-MM-dd}" +
+            $"&passengers={searchModel.Passengers}" +
+            $"&returnDate={(Dense_Radio ? Uri.EscapeDataString(ReturnDate.ToString("yyyy-MM-dd")) : string.Empty)}" +
+            $"&roundTrip={Dense_Radio}");
+            Console.WriteLine($"Error: {response.Mensaje}");
+        }
+    }
+
+
+    private List<AddFlights> filteredCities = new();
+    private List<AddFlights> filterCitiesDestination = new();
+
+    private void FilterCities(ChangeEventArgs e)
+    {
+        string input = e.Value?.ToString() ?? string.Empty;
+        filteredCities = allCities
+            .Where(c => c.city.Contains(input, StringComparison.OrdinalIgnoreCase))
+            .Take(10) 
+            .ToList();
+    }
+
+    private void FliterCitiesDestination(ChangeEventArgs e)
+    {
+        string input = e.Value?.ToString() ?? string.Empty;
+
+        filterCitiesDestination = allCities
+            .Where(c => c.city.Contains(input, StringComparison.OrdinalIgnoreCase))
+            .Take(10)
+            .ToList();
+    }
+
+    private void SelectCity(AddFlights city)
+    {
+        searchModel.Origin = city.city + " " + "(" + city.code + ")" + " - " + city.country + " " + "(" + city.country_code + ")";
+        filteredCities.Clear();   
+    }
+
+    private void SelectCityDestination(AddFlights city)
+    {
+        searchModel.Destination = city.city + " " + "(" + city.code + ")" + " - " + city.country + " " + "(" + city.country_code + ")";
+        filterCitiesDestination.Clear(); 
+    }
+}

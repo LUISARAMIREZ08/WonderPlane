@@ -1,0 +1,494 @@
+﻿.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    background-color: #f5f5f5;
+}
+
+.container-search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    background-color: dodgerblue;
+}
+
+.flight-search-card {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    padding: 1%;
+    background-color: rgba(245, 245, 245, 0.7);
+}
+
+.radio-group {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    gap: 2%;
+    padding-left: 3%;
+}
+
+.form-search {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    gap: 1%;
+    background-color: white;
+    padding: 1%;
+    border-radius: 10px;
+    color: #071952;
+}
+
+.form-button {
+    color: white;
+    border-radius: 10px;
+    border-block-color: dodgerblue;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-bottom: 0.5rem;
+    width: 30%;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+    .input-group span {
+        color: #071952;
+        font-size: 1.5rem;
+        border: 1px solid #ced4da;
+        border-right: none;
+        border-radius: 5px;
+        padding-inline: 1%;
+        padding-block: 4.9px;
+    }
+
+.form-control {
+    font-size: 0.8rem;
+    color: #507687;
+}
+
+.form-button {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    margin-top: 18px;
+}
+
+    .form-button .submit-button {
+        background-color: dodgerblue;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        font-weight: 500;
+    }
+
+        .form-button .submit-button:hover {
+            background-color: #256cff
+        }
+
+.container-flighs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 95%;
+    text-align: center;
+    margin: 1%;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.container-flight-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 95%;
+    text-align: center;
+    border-radius: 5px;
+    padding: 1%;
+    margin-top: 1%;
+    margin-block: 1%;
+    background-color: rgba(245, 245, 245, 0.7);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.container-flights-1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    border-radius: 5px;
+    padding: 1%;
+    background-color: rgba(245, 245, 245, 0.7);
+}
+
+.container-flight-info-2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    text-align: center;
+    border-radius: 5px;
+    padding: 1%;
+    background-color: rgba(245, 245, 245, 0.7);
+}
+.container-flight-info-3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 20%;
+    border-radius: 5px;
+    padding: 1%;
+    background-color: rgba(245, 245, 245, 0.7);
+}
+
+.line-2 {
+    width: 80%;
+    height: 1px;
+    background-color: #d5d8dc;
+}
+
+.container-flight-1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    text-align: center;
+    padding: 1%;
+}
+
+.container-flight-origin {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    padding: 1%;
+    color: #071952;
+}
+
+    .container-flight-origin h6 {
+        font-weight: 300;
+    }
+
+.container-flight-duration {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    padding: 1%;
+    color: #507687;
+}
+
+.line {
+    width: 80%;
+    height: 1px;
+    background-color: #FF6699;
+    margin: 1% 0;
+}
+
+.container-flight-destination {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    padding: 1%;
+    color: #071952;
+}
+
+.container-flight-destination h6{
+    font-weight: 300;
+}
+
+.container-flight-airline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    text-align: center;
+    padding: 1%;
+    color: #071952;
+}
+
+    .container-flight-airline span {
+        font-size: 1.5rem;
+        padding-inline: 1%;
+        padding-block: 4.8px;
+        color: #071952;
+    }
+
+.container-flight-2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    white-space: nowrap;
+    width: 20%;
+    padding: 1%;
+}
+
+.container-flight-2 h7{
+    font-size: 0.7rem;
+    color: #071952;
+    margin-block-end: 10px;
+}
+
+.container-flight-price {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 20%;
+    color: #071952;
+    text-align: center;
+}
+
+.container-flight-price .price{
+    font-weight: 800;
+}
+
+.form-button-2 {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+}
+
+    .form-button-2 .submit-button-2 {
+        background-color: #0AD1D0;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        font-weight: 500;
+    }
+
+        .form-button-2 .submit-button-2:hover {
+            background-color: #08B0AF
+        }
+.autocomplete-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    position: relative;
+    width: 100%;
+}
+
+.cities {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+
+    .cities span {
+        font-weight: 500;
+        font-size: 0.7rem;
+        text-align: left;
+    }
+
+    .cities h7 {
+        font-weight: 250;
+        font-size: 0.6rem;
+        text-align: left;
+    }
+
+.autocomplete-results {
+    position: absolute; 
+    top: 100%; 
+    left: 0; 
+    width: 300px; 
+    max-height: 250px; 
+    overflow-y: auto; 
+    background-color: white; 
+    border: 1px solid #ccc; 
+    z-index: 10; 
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px; 
+}
+
+    .autocomplete-results li {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+
+        .autocomplete-results li:hover {
+            background-color: #f0f0f0;
+        }
+
+.city-image {
+    width: 50px; 
+    height: 50px;
+    margin-right: 10px;
+    border-radius: 5px; 
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+}
+
+.modal {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding-top: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    width: 50%;
+    height: 80%;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    color: #071952;
+}
+
+    .modal .container-details {
+        display: flex;
+        justify-content: space-around;
+        flex-direction: column;
+        max-height: calc(100% - 60px);
+        overflow-y: auto; 
+        width: 100%;
+        padding-top: 2%;
+    }
+
+    .modal .container-details-outbound {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        flex-direction: row;
+        margin-block-end:1%;
+    }
+
+    .modal .container-details-return {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        flex-direction: row;
+        margin-top:2%;
+        margin-block-end:10%;
+    }
+
+    .modal .container-details-1 {
+        display: flex;
+        justify-content: center;
+        align-items: start;
+        flex-direction: column;
+    }
+
+    .modal .container-details-1-1 {
+        display: flex;
+        justify-content: center;
+        align-items: start;
+        flex-direction: column;
+        margin-bottom:5px;
+    }
+
+    .modal .container-details-2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        flex-direction: column;
+    }
+
+    .modal footer {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-direction: row;
+        height: 20%;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background-color: #fff;
+        z-index: 1000;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+        .modal footer .container-price-details {
+            display: flex;
+            justify-content: start;
+            align-items: start;
+            flex-direction: column;
+            width:40%;
+        }
+
+        .modal footer .form-button-3 {
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            align-items: center;
+            text-align: center;
+            width:20%;
+        }
+
+        .modal footer .submit-button-3 {
+            background-color: #0AD1D0;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 500;
+        }
+
+            .modal footer .submit-button-3:hover {
+                background-color: #08B0AF
+            }

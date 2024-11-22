@@ -42,7 +42,7 @@
             <div class="img-change-button">
                 <MudFileUpload T="IBrowserFile" FilesChanged="OnFileSelected">
                     <ActivatorContent>
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" Size="Size.Large"/>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Info" Size="Size.Large"/>
                     </ActivatorContent>
                 </MudFileUpload>
             </div>
@@ -616,7 +616,7 @@
     // Método para obtener las iniciales del nombre del usuario
     private string GetInitials(UserInfo? userInfo)
     {
-        if (userInfo == null) return "NN";
+        if (userInfo == null) return " ";
 
         var initials = $"{userInfo.Name?.FirstOrDefault()}{userInfo.LastName?.FirstOrDefault()}";
         return initials.ToUpper();

@@ -13,10 +13,11 @@
 @inject ISnackbar Snackbar;
 @inject IFlightService FlightService;
 
+<AsideMenu />
 <div class="main-container poppins-light">
     
     <div class="register-container">
-        <EditForm Model="newFlight" OnValidSubmit="OnValidSubmit" style="display:flex;flex-direction: column;justify-content: center;width:80%">
+        <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit"  style="display:flex;flex-direction: column;justify-content: center;width:80%">
             <DataAnnotationsValidator />
             <div class="tittle">
                 <MudTooltip Text="Volver"><MudIconButton Icon="material-symbols-outlined/arrow_back" Color="Color.Info" OnClick="@(() => navigation.NavigateTo("/manage-flights"))" /></MudTooltip>
@@ -136,7 +137,7 @@
                         <span class="small-validation-message"><ValidationMessage For="@(() => newFlight.ArriveDate)"></ValidationMessage></span>
                     </div>
                     <div class="input">
-                        <label class="form-label">Hora de llegada</label>
+                        <label class="form-label">Hora de llegada "Col"</label>
                         <div style="position: relative;">
                             <input type="text" class="form-control"
                                    value="@(_arriveTime.HasValue ? $"{_arriveTime.Value.Hours:D2}:{_arriveTime.Value.Minutes:D2}" : "")"
@@ -151,30 +152,30 @@
                 </div>
                 <div class="form-container-right-2">
                     <div class="input">
-                        <label class="form-label">Precio Primera Clase</label>
+                        <label class="form-label">Precio Primera Clase "Cop"</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span> 
-                            <InputNumber class="form-control" @bind-Value="newFlight.FirstClassPrice" @oninput="e => UpdatePrice(e, price => newFlight.FirstClassPrice = price)" style="font-size: 0.8rem; color: #507687;" />
+                            <InputNumber class="form-control" @bind-Value="newFlight.FirstClassPrice" @oninput="e => UpdatePrice((int)e.Value, price => newFlight.EconomicClassPrice = price)" style="font-size: 0.8rem; color: #507687;" />
                         </div>
                         <span class="small-validation-message">
                             <ValidationMessage For="@(() => newFlight.FirstClassPrice)" />
                         </span>
                     </div>
                     <div class="input">
-                        <label class="form-label">Precio Clase Economica</label>
+                        <label class="form-label">Precio Clase Economica "Cop"</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span> 
-                            <InputNumber class="form-control" @bind-Value="newFlight.EconomicClassPrice" @oninput="e => UpdatePrice(e, price => newFlight.EconomicClassPrice = price)" style="font-size: 0.8rem; color: #507687;" />
+                            <InputNumber class="form-control" @bind-Value="newFlight.EconomicClassPrice" @oninput="e => UpdatePrice((int)e.Value, price => newFlight.EconomicClassPrice = price)" style="font-size: 0.8rem; color: #507687;" />
                         </div>
                         <span class="small-validation-message">
                             <ValidationMessage For="@(() => newFlight.EconomicClassPrice)" />
                         </span>
                     </div>
                     <div class="input">
-                        <label class="form-label">Valor adicional por maleta</label>
+                        <label class="form-label">Valor adicional por maleta "Cop"</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
-                            <InputNumber class="form-control" @bind-Value="newFlight.BagPrice" @oninput="e => UpdatePrice(e, price => newFlight.BagPrice = price)" style="font-size: 0.8rem; color: #507687;" />
+                            <InputNumber class="form-control" @bind-Value="newFlight.BagPrice" @oninput="e => UpdatePrice((int)e.Value, price => newFlight.EconomicClassPrice = price)" style="font-size: 0.8rem; color: #507687;" />
                         </div>
                         <span class="small-validation-message">
                             <ValidationMessage For="@(() => newFlight.BagPrice)" />
@@ -202,12 +203,18 @@
             ArriveDate = DateTime.Now,
             ArriveTime = "00:00",
             FirstClassPrice = 0,
+            FirstClassPricePromotion = 0,
             IsInternational = false,
             FlightStatus = 0,
             BagPrice = 0,
             FlightCode = string.Empty,
             Duration = 0,
             EconomicClassPrice = 0,
+            EconomicClassPricePromotion = 0,
+            HasPromotion = false,
+            CodePromotion = string.Empty,
+            DiscountPercentage = 0,
+            PromotionDescription = string.Empty
         };
     private TimeSpan? _departureTime;
     private TimeSpan? _arriveTime;
@@ -215,21 +222,23 @@
     private List<AddFlights> allCities = new();
     private List<AddFlights> nationalCities = new();
     private List<AddFlights> internationalCities = new();
+    private EditContext? editContext;
+    private ValidationMessageStore? validationMessages;
 
 
     private async Task OnInternationalChange(ChangeEventArgs e)
     {
         bool.TryParse(e.Value.ToString(), out bool isInternational);
         newFlight.IsInternational = isInternational;
-
     }
+
 
     private void OnArriveTimeChanged(TimeSpan? newTime)
     {
         _departureTime = newTime ?? TimeSpan.Zero;
         if (newTime.HasValue)
         {
-            _arriveTime = newTime.Value;
+            newFlight.DepartureTime = $"{_departureTime.Value.Hours:D2}:{_departureTime.Value.Minutes:D2}";
             var resultadoLlegada = CalcularFechaHoraLlegada(newFlight.DepartureDate, _departureTime);
             newFlight.ArriveDate = resultadoLlegada.FechaLlegada;
             _arriveTime = resultadoLlegada.HoraLlegada;
@@ -321,18 +330,6 @@
                 newFlight.ArriveTime = _arriveTime.Value.ToString(@"hh\:mm");
             }
 
-            if (newFlight.FirstClassPrice < newFlight.EconomicClassPrice)
-            {
-                Snackbar.Add("El precio de la clase económica no puede ser mayor al de Primera clase.", Severity.Error);
-                return;
-            }
-
-            if (newFlight.FirstClassPrice == newFlight.EconomicClassPrice)
-            {
-                Snackbar.Add("El precio de la clase económica no puede ser igual al de Primera clase.", Severity.Error);
-                return;
-            }
-
             await FlightService.CreateFlight(newFlight);
             Snackbar.Add("Vuelo Registrado Correctamente", Severity.Success);
             newFlight = new FlightDTO
@@ -344,12 +341,18 @@
                     ArriveDate = DateTime.Now,
                     ArriveTime = "00:00",
                     FirstClassPrice = 0,
+                    FirstClassPricePromotion = 0,
                     IsInternational = false,
                     FlightStatus = 0,
                     BagPrice = 0,
                     FlightCode = string.Empty,
                     Duration = 0,
                     EconomicClassPrice = 0,
+                    EconomicClassPricePromotion = 0,
+                    HasPromotion = false,
+                    CodePromotion = string.Empty,
+                    DiscountPercentage = 0,
+                    PromotionDescription = string.Empty
                 };
             _departureTime = null; 
             _arriveTime = null;
@@ -374,15 +377,40 @@
         return (momentoLlegada.Date, momentoLlegada.TimeOfDay);
     }
 
-    private void UpdatePrice(ChangeEventArgs e, Action<int> setPriceAction)
+    private void UpdatePrice(int newValue, Action<int> setPriceAction)
     {
-        if (int.TryParse(e.Value.ToString(), NumberStyles.AllowThousands | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out int result))
+        setPriceAction(newValue);
+        ValidatePrices();
+    }
+
+    protected override void OnInitialized()
+    {
+        editContext ??= new EditContext(newFlight);
+        validationMessages = new ValidationMessageStore(editContext);
+
+        // Suscribe a cambios de campo para ejecutar validaciones personalizadas
+        editContext.OnFieldChanged += HandleFieldChanged;
+    }
+
+    private void HandleFieldChanged(object sender, FieldChangedEventArgs e)
+    {
+        // Detecta si el campo cambiado es FirstClassPrice o EconomicClassPrice
+        if (e.FieldIdentifier.FieldName == nameof(newFlight.FirstClassPrice) ||
+            e.FieldIdentifier.FieldName == nameof(newFlight.EconomicClassPrice))
         {
-            setPriceAction(result);
+            ValidatePrices();
         }
-        else
+    }
+
+    private void ValidatePrices()
+    {
+        validationMessages.Clear();
+
+        if (newFlight.FirstClassPrice < newFlight.EconomicClassPrice)
         {
-            setPriceAction(0);
+            validationMessages.Add(editContext.Field(nameof(newFlight.EconomicClassPrice)),
+                                   "El precio de la clase económica no puede ser mayor que el de primera clase.");
         }
+        editContext?.NotifyValidationStateChanged();
     }
 }

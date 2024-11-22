@@ -1,0 +1,52 @@
+﻿.create-form {
+    margin: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-container h2 {
+    margin-bottom:40px;
+    text-align:center;
+}
+
+    .create-form .input {
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        width: 300px;
+    }
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    padding: 40px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+}
+
+.button {
+    border: none;
+    border-radius: 5px;
+    padding: 10px 30px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px;
+    width: 50%;
+}
+
+.confirm-button {
+    background-color: dodgerblue;
+    color: white;
+}
+
+    .confirm-button:hover {
+        background: none;
+        color: black;
+        transition: ease 0.5s;
+    }
