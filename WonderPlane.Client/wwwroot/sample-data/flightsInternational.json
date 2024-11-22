@@ -6,7 +6,7 @@
     "country_code": "UK",
     "airport": "Aeropuerto Internacional de Londres Heathrow",
     "type": "international",
-    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866095/Londres_v32upf.jpg"
+    "image": "https://i.postimg.cc/nLS1bH7Y/londres.jpg"
   },
   {
     "city": "New York",
@@ -15,7 +15,7 @@
     "country_code": "US",
     "airport": "Aeropuerto Internacional John F. Kennedy",
     "type": "international",
-    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866099/NewYork_swtpgb.jpg"
+    "image": "https://i.postimg.cc/cJ7NXbnS/newyork.jpg"
   },
   {
     "city": "Buenos Aires",
@@ -24,7 +24,7 @@
     "country_code": "AR",
     "airport": "Aeropuerto Internacional Ezeiza",
     "type": "international",
-    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866094/Buenos_aires_vgz1xr.jpg"
+    "image": "https://i.postimg.cc/5t2ZS2bw/buenos-Aires.jpg"
   },
   {
     "city": "Miami",
@@ -33,7 +33,7 @@
     "country_code": "US",
     "airport": "Aeropuerto Internacional de Miami",
     "type": "international",
-    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866098/Miami_dttlcl.jpg"
+    "image": "https://i.postimg.cc/MH575qWQ/miami.jpg"
   },
   {
     "city": "Madrid",
@@ -42,7 +42,7 @@
     "country_code": "ES",
     "airport": "Aeropuerto Adolfo Suárez Madrid-Barajas",
     "type": "international",
-    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866097/Madrid_cbhhep.jpg"
+    "image": "https://i.postimg.cc/h4NQFXYt/madrid.jpg"
   },
   {
     "city": "Bogotá",
@@ -51,7 +51,7 @@
     "country_code": "CO",
     "airport": "El Dorado International Airport",
     "type": "national",
-    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866091/Bogot%C3%A1_fwia5t.jpg"
+    "image": "https://i.postimg.cc/k40bnLDH/bogota.png"
   },
   {
     "city": "Cali",
@@ -60,7 +60,7 @@
     "country_code": "CO",
     "airport": "Alfonso Bonilla Aragon International Airport",
     "type": "national",
-    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866092/Cali_rs1dse.jpg"
+    "image": "https://i.postimg.cc/SxMHRMZt/cali.png"
   },
   {
     "city": "Medellín",
@@ -69,7 +69,7 @@
     "country_code": "CO",
     "airport": "José María Córdova International Airport",
     "type": "national",
-    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866099/Medellin_vbhi5o.jpg"
+    "image": "https://i.postimg.cc/Nj6bZ7CY/medellin.jpg"
   },
   {
     "city": "Cartagena",
@@ -78,7 +78,7 @@
     "country_code": "CO",
     "airport": "Rafael Núñez International Airport",
     "type": "national",
-    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866093/Cartagena_xlpsws.jpg"
+    "image": "https://i.postimg.cc/T3sm7yfG/cartagena.jpg"
   },
   {
     "city": "Pereira",
@@ -87,6 +87,6 @@
     "country_code": "CO",
     "airport": "Matecaña International Airport",
     "type": "national",
-    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866102/Pereira_adao06.jpg"
+    "image": "https://i.postimg.cc/fT9JzHN4/pereira.png"
   }
 ]
