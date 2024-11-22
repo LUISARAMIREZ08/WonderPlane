@@ -340,8 +340,14 @@
             
             <footer>
                 <div class="container-price-details">
-                    <h5><strong>COP$ @selectedFlights?.OutboundFlight?.EconomicClassPrice.ToString("N0")</strong> </h5>
+                    <h5><strong>COP$ @GetTotalPrice(selectedFlights).ToString("N0")</strong></h5>
                     <p>Precio Clase Economica</p>
+                    <div class="container-bag">
+                        <h7>Incluye equipaje de mano</h7>
+                        <span class="material-symbols-outlined">
+                            backpack
+                        </span>
+                    </div>
                 </div>
                 <div class="form-button-3">
                     <button class="submit-button-3" @onclick="ClearSelection">Elegir</button>
