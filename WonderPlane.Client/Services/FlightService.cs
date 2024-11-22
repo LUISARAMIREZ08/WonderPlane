@@ -90,6 +90,85 @@ namespace WonderPlane.Client.Services
             Console.WriteLine($"Respuesta del servidor: {jsonResponse.Mensaje}");
             return jsonResponse;
         }
-    
-}
+
+        public async Task<ResponseAPI<List<FlightsFoundDTO>>> GetOneWayFlightAsync(
+            string origin,
+            string destination,
+            DateTime departureDate,
+            int passengers)
+        {
+            try
+            {
+                var queryParams = $"api/Flight/search/one-way?Origin={Uri.EscapeDataString(origin)}&Destination={Uri.EscapeDataString(destination)}&DepartureDate={departureDate:yyyy-MM-dd}&Passengers={passengers}";
+                var response = await _http.GetAsync(queryParams);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ResponseAPI<List<FlightsFoundDTO>>>();
+                    return result ?? new ResponseAPI<List<FlightsFoundDTO>> { EsCorrecto = false, Mensaje = "Error deserializando respuesta." };
+                }
+
+                var errorResponse = await response.Content.ReadAsStringAsync();
+                return new ResponseAPI<List<FlightsFoundDTO>>
+                {
+                    EsCorrecto = false,
+                    Mensaje = $"Error: {response.ReasonPhrase}, Detalle: {errorResponse}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseAPI<List<FlightsFoundDTO>>
+                {
+                    EsCorrecto = false,
+                    Mensaje = $"Error inesperado: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ResponseAPI<List<RoundTripDTO>>> GetRoundTripFlightsAsync(
+        string origin,
+        string destination,
+        DateTime departureDate,
+        DateTime returnDate,
+        int passengers)
+        {
+            try
+            {
+                var queryParams = $"api/Flight/search/round-trip?" +
+                                  $"origin={Uri.EscapeDataString(origin)}&" +
+                                  $"destination={Uri.EscapeDataString(destination)}&" +
+                                  $"departureDate={departureDate:yyyy-MM-dd}&" +
+                                  $"returnDate={returnDate:yyyy-MM-dd}&" +
+                                  $"passengers={passengers}";
+
+                var response = await _http.GetAsync(queryParams);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ResponseAPI<List<RoundTripDTO>>>();
+                    return result ?? new ResponseAPI<List<RoundTripDTO>>
+                    {
+                        EsCorrecto = false,
+                        Mensaje = "No se pudo deserializar la respuesta."
+                    };
+                }
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return new ResponseAPI<List<RoundTripDTO>>
+                {
+                    EsCorrecto = false,
+                    Mensaje = $"Error {response.StatusCode}: {errorContent}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseAPI<List<RoundTripDTO>>
+                {
+                    EsCorrecto = false,
+                    Mensaje = $"Error inesperado: {ex.Message}"
+                };
+            }
+        }
+
+    }
 }

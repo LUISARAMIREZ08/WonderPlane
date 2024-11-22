@@ -112,6 +112,19 @@
             background-color: #256cff
         }
 
+.container-flighs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 95%;
+    text-align: center;
+    margin: 1%;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
 .container-flight-info {
     display: flex;
     justify-content: center;
@@ -127,12 +140,52 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+.container-flights-1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    border-radius: 5px;
+    padding: 1%;
+    background-color: rgba(245, 245, 245, 0.7);
+}
+
+.container-flight-info-2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    text-align: center;
+    border-radius: 5px;
+    padding: 1%;
+    background-color: rgba(245, 245, 245, 0.7);
+}
+.container-flight-info-3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 20%;
+    border-radius: 5px;
+    padding: 1%;
+    background-color: rgba(245, 245, 245, 0.7);
+}
+
+.line-2 {
+    width: 80%;
+    height: 1px;
+    background-color: #d5d8dc;
+}
+
 .container-flight-1 {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    width: 80%;
+    width: 100%;
     text-align: center;
     padding: 1%;
 }
@@ -147,6 +200,10 @@
     padding: 1%;
     color: #071952;
 }
+
+    .container-flight-origin h6 {
+        font-weight: 300;
+    }
 
 .container-flight-duration {
     display: flex;
@@ -177,6 +234,10 @@
     color: #071952;
 }
 
+.container-flight-destination h6{
+    font-weight: 300;
+}
+
 .container-flight-airline {
     display: flex;
     justify-content: center;
@@ -200,6 +261,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    white-space: nowrap;
     width: 20%;
     padding: 1%;
 }
@@ -263,6 +325,8 @@
 }
 
     .cities span {
+        font-weight: 500;
+        font-size: 0.7rem;
         text-align: left;
     }
 
@@ -304,3 +368,127 @@
     margin-right: 10px;
     border-radius: 5px; 
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+}
+
+.modal {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding-top: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    width: 50%;
+    height: 80%;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    color: #071952;
+}
+
+    .modal .container-details {
+        display: flex;
+        justify-content: space-around;
+        flex-direction: column;
+        max-height: calc(100% - 60px);
+        overflow-y: auto; 
+        width: 100%;
+        padding-top: 2%;
+    }
+
+    .modal .container-details-outbound {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        flex-direction: row;
+        margin-block-end:1%;
+    }
+
+    .modal .container-details-return {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        flex-direction: row;
+        margin-top:2%;
+        margin-block-end:10%;
+    }
+
+    .modal .container-details-1 {
+        display: flex;
+        justify-content: center;
+        align-items: start;
+        flex-direction: column;
+    }
+
+    .modal .container-details-1-1 {
+        display: flex;
+        justify-content: center;
+        align-items: start;
+        flex-direction: column;
+        margin-bottom:5px;
+    }
+
+    .modal .container-details-2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        flex-direction: column;
+    }
+
+    .modal footer {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-direction: row;
+        height: 20%;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background-color: #fff;
+        z-index: 1000;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+        .modal footer .container-price-details {
+            display: flex;
+            justify-content: start;
+            align-items: start;
+            flex-direction: column;
+            width:40%;
+        }
+
+        .modal footer .form-button-3 {
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            align-items: center;
+            text-align: center;
+            width:20%;
+        }
+
+        .modal footer .submit-button-3 {
+            background-color: #0AD1D0;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 500;
+        }
+
+            .modal footer .submit-button-3:hover {
+                background-color: #08B0AF
+            }

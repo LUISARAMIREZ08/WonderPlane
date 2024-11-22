@@ -132,14 +132,12 @@
 }
 
     .cities span {
-        font: 1rem;
-        font-weight: 250;
-        font-size: 0.6rem;
+        font-weight: 500;
+        font-size: 0.7rem;
         text-align: left;
     }
 
     .cities h7{
-        font: 1rem;
         font-weight: 250;
         font-size: 0.6rem;
         text-align: left;

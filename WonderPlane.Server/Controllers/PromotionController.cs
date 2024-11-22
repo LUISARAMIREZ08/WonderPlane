@@ -37,7 +37,7 @@ public class PromotionController : ControllerBase
                 EndDate = promotionDTO.EndDate,
                 Discount = promotionDTO.Discount,
                 PromotionStatus = PromotionStatus.Active,
-                PromotionType = (PromotionType)promotionDTO.PromotionTypeDto,
+                PromotionType = (PromotionType)promotionDTO.PromotionType,
                 FlightId = promotionDTO.FlightId
             };
 

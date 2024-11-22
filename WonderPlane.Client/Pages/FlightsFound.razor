@@ -1,0 +1,570 @@
+﻿<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+@page "/flights-found"
+@using WonderPlane.Shared;
+@using MudBlazor;
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components
+@using WonderPlane.Client.Services;
+@using WonderPlane.Client.Utils
+
+@inject IFlightService FlightService
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
+
+
+<main class="main-container poppins-light">
+    <div class="container-search">
+    <div Class="flight-search-card">
+            <EditForm Model="@searchModel" OnValidSubmit="PerformSearch" Style="width:100%">
+            <div class="radio-group">
+                <MudRadioGroup @bind-Value="Dense_Radio">
+                    <MudRadio Value="true" Color="Color.Info" Dense="true">Ida y Vuelta</MudRadio>
+                    <MudRadio Value="false" Color="Color.Info" Dense="false">Solo ida</MudRadio>
+                </MudRadioGroup>
+            </div>
+            <div class="form-search">
+                    <div class="input">
+                        <div class="autocomplete-container">
+                            <label class="form-label">Origen</label>
+                            <input type="text" class="form-control"
+                                   @bind="searchModel.Origin"
+                                   @oninput="FilterCities"
+                                   placeholder="Ingresa el Destino" />
+                            <ul class="autocomplete-results" style="display:@(filteredCities.Any() ? "block" : "none")">
+                                @foreach (var city in filteredCities)
+                                {
+                                    <li @onclick="() => SelectCity(city)">
+                                        @if (!string.IsNullOrEmpty(city.image))
+                                        {
+                                            <img src="@city.image" alt="@city.city" class="city-image" />
+                                        }
+                                        <div class="cities">
+                                            <span>@city.city - @city.country (@city.country_code)</span>
+                                            <h7>@city.airport</h7>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="input">
+                        <div class="autocomplete-container">
+                            <label class="form-label">Destino</label>
+                            <input type="text" class="form-control"
+                                   @bind="searchModel.Destination"
+                                   @oninput="FliterCitiesDestination"
+                                   placeholder="Ingresa el Destino" />
+                            <ul class="autocomplete-results" style="display:@(filterCitiesDestination.Any() ? "block" : "none")">
+                                @foreach (var city in filterCitiesDestination)
+                                {
+                                    <li @onclick="() => SelectCityDestination(city)">
+                                        @if (!string.IsNullOrEmpty(city.image))
+                                        {
+                                            <img src="@city.image" alt="@city.city" class="city-image" />
+                                        }
+                                        <div class="cities">
+                                            <span>@city.city - @city.country (@city.country_code)</span>
+                                            <h7>@city.airport</h7>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+
+                <MudDivider Vertical="true" FlexItem="true" />
+                <div class="input">
+                    <label class="form-label">Ida</label>
+                    <InputDate @bind-Value="searchModel.DepartureDate" class="form-control" style="font-size: 0.9rem;color: #507687"></InputDate>
+                </div>
+                    @if (Dense_Radio == true)
+                    {
+                        <div class="input">
+                            <label class="form-label">Regreso</label>
+                            <InputDate @bind-Value="ReturnDate" class="form-control" style="font-size: 0.9rem;color: #507687"></InputDate>
+                        </div>
+                    }
+                <MudDivider Vertical="true" FlexItem="true" />
+                    <div class="input">
+                        <label class="form-label">Pasajeros</label>
+                        <div class="input-group">
+                            <span class="material-symbols-outlined">
+                                person
+                            </span>
+                            <InputNumber @bind-Value="searchModel.Passengers" class="form-control" style="font-size: 0.9rem;color: #507687" Min="1" Max="10"></InputNumber>
+                        </div>
+                    </div>
+                <div class="form-button">
+                    <button class="submit-button" type="submit">Buscar</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+    </div>
+    @if (flights != null && flights.Any() && Dense_Radio == false)
+    {
+        @foreach (var flight in flights)
+        {
+            <div class="container-flight-info">
+                <div class="container-flight-1">
+                    <div class="container-flight-origin">
+                        <h5>@flight.DepartureTime.Substring(0, 5) @(flight.Origin.Split('(', ')')[1])</h5>
+                        <h6>@(flight.DepartureDate.ToString("dd 'de' MMM (ddd)", new System.Globalization.CultureInfo("es-ES")))</h6>
+                    </div>
+                    <div class="container-flight-duration">
+                        <h7>@FlightDuration.FormatDuration(flight.Duration)</h7>
+                        <div class="line"></div>
+                        <h8>Directo</h8>
+                    </div>
+                    <div class="container-flight-destination">
+                        <h5>@flight.ArriveTime.Substring(0, 5) @(flight.Destination.Split('(', ')')[1])</h5>
+                        <h6>@(flight.ArriveDate.ToString("dd 'de' MMM (ddd)", new System.Globalization.CultureInfo("es-ES")))</h6>
+                    </div>
+                    <MudDivider Vertical="true" FlexItem="true" />
+                    <div class="container-flight-airline">
+                        <h7>WonderPlane</h7>
+                        <span class="material-symbols-outlined">
+                            travel
+                        </span>
+                    </div>
+                    <MudDivider Vertical="true" FlexItem="true" />
+                </div>          
+
+                <div class="container-flight-2">
+                    <div class="container-flight-price">
+                        <h5>COP$</h5>
+                        <h5 class="price">@flight.EconomicClassPrice.ToString("N0")</h5>
+                    </div>
+                    <h7>Precio por pasajero</h7>
+                    <div class="form-button-2">
+                        <button class="submit-button-2" @onclick="() => SelectFlight(flight)">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    @if (RoundTripFlight != null && RoundTripFlight.Any() && Dense_Radio == true)
+    {
+        @foreach (var flight in RoundTripFlight)
+        {
+            <div class="container-flighs">
+                    <div class="container-flights-1">
+                    <div class="container-flight-info-2">
+                        <div class="container-flight-1">
+                            <div class="container-flight-origin">
+                                <h5>@flight.OutboundFlight.DepartureTime.Substring(0, 5) @(flight.OutboundFlight.Origin.Split('(', ')')[1])</h5>
+                                <h6>@(flight.OutboundFlight.DepartureDate.ToString("dd 'de' MMM (ddd)", new System.Globalization.CultureInfo("es-ES")))</h6>
+                            </div>
+                            <div class="container-flight-duration">
+                                <h7>@FlightDuration.FormatDuration(flight.OutboundFlight.Duration)</h7>
+                                <div class="line"></div>
+                                <h8>Directo</h8>
+                            </div>
+                            <div class="container-flight-destination">
+                                <h5>@flight.OutboundFlight.ArriveTime.Substring(0, 5) @(flight.OutboundFlight.Destination.Split('(', ')')[1])</h5>
+                                <h6>@(flight.OutboundFlight.ArriveDate.ToString("dd 'de' MMM (ddd)", new System.Globalization.CultureInfo("es-ES")))</h6>
+                            </div>
+                            <MudDivider Vertical="true" FlexItem="true" />
+                            <div class="container-flight-airline">
+                                <h7>WonderPlane</h7>
+                                <span class="material-symbols-outlined">
+                                    travel
+                                </span>
+                            </div>
+                            <MudDivider Vertical="true" FlexItem="true" />
+                        </div>
+                    </div>
+                    <div class="line-2"></div>
+                    <div class="container-flight-info-2">
+                        <div class="container-flight-1">
+                            <div class="container-flight-origin">
+                                <h5>@flight.ReturnFlight.DepartureTime.Substring(0, 5) @(flight.ReturnFlight.Origin.Split('(', ')')[1])</h5>
+                                <h6>@(flight.ReturnFlight.DepartureDate.ToString("dd 'de' MMM (ddd)", new System.Globalization.CultureInfo("es-ES")))</h6>
+                            </div>
+                            <div class="container-flight-duration">
+                                <h7>@FlightDuration.FormatDuration(flight.ReturnFlight.Duration)</h7>
+                                <div class="line"></div>
+                                <h8>Directo</h8>
+                            </div>
+                            <div class="container-flight-destination">
+                                <h5>@flight.ReturnFlight.ArriveTime.Substring(0, 5) @(flight.ReturnFlight.Destination.Split('(', ')')[1])</h5>
+                                <h6>@(flight.ReturnFlight.ArriveDate.ToString("dd 'de' MMM (ddd)", new System.Globalization.CultureInfo("es-ES")))</h6>
+                            </div>
+                            <MudDivider Vertical="true" FlexItem="true" />
+                            <div class="container-flight-airline">
+                                <h7>WonderPlane</h7>
+                                <span class="material-symbols-outlined">
+                                    travel
+                                </span>
+                            </div>
+                            <MudDivider Vertical="true" FlexItem="true" />
+                        </div>
+                    </div>
+                </div>
+                <div class="container-flight-info-3">
+                    <div class="container-flight-2">
+                        <div class="container-flight-price">
+                            <h5>COP$</h5>
+                            <h5 class="price">@GetTotalPrice(flight).ToString("N0")</h5>
+                        </div>
+                        <h7>Precio por pasajero,</h7>
+                        <h7>para ida y vuelta</h7>
+                        <div class="form-button-2">
+                            <button class="submit-button-2" @onclick="() => SelectFlights(flight)">Seleccionar</button>
+                        </div>
+                    </div>
+                </div>
+                </div> 
+        }
+    }
+    @if ((flights == null || !flights.Any()) && (RoundTripFlight == null || !RoundTripFlight.Any()))
+    {
+        <p>No se encontraron vuelos disponibles.</p>
+    }
+
+    @if (showFlightDetails && selectedFlight != null && Dense_Radio == false)
+    {
+        <div class="modal-overlay" @onclick="ClearSelection2"></div>
+        <div class="modal">
+            <h4>Detalles del Vuelo</h4>
+            <div class="container-details">
+                <div class="container-details-outbound">
+                    <div class="container-details-1">
+                        <div class="container-details-1-1">
+                            <p>Hora de Salida:</p>
+                            <h5><strong>@selectedFlight.DepartureTime.Substring(0, 5)</strong></h5>
+                            <p>@selectedFlight.DepartureDate.ToString("dd 'de' MMM yyyy")</p>
+                            <p>@selectedFlight.Origin</p>
+                        </div>
+                        <div class="container-details-1-1">
+                            <p>Hora de Llegada:</p>
+                            <h5><strong>@selectedFlight.ArriveTime.Substring(0, 5)</strong></h5>
+                            <p>@selectedFlight.ArriveDate.ToString("dd 'de' MMM yyyy")</p>
+                            <p>@selectedFlight.Destination</p>
+                        </div>
+                    </div>
+
+                    <div class="container-details-2">
+                        <p>Duración del Vuelo:</p>
+                        <p><strong>@FlightDuration.FormatDuration(@selectedFlight.Duration)</strong></p>
+                        <p>Tipo de Vuelo:</p>
+                        <p><strong>Vuelo Directo</strong></p>
+                        <p>N° de Vuelo:</p>
+                        <p><strong>@selectedFlight.FlightCode</strong></p>
+                        <p>Operador por:</p>
+                        <p><strong>WonderPlane</strong></p>
+                    </div>
+
+                </div>
+            </div>
+
+            <footer>
+                <div class="container-price-details">
+                    <h5><strong>COP$ @selectedFlight.EconomicClassPrice.ToString("N0")</strong> </h5>
+                    <p>Precio Clase Economica</p>
+                </div>
+                <div class="form-button-3">
+                    <button class="submit-button-3" @onclick="ClearSelection">Elegir</button>
+                </div>
+
+            </footer>
+        </div>
+    }
+
+    @if (showFlightDetails && selectedFlights != null && Dense_Radio == true)
+    {
+        <div class="modal-overlay" @onclick="ClearSelection2"></div>
+        <div class="modal">
+            <h4>Detalles del Vuelo</h4>
+            <div class="container-details">
+                <div class="container-details-outbound">
+                    <div class="container-details-1">
+                        <div class="container-details-1-1">
+                            <p>Hora de Salida:</p>
+                            <h5><strong>@selectedFlights.OutboundFlight.DepartureTime.Substring(0, 5)</strong></h5>
+                            <p>@selectedFlights.OutboundFlight.DepartureDate.ToString("dd 'de' MMM yyyy")</p>
+                            <p>@selectedFlights.OutboundFlight.Origin</p>
+                        </div>
+                        <div class="container-details-1-1">
+                            <p>Hora de Llegada:</p>
+                            <h5><strong>@selectedFlights.OutboundFlight.ArriveTime.Substring(0, 5)</strong></h5>
+                            <p>@selectedFlights.OutboundFlight.ArriveDate.ToString("dd 'de' MMM yyyy")</p>
+                            <p>@selectedFlights.OutboundFlight.Destination</p>
+                        </div>
+                    </div>
+
+                    <div class="container-details-2">
+                        <p>Duración del Vuelo:</p>
+                        <p><strong>@FlightDuration.FormatDuration(@selectedFlights.OutboundFlight.Duration)</strong></p>
+                        <p>Tipo de Vuelo:</p>
+                        <p><strong>Vuelo Directo</strong></p>
+                        <p>N° de Vuelo:</p>
+                        <p><strong>@selectedFlights.OutboundFlight.FlightCode</strong></p>
+                        <p>Operador por:</p>
+                        <p><strong>WonderPlane</strong></p>
+                    </div>
+
+                </div>
+                <MudDivider />
+                <div class="container-details-return">
+                    <div class="container-details-1">
+                        <div class="container-details-1-1">
+                            <p>Hora de Salida:</p>
+                            <h5><strong>@selectedFlights.ReturnFlight.DepartureTime.Substring(0, 5)</strong></h5>
+                            <p>@selectedFlights.ReturnFlight.DepartureDate.ToString("dd 'de' MMM yyyy")</p>
+                            <p>@selectedFlights.ReturnFlight.Origin</p>
+                        </div>
+                        <div class="container-details-1-1">
+                            <p>Hora de Llegada:</p>
+                            <h5><strong>@selectedFlights.ReturnFlight.ArriveTime.Substring(0, 5)</strong></h5>
+                            <p>@selectedFlights.ReturnFlight.ArriveDate.ToString("dd 'de' MMM yyyy")</p>
+                            <p>@selectedFlights.ReturnFlight.Destination</p>
+                        </div>
+
+                    </div>
+
+                    <div class="container-details-2">
+                        <p>Duración del Vuelo:</p>
+                        <p><strong>@FlightDuration.FormatDuration(@selectedFlights.ReturnFlight.Duration)</strong></p>
+                        <p>Tipo de Vuelo:</p>
+                        <p><strong>Vuelo Directo</strong></p>
+                        <p>N° de Vuelo:</p>
+                        <p><strong>@selectedFlights.ReturnFlight.FlightCode</strong></p>
+                        <p>Operador por:</p>
+                        <p><strong>WonderPlane</strong></p>
+                    </div>
+                </div>
+
+                </div>
+                
+            
+            <footer>
+                <div class="container-price-details">
+                    <h5><strong>COP$ @selectedFlights?.OutboundFlight?.EconomicClassPrice.ToString("N0")</strong> </h5>
+                    <p>Precio Clase Economica</p>
+                </div>
+                <div class="form-button-3">
+                    <button class="submit-button-3" @onclick="ClearSelection">Elegir</button>
+                </div>
+                
+            </footer>
+        </div>
+    }
+</main>
+
+<style>
+    .mud-radio > .mud-radio-content {
+        font-weight: 600;
+        color: #071952;
+        font-family: 'Poppins', sans-serif;
+    }
+</style>
+
+
+@code {
+    FlightSearchRequest searchModel = new FlightSearchRequest
+        {
+            Origin = string.Empty,
+            Destination = string.Empty,
+            DepartureDate = DateTime.Today,
+            Passengers = 1,
+        };
+
+    private bool isValid;
+    private DateTime? _date = DateTime.Today;
+    public bool Dense_Radio { get; set; } = true;
+    public DateTime ReturnDate { get; set; } = DateTime.Today;
+    private List<FlightsFoundDTO> flights = new();
+    private List<RoundTripDTO> RoundTripFlight = new();
+
+    private FlightsFoundDTO? selectedFlight;
+    private RoundTripDTO? selectedFlights;
+    private bool showFlightDetails = false;
+
+    private void SelectFlight(FlightsFoundDTO flight)
+    {
+        selectedFlight = flight; 
+        showFlightDetails = true;
+    }
+
+    private void SelectFlights(RoundTripDTO flight)
+    {
+        selectedFlights = flight;
+        showFlightDetails = true;
+        Console.WriteLine($"entre aqui");
+    }
+
+    private void ClearSelection()
+    {
+        selectedFlight = null; 
+        showFlightDetails = false;
+    }
+
+    private void ClearSelection2()
+    {
+        selectedFlights = null;
+        showFlightDetails = false;
+    }
+
+    private decimal GetTotalPrice(RoundTripDTO flight)
+    {
+        return flight.OutboundFlight.EconomicClassPrice + flight.ReturnFlight.EconomicClassPrice;
+    }
+
+    private async Task PerformSearch()
+    {
+        if (Dense_Radio == true)
+        {
+            await SearchFlighRoundTrip();
+        }
+        else
+        {
+            await SearchFlight();
+        }
+    }
+
+    private async Task SearchFlight()
+    {
+        
+        var response = await FlightService.GetOneWayFlightAsync(
+            searchModel.Origin,
+            searchModel.Destination,
+            searchModel.DepartureDate,
+            searchModel.Passengers);
+
+        if (response.EsCorrecto && response.Data != null)
+        {
+            flights = response.Data;
+            Console.WriteLine($"entre aqui");
+        }
+        else
+        {
+            Console.WriteLine($"Error: {response.Mensaje}");
+        }
+    }
+
+    private async Task SearchFlighRoundTrip()
+    {
+        var response = await FlightService.GetRoundTripFlightsAsync(
+            searchModel.Origin,
+            searchModel.Destination,
+            searchModel.DepartureDate,
+            ReturnDate,
+            searchModel.Passengers);
+
+        if (response.EsCorrecto && response.Data != null)
+        {
+            RoundTripFlight = response.Data;
+            Console.WriteLine($"entre en esta");
+        }
+        else
+        {
+
+            Console.WriteLine($"Error: {response.Mensaje}");
+        }
+    }
+
+    private void ClearFlights()
+    {
+        // Limpiar las listas para ocultar contenido previo:
+        flights = null;
+        RoundTripFlight = null;
+    }
+
+    private List<AddFlights> allCities = new();
+    private List<AddFlights> nationalCities = new();
+    private List<AddFlights> internationalCities = new();
+
+    public Color SelectedColor { get; set; } = Color.Default;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var localClient = HttpClientFactory.CreateClient("LocalClient");
+        var nationalList = await localClient.GetFromJsonAsync<List<AddFlights>>("sample-data/flightsNational.json");
+        if (nationalList != null)
+        {
+            foreach (var city in nationalList)
+            {
+                allCities.Add(city);
+            }
+        }
+
+        var internationalList = await localClient.GetFromJsonAsync<List<AddFlights>>("sample-data/flightsInternational.json");
+        if (internationalList != null)
+        {
+            foreach (var city in internationalList)
+            {
+                if (city.type == "international")
+                {
+                    allCities.Add(city);
+                }
+            }
+        }
+
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var queryParams = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        if (queryParams.HasKeys())
+        {
+            searchModel.Origin = queryParams["origin"] ?? string.Empty;
+            searchModel.Destination = queryParams["destination"] ?? string.Empty;
+            searchModel.Passengers = int.TryParse(queryParams["passengers"], out var passengers) ? passengers : 1;
+
+            if (DateTime.TryParse(queryParams["departureDate"], out var parsedDepartureDate))
+            {
+                searchModel.DepartureDate = parsedDepartureDate;
+            }
+
+            Dense_Radio = bool.TryParse(queryParams["roundTrip"], out var isRoundTrip) && isRoundTrip;
+
+            if (Dense_Radio && DateTime.TryParse(queryParams["returnDate"], out var parsedReturnDate))
+            {
+                ReturnDate = parsedReturnDate;
+                await SearchFlighRoundTrip();
+            }
+            else
+            {
+                await SearchFlight();
+            }
+        }
+        else
+        {
+            Console.WriteLine("Error: Parámetros de consulta inválidos o faltantes.");
+        }
+    }
+
+
+    private List<AddFlights> filteredCities = new();
+    private List<AddFlights> filterCitiesDestination = new();
+
+    private void FilterCities(ChangeEventArgs e)
+    {
+        string input = e.Value?.ToString() ?? string.Empty;
+        filteredCities = allCities
+            .Where(c => c.city.Contains(input, StringComparison.OrdinalIgnoreCase))
+            .Take(10)
+            .ToList();
+    }
+
+    private void FliterCitiesDestination(ChangeEventArgs e)
+    {
+        string input = e.Value?.ToString() ?? string.Empty;
+
+        filterCitiesDestination = allCities
+            .Where(c => c.city.Contains(input, StringComparison.OrdinalIgnoreCase))
+            .Take(10)
+            .ToList();
+    }
+
+    private void SelectCity(AddFlights city)
+    {
+        searchModel.Origin = city.city + " " + "(" + city.code + ")" + " - " + city.country + " " + "(" + city.country_code + ")";
+        filteredCities.Clear();
+    }
+
+    private void SelectCityDestination(AddFlights city)
+    {
+        searchModel.Destination = city.city + " " + "(" + city.code + ")" + " - " + city.country + " " + "(" + city.country_code + ")";
+        filterCitiesDestination.Clear();
+    }
+}

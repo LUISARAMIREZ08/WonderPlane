@@ -51,6 +51,7 @@ public class Flight
     [Range(0, 100, ErrorMessage = "El porcentaje de descuento debe estar entre 0 y 100.")]
     public int? DiscountPercentage { get; set; }
     public string? PromotionDescription { get; set; }
+    public int AvailableSeats { get; set; } = 0;
     public ICollection<Promotion> Promotions { get; } = new List<Promotion>();
     public ICollection<News> News { get; } = new List<News>();
 
