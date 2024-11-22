@@ -9,6 +9,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Forum> Forums { get; set; }
     public DbSet<Message> Messages { get; set; }
+    public DbSet<Question> Questions { get; set; }
+    public DbSet<Response> Responses { get; set; }
     public DbSet<News> News { get; set; }
     public DbSet<Flight> Flights { get; set; }
     public DbSet<Seat> Seats { get; set; }
@@ -142,6 +144,11 @@ public class ApplicationDbContext : DbContext
             .WithMany(ru => ru.Cards)
             .HasForeignKey(c => c.RegisteredUserId);
 
+        modelBuilder.Entity<Response>()
+            .HasOne(r => r.Question)
+            .WithMany(q => q.Responses)
+            .HasForeignKey(r => r.QuestionId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         //precision for decimals
 

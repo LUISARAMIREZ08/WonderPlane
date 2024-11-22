@@ -1,0 +1,493 @@
+﻿@page "/forum"
+
+
+<PageTitle>Foro</PageTitle>
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using WonderPlane.Shared;
+@using WonderPlane.Client.Services;
+@using WonderPlane.Client.Utils
+@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json
+@using MudBlazor;
+@using System.Security.Claims
+@using CurrieTechnologies.Razor.SweetAlert2
+
+@inject IForumService ForumService
+@inject IUserService UserService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ISnackbar Snackbar;
+@inject NavigationManager NavigationManager
+@inject SweetAlertService Swal
+@inject HttpClient Http;
+
+
+<AsideMenu />
+
+<article class="forum-container poppins-regular">
+    <h2>¿Aún tienes dudas? Resuelvelas en nuestro foro</h2>
+
+    <div class="forum">
+
+        <div class="header-forum">
+            <h5>Foro de ayuda y preguntas frecuentes</h5>
+            <p>Resuleve tus dudas sobre equipaje, vuelos, tiquetes, pagos y más con nuestro equipo de trabajo.</p>
+        </div>
+
+        <div class="themes-forum">
+            <AuthorizeView Roles="Admin">
+                <Authorized>
+                    <MudBadge Content="@GetPendingQuestionsCountByTheme("All")" Color="Color.Error" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                        <MudFab Color="Color.Success" StartIcon="material-symbols-outlined/filter_list_off" Size="Size.Large" Label="Todos" OnClick="@(() => ApplyFilter("All"))" />
+                    </MudBadge>
+
+                    <MudBadge Content="@GetPendingQuestionsCountByTheme("Equipaje")" Color="Color.Error" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                        <MudFab Color="Color.Info" StartIcon="material-symbols-outlined/luggage" Size="Size.Large" Label="Equipaje" OnClick="@(() => ApplyFilter("Equipaje"))" />
+                    </MudBadge>
+
+                    <MudBadge Content="@GetPendingQuestionsCountByTheme("Vuelos")" Color="Color.Error" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                        <MudFab Color="Color.Primary" StartIcon="material-symbols-outlined/flight" Size="Size.Large" Label="Vuelos" OnClick="@(() => ApplyFilter("Vuelos"))" />
+                    </MudBadge>
+
+                    <MudBadge Content="@GetPendingQuestionsCountByTheme("Tiquetes")" Color="Color.Error" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                        <MudFab Color="Color.Secondary" StartIcon="material-symbols-outlined/airplane_ticket" Size="Size.Large" Label="Tiquetes" OnClick="@(() => ApplyFilter("Tiquetes"))" />
+                    </MudBadge>
+
+                    <MudBadge Content="@GetPendingQuestionsCountByTheme("Pagos")" Color="Color.Error" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                        <MudFab Color="Color.Tertiary" StartIcon="material-symbols-outlined/credit_card" Size="Size.Large" Label="Pagos" OnClick="@(() => ApplyFilter("Pagos"))" />
+                    </MudBadge>
+
+                    <MudBadge Content="@GetPendingQuestionsCountByTheme("Otros")" Color="Color.Error" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                        <MudFab Color="Color.Warning" StartIcon="material-symbols-outlined/question_mark" Size="Size.Large" Label="Otros" OnClick="@(() => ApplyFilter("Otros"))" />
+                    </MudBadge>
+                </Authorized>
+            </AuthorizeView>
+
+            <AuthorizeView Roles="RegisteredUser">
+                <MudFab Color="Color.Success" StartIcon="material-symbols-outlined/filter_list_off" Size="Size.Large" Label="Todos" OnClick="@(() => ApplyFilter("All"))" />
+                <MudFab Color="Color.Info" StartIcon="material-symbols-outlined/luggage" Size="Size.Large" Label="Equipaje" OnClick="@(() => ApplyFilter("Equipaje"))" />
+                <MudFab Color="Color.Primary" StartIcon="material-symbols-outlined/flight" Size="Size.Large" Label="Vuelos" OnClick="@(() => ApplyFilter("Vuelos"))" />
+                <MudFab Color="Color.Secondary" StartIcon="material-symbols-outlined/airplane_ticket" Size="Size.Large" Label="Tiquetes" OnClick="@(() => ApplyFilter("Tiquetes"))" />
+                <MudFab Color="Color.Tertiary" StartIcon="material-symbols-outlined/credit_card" Size="Size.Large" Label="Pagos" OnClick="@(() => ApplyFilter("Pagos"))" />
+                <MudFab Color="Color.Warning" StartIcon="material-symbols-outlined/question_mark" Size="Size.Large" Label="Otros" OnClick="@(() => ApplyFilter("Otros"))" />
+            </AuthorizeView>
+
+        </div>
+
+        <div class="filter-info">
+            <h6><span style="color: dodgerblue;">Tema: </span> @selectedFilter</h6>
+            
+            <AuthorizeView Roles="RegisteredUser">
+                <MudBadge Content="@GetPendingQuestionsCountByUserId(userId)" Color="Color.Error" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                    <MudFab Color="Color.Info" Size="Size.Large" Label="Realizadas por mi" OnClick="@(() => ApplyFilter("Mis preguntas"))" />
+                </MudBadge>
+            </AuthorizeView>
+
+        </div>
+
+        <div id="another_unique_identifier" class="questions-forum mx-auto ma-0" style="max-width: 900px; height:400px;overflow: auto;">
+
+            <MudPaper Elevation="0" Height="auto" Class="d-flex flex-column justify-space-between py-6">
+                <MudExpansionPanels>
+
+                    @if (filtered_questions != null)
+                    {
+                        @foreach (var question in filtered_questions)
+                        {
+                            <MudExpansionPanel>
+                                <TitleContent>
+                                    @* <span class="state">Respondido</span> *@
+                                    <div class="state">
+                                        <AuthorizeView Roles="Admin">
+                                            <Authorized>
+                                                <MudBadge Dot="true" Color="@GetBadgeColor(question.StateQuestion.ToString())" Class="mx-6 my-4">
+                                                    <MudText>@question.StateQuestion</MudText>
+                                                </MudBadge>
+                                            </Authorized>
+                                        </AuthorizeView>
+
+                                        <AuthorizeView Roles="RegisteredUser">
+                                            <Authorized>
+                                                <MudText>@question.StateQuestion</MudText>
+                                            </Authorized>
+                                        </AuthorizeView>
+                                    </div>
+                                    <div class="header-question">
+                                        <MudAvatar Color="@GetAvatarColor(question.Theme ?? "Default")" Size="Size.Medium">
+                                            @(!string.IsNullOrEmpty(UserCache[question.UserId]?.ToString())
+                                                                            ? char.ToUpper(UserCache[question.UserId].ToString()[0])
+                                                                            : '?')
+                                        </MudAvatar>
+                                        <div class="name-user-question">
+                                            <strong>@UserCache[question.UserId]</strong>
+                                            <span class="publication-date">Publicada el @question.Date.ToShortDateString()</span>
+                                        </div>
+                                        <AuthorizeView Roles="Admin">
+                                            <Authorized>
+                                                <span class="material-symbols-outlined comment" @onclick="() => ShowResponseInput(question.Id)">comment</span>
+                                            </Authorized>
+                                        </AuthorizeView>
+                                    </div>
+                                    <div class="d-flex">
+                                        <p class="message">@question.Content</p>
+                                    </div>
+                                </TitleContent>
+                                <ChildContent>
+                                    @if (question.Responses != null && question.Responses.Any())
+                                    {
+                                        @foreach (var response in question.Responses){
+                                            <h6>Respuesta</h6>
+                                            <div class="header-question header-response">
+                                                <MudAvatar Color="Color.Error" Size="Size.Medium">
+                                                    @(!string.IsNullOrEmpty(UserCache[response.AdminId]?.ToString())
+                                                                                    ? char.ToUpper(UserCache[response.AdminId].ToString()[0])
+                                                                                    : '?')
+                                                </MudAvatar>
+                                                <div class="name-user-response">
+                                                    <div class="name-admin"><strong>@UserCache[response.AdminId]</strong><span class="material-symbols-outlined">verified</span></div>
+                                                    <span class="publication-date">Publicada el @response.Date.ToShortDateString()</span>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex">
+                                                <p class="message">@response.Content</p>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <h6>No hay respuestas todavía</h6>
+                                    }
+
+                                </ChildContent>
+                            </MudExpansionPanel>
+                        }
+                    }
+
+
+                </MudExpansionPanels>
+            </MudPaper>
+
+        </div>
+
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+                @if (isResponding)
+                {
+                    <EditForm Model="@newResponse" OnValidSubmit="NewResponseSubmit" Context="editContext">
+                        <div class="form mx-auto" style="max-width: 900px;">
+
+                            <input class="input-question" type="text" id="question" name="question" placeholder="Escribe tu respuesta" required @bind="newResponse.Content" @ref="InputRef" />
+
+                            <button type="submit" class="send-button"><MudIcon Style="color:white;" Icon="@Icons.Material.Filled.Send" color="Color.Inherit" Title="Enviar" /></button>
+
+                        </div>
+                    </EditForm>
+                }
+
+            </Authorized>
+        </AuthorizeView>
+
+        <AuthorizeView Roles="RegisteredUser">
+            <Authorized>
+                <EditForm Model="@newQuestion" OnValidSubmit="NewQuestionSubmit" Context="editContext">
+                    <div class="form mx-auto" style="max-width: 900px;">
+                        <select class="select" id="topic" name="topic" required @bind="newQuestion.Theme">
+                            <option value="" disabled selected>Tema</option>
+                            <option value="Equipaje">Equipaje</option>
+                            <option value="Vuelos">Vuelos</option>
+                            <option value="Tiquetes">Tiquetes</option>
+                            <option value="Pagos">Pagos</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+
+                        @* <textarea id="question" name="question" placeholder="Describe tu pregunta en detalle..." rows="2" required @bind="newQuestion.Content"></textarea> *@
+                        <input class="input-question" type="text" id="question" name="question" placeholder="Haz tu pregunta" required @bind="newQuestion.Content" />
+
+                        <button type="submit" class="send-button"><MudIcon Style="color:white;" Icon="@Icons.Material.Filled.Send" color="Color.Inherit" Title="Enviar" /></button>
+
+                        @* <MudFab Color="Color.Info" StartIcon="@Icons.Material.Filled.Send" Size="Size.Medium" /> *@
+                    </div>
+                </EditForm>
+            </Authorized>
+        </AuthorizeView>
+
+
+    </div>
+
+</article>
+
+@code 
+{
+    private ElementReference InputRef;
+    private bool isResponding = false;
+    private int questionSelectedId = 0;
+    private UserInfo? userInfo;
+    private int userId;
+    private List<QuestionDto>? questions;
+    private List<QuestionDto>? filtered_questions;
+    private string selectedFilter = "All";
+    private List<string> filters = new List<string> { "All", "Equipaje", "Vuelos", "Tiquetes", "Pagos", "Otros", "Respondida", "Pendiente", "Mis preguntas" };
+    private Dictionary<int, string> UserCache = new();
+
+    private QuestionDto newQuestion = new QuestionDto
+        {
+            Id = 0,
+            Content = string.Empty,
+            Date = DateTime.Now,
+            StateQuestion = QuestionDto.StateDto.Pendiente,
+            UserId = 0,
+            Theme = string.Empty
+        };
+
+    private ResponseDto newResponse = new ResponseDto
+        {
+            Id = 0,
+            Content = string.Empty,
+            Date = DateTime.Now,
+            AdminId = 0,
+            QuestionId = 0
+        };
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Obtener el estado de autenticación
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // Verificar si el usuario está autenticado
+        if (user?.Identity?.IsAuthenticated == true)
+        {
+            // Obtener la claim "UserInfo" y extraer el ID
+            var userInfoClaim = user.FindFirst("UserInfo");
+            if (userInfoClaim != null)
+            {
+                var userInfo = JsonSerializer.Deserialize<UserInfo>(userInfoClaim.Value);
+                if (userInfo != null)
+                {
+                    userId = userInfo.Id; // Asigna el ID del usuario autenticado
+                    Console.WriteLine($"User ID: {userId}");
+                }
+            }
+
+            await LoadQuestions();
+        }
+
+
+    }
+
+    private async Task LoadQuestions()
+    {
+        // Obtener las preguntas del foro
+        questions = await ForumService.GetQuestionsAsync();
+        questions.Reverse(); // Invertir el orden de las preguntas
+        filtered_questions = questions;
+        ApplyFilter(selectedFilter);
+
+        // Obtener respuestas y nombres para cada pregunta
+        foreach (var question in questions)
+        {
+            // Obtener las respuestas de la pregunta
+            question.Responses = await ForumService.GetResponsesByQuestionIdAsync(question.Id);
+
+            // Obtener el nombre del creador de la pregunta si no se ha cargado ya
+            if (!UserCache.ContainsKey(question.UserId))
+            {
+                var userbyid = await UserService.GetUserById(question.UserId);
+                UserCache[question.UserId] = userbyid != null ? $"{userbyid.Name} {userbyid.LastName}" : "Usuario no encontrado";
+            }
+
+            // Obtener los nombres de los creadores de las respuestas
+            foreach (var response in question.Responses)
+            {
+                if (!UserCache.ContainsKey(response.AdminId))
+                {
+                    var userbyidResponse = await UserService.GetUserById(response.AdminId);
+                    UserCache[response.AdminId] = userbyidResponse != null ? $"{userbyidResponse.Name} {userbyidResponse.LastName}" : "Usuario no encontrado";
+                }
+            }
+        }
+    }
+
+    private async Task NewQuestionSubmit()
+    {
+        // Enviar la pregunta al servicio del foro
+        try
+        {
+            // Asignar el ID del usuario a la pregunta
+            newQuestion.UserId = userId;
+            var response = await ForumService.CreateQuestionAsync(newQuestion);
+
+            if (response != null)
+            {
+
+                // Si la respuesta es exitosa, actualiza la lista de preguntas o muestra un mensaje
+                await LoadQuestions();
+                Snackbar.Add("Pregunta creada con éxito", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Hubo un error al crear la pregunta", Severity.Error);
+            }
+
+            // Limpiar el formulario
+            newQuestion = new QuestionDto
+                {
+                    Id = 0,
+                    Content = string.Empty,
+                    Date = DateTime.Now,
+                    StateQuestion = QuestionDto.StateDto.Pendiente,
+                    UserId = 0,
+                    Theme = string.Empty
+                };
+
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error al crear la pregunta: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private async Task NewResponseSubmit()
+    {
+        // Enviar la pregunta al servicio del foro
+        try
+        {
+            // Asignar el ID del usuario a la pregunta
+            newResponse.AdminId = userId;
+            newResponse.QuestionId = questionSelectedId;
+
+            var response = await ForumService.CreateResponseAsync(newResponse);
+
+            if (response != null)
+            {
+
+                // Crear el cuerpo del correo
+                var emailDto = new EmailDto
+                    {
+                        To = response,
+                        Subject = "Te han respondido",
+                        Body = "Un administrador ha respondido tu pregunta en el foro, revisalo ahora."
+                    };
+
+                // Enviar el correo utilizando el endpoint de envío de correos
+                var emailResponse = await Http.PostAsJsonAsync("api/sendemail", emailDto);
+
+                // Si la respuesta es exitosa, actualiza la lista de preguntas o muestra un mensaje
+                await LoadQuestions();
+                Snackbar.Add("Respuesta agregada con éxito", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Hubo un error al crear la respuesta", Severity.Error);
+            }
+
+            // Limpiar el formulario
+            newResponse = new ResponseDto
+                {
+                    Id = 0,
+                    Content = string.Empty,
+                    Date = DateTime.Now,
+                    AdminId = 0,
+                    QuestionId = 0
+                };
+
+            isResponding = false;
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error al agregar la respuesta: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private Color GetBadgeColor(string state)
+    {
+        // Devuelve el color según el estado de la pregunta
+        return state switch
+        {
+            "Pendiente" => Color.Error,   // Rojo
+            "Respondida" => Color.Success, // Verde
+            _ => Color.Default             // Color por defecto
+        };
+    }
+
+    private Color GetAvatarColor(string theme)
+    {
+        // Devuelve el color según el estado de la pregunta
+        return theme switch
+        {
+            "All" => Color.Success,
+            "Equipaje" => Color.Info,
+            "Vuelos" => Color.Primary,
+            "Tiquetes" => Color.Secondary,
+            "Pagos" => Color.Tertiary,
+            "Otros" => Color.Warning,
+            _ => Color.Default             // Color por defecto
+        };
+    }
+
+    private void ApplyFilter(string filter)
+    {
+        selectedFilter = filter;
+
+        if (questions == null) return;
+
+        filtered_questions = filter switch
+        {
+            "All" => questions,
+            "Respondida" => questions.Where(q => q.StateQuestion == QuestionDto.StateDto.Respondida).ToList(),
+            "Pendiente" => questions.Where(q => q.StateQuestion == QuestionDto.StateDto.Pendiente).ToList(),
+            "Equipaje" => questions.Where(q => q.Theme == "Equipaje").ToList(),
+            "Vuelos" => questions.Where(q => q.Theme == "Vuelos").ToList(),
+            "Tiquetes" => questions.Where(q => q.Theme == "Tiquetes").ToList(),
+            "Pagos" => questions.Where(q => q.Theme == "Pagos").ToList(),
+            "Mis preguntas" => questions.Where(q => q.UserId == userId).ToList(),
+            "Otros" => questions.Where(q => q.Theme == "Otros").ToList(),
+            _ => questions
+        };
+
+    }
+
+    public async void ShowResponseInput(int questionId)
+    {
+        questionSelectedId = questionId;
+        isResponding = !isResponding;
+        await InputRef.FocusAsync();
+    }
+
+    private async Task<string> GetUserInitialAsync(int userId)
+    {
+        try
+        {
+            // Llama al servicio para obtener el usuario por su ID
+            var user = await UserService.GetUserById(userId);
+
+            // Retorna la inicial del nombre del usuario si existe, de lo contrario, un valor predeterminado
+            return user != null && !string.IsNullOrEmpty(user.Name) ? user.Name[0].ToString().ToUpper() : "?";
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al obtener el usuario: {ex.Message}");
+            return "?";
+        }
+    }
+
+    // Devuelve el número de preguntas pendientes para un tema.
+    private int GetPendingQuestionsCountByTheme(string theme)
+    {
+        if (questions == null) return 0;
+
+        if (theme == "All")
+        {
+            return questions.Count(q => q.StateQuestion == QuestionDto.StateDto.Pendiente);
+        }
+        return questions.Count(q => q.Theme == theme && q.StateQuestion == QuestionDto.StateDto.Pendiente);
+    }
+
+    // Devuelve el numero de preguntas pendientes para un UserId
+    private int GetPendingQuestionsCountByUserId(int userId)
+    {
+        if (questions == null) return 0;
+        return questions.Count(q => q.UserId == userId && q.StateQuestion == QuestionDto.StateDto.Pendiente);
+    }
+
+}

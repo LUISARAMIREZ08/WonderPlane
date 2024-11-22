@@ -122,6 +122,9 @@ public class UserController : ControllerBase
         if (await UserExists(registerDTO.UserName))
             return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "User name is already used" });
 
+        if (string.IsNullOrEmpty(registerDTO.Password))
+            return BadRequest(new ResponseAPI<User> { EsCorrecto = false, Mensaje = "Password cannot be null or empty" });
+
         var hmac = new HMACSHA512();
 
         var user = new User
@@ -140,7 +143,8 @@ public class UserController : ControllerBase
             Image = string.Empty,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
             PasswordSalt = hmac.Key,
-            IsActive = false
+            IsActive = false,
+            IsSuscribedToNews = true
         };
 
         _context.Users.Add(user);

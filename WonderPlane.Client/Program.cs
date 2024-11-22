@@ -48,6 +48,8 @@ builder.Services.AddScoped<ImageUploadService>();
 builder.Services.AddScoped<IFinanceService, FinanceService>();
 
 builder.Services.AddScoped<IFlightService, FlightService>();
+builder.Services.AddScoped<IForumService, ForumService>();
+
 builder.Services.AddScoped<CountryService>();
 
 await builder.Build().RunAsync();

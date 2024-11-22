@@ -12,8 +12,8 @@ using WonderPlane.Server.Models;
 namespace WonderPlane.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241117160041_PromotionAdd")]
-    partial class PromotionAdd
+    [Migration("20241120222734_ImplementQuestionsAndResponses")]
+    partial class ImplementQuestionsAndResponses
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,72 @@ namespace WonderPlane.Server.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Question", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StateQuestion")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Theme")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Questions", "WonderPlane");
+                });
+
+            modelBuilder.Entity("Response", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AdminId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Responses", "WonderPlane");
+                });
 
             modelBuilder.Entity("WonderPlane.Server.Models.BoardingPass", b =>
                 {
@@ -628,6 +694,31 @@ namespace WonderPlane.Server.Migrations
                     b.ToTable("Users", "WonderPlane");
                 });
 
+            modelBuilder.Entity("Question", b =>
+                {
+                    b.HasOne("WonderPlane.Server.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Response", b =>
+                {
+                    b.HasOne("Question", "Question")
+                        .WithMany("Responses")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("WonderPlane.Server.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Question");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("WonderPlane.Server.Models.Card", b =>
                 {
                     b.HasOne("WonderPlane.Server.Models.User", "RegisteredUser")
@@ -782,6 +873,11 @@ namespace WonderPlane.Server.Migrations
                         .HasForeignKey("WonderPlane.Server.Models.User", "TravelerId");
 
                     b.Navigation("Traveler");
+                });
+
+            modelBuilder.Entity("Question", b =>
+                {
+                    b.Navigation("Responses");
                 });
 
             modelBuilder.Entity("WonderPlane.Server.Models.BoardingPass", b =>

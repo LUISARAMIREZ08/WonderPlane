@@ -1,10 +1,9 @@
 ﻿.main-container {
-    background-color: dodgerblue;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    position: relative;
+    margin: 50px;
 }
 
 .main-container .svg-bottom {
@@ -14,8 +13,6 @@
 .register-container {
     background-color:white;
     padding:10px 20px;
-    margin-top: -315px;
-    z-index:10;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
     position: sticky;
