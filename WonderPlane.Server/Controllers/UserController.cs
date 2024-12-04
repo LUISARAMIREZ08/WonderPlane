@@ -139,7 +139,8 @@ public class UserController : ControllerBase
             Role = UserRole.Admin,
             Image = string.Empty,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
-            PasswordSalt = hmac.Key
+            PasswordSalt = hmac.Key,
+            IsActive = false
         };
 
         _context.Users.Add(user);
@@ -319,6 +320,7 @@ public class UserController : ControllerBase
         var hmac = new HMACSHA512();
         user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(updatePasswordDto.NewPassword));
         user.PasswordSalt = hmac.Key;
+        user.IsActive = true;   // Activar el usuario
 
         // Guardar los cambios en la base de datos
         try

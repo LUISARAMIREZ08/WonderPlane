@@ -1,0 +1,160 @@
+﻿@page "/rootcrud/createadmin"
+
+@using WonderPlane.Shared;
+@using WonderPlane.Client.Services;
+@using System.ComponentModel.DataAnnotations;
+@using MudBlazor;
+@using CurrieTechnologies.Razor.SweetAlert2
+
+@inject IUserService UserService;
+@inject NavigationManager navigation;
+@inject HttpClient Http;
+@inject ISnackbar Snackbar;
+@inject SweetAlertService Swal
+
+<PageTitle>Creación de administradores</PageTitle>
+
+<AsideMenu />
+
+<div class="create-form">
+    <EditForm Model="newUser" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+
+        <MudTooltip Text="Volver"><MudIconButton Icon="material-symbols-outlined/arrow_back" Color="Color.Info" OnClick="@(() => navigation.NavigateTo("/rootcrud"))" /></MudTooltip>
+        <div class="form-container">
+
+            <h2>Crear Usuario</h2>
+
+            <div class="input">
+                <label class="form-label">Documento</label>
+                <InputText class="form-control" @bind-Value="newUser.Document"></InputText>
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Document)"></ValidationMessage></span>
+            </div>
+
+            <div class="input">
+                <label class="form-label">Nombre</label>
+                <InputText class="form-control" @bind-Value="newUser.Name"></InputText>
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Name)"></ValidationMessage></span>
+            </div>
+
+            <div class="input">
+                <label class="form-label">Apellido</label>
+                <InputText class="form-control" @bind-Value="newUser.LastName"></InputText>
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.LastName)"></ValidationMessage></span>
+            </div>
+
+            <div class="input">
+                <label class="form-label">Nombre de usuario</label>
+                <InputText class="form-control" @bind-Value="newUser.UserName"></InputText>
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.UserName)"></ValidationMessage></span>
+            </div>
+
+            <div class="input">
+                <label class="form-label">Email</label>
+                <InputText class="form-control" @bind-Value="newUser.Email" Placeholder="ejemplo@dominio.com"></InputText>
+                <span class="small-validation-message"><ValidationMessage For="@(() => newUser.Email)"></ValidationMessage></span>
+            </div>
+
+            <button class="button confirm-button" type="submit">Crear</button>
+
+        </div>
+
+    </EditForm>
+</div>
+
+@code {
+
+    CreateAdminDto newUser = new CreateAdminDto
+        {
+            Document = string.Empty,
+            Name = string.Empty,
+            LastName = string.Empty,
+            UserName = string.Empty,
+            Email = string.Empty
+        };
+
+
+    private async Task OnValidSubmit()
+    {
+        try
+        {
+            // Generar una contraseña aleatoria
+            newUser.Password = GenerateRandomPassword();
+            Console.WriteLine("Llegué a la función");
+            // Crear al nuevo administrador
+            await UserService.CreateAdmin(newUser);
+
+            // Crear el cuerpo del correo
+            var emailDto = new EmailDto
+                {
+                    To = newUser.Email,
+                    Subject = "Ahora eres administrador de WonderPlane",
+                    Body = $@"Hola {newUser.Name}. Por ahora estás desactivado, pero ya tienes una cuenta creada.
+                            Por favor, cámbia la contraseña al momento de iniciar sesión en WonderPlane usando la opción 'he olvidado mi contraseña'."
+                };
+
+            // Enviar el correo utilizando el endpoint de envío de correos
+            var emailResponse = await Http.PostAsJsonAsync("api/sendemail", emailDto);
+
+            if (emailResponse.IsSuccessStatusCode)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Usuario notificado correctamente.", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Error al notificar al usuario.", Severity.Error);
+            }
+
+            // Mostrar notificación de éxito
+            var resultado = await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Administrador creado",
+                    Text = "El administrador ha sido creado y notificado con éxito.",
+                    Icon = SweetAlertIcon.Success,
+                });
+
+            // Redirigir a la página de administradores
+            navigation.NavigateTo("/rootcrud");
+        }
+        catch (ApplicationException ex)
+        {
+            // Mostrar error en caso de fallo
+            var resultado = await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Error al crear administrador",
+                    Text = ex.Message,
+                    Icon = SweetAlertIcon.Error,
+                });
+        }
+    }
+
+
+    private string GenerateRandomPassword()
+    {
+        const int passwordLength = 12; // Puedes ajustar la longitud aquí si deseas
+        const string lowerChars = "abcdefghijklmnopqrstuvwxyz";
+        const string upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const string digits = "0123456789";
+        const string allChars = lowerChars + upperChars + digits;
+
+        Random random = new Random();
+
+        // Aseguramos que la contraseña tenga al menos un carácter de cada tipo
+        char[] password = new char[passwordLength];
+        password[0] = lowerChars[random.Next(lowerChars.Length)];
+        password[1] = upperChars[random.Next(upperChars.Length)];
+        password[2] = digits[random.Next(digits.Length)];
+
+        // Rellenamos el resto de la contraseña con caracteres aleatorios de todos los tipos
+        for (int i = 3; i < passwordLength; i++)
+        {
+            password[i] = allChars[random.Next(allChars.Length)];
+        }
+
+        // Mezclamos los caracteres para que no siempre inicien en el mismo orden
+        return new string(password.OrderBy(c => random.Next()).ToArray());
+    }
+
+}

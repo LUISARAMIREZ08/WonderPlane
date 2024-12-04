@@ -6,7 +6,7 @@
     "country_code": "UK",
     "airport": "Aeropuerto Internacional de Londres Heathrow",
     "type": "international",
-    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
+    "image": "https://i.postimg.cc/nLS1bH7Y/londres.jpg"
   },
   {
     "city": "New York",
@@ -15,7 +15,7 @@
     "country_code": "US",
     "airport": "Aeropuerto Internacional John F. Kennedy",
     "type": "international",
-    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
+    "image": "https://i.postimg.cc/cJ7NXbnS/newyork.jpg"
   },
   {
     "city": "Buenos Aires",
@@ -24,7 +24,7 @@
     "country_code": "AR",
     "airport": "Aeropuerto Internacional Ezeiza",
     "type": "international",
-    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
+    "image": "https://i.postimg.cc/5t2ZS2bw/buenos-Aires.jpg"
   },
   {
     "city": "Miami",
@@ -33,7 +33,7 @@
     "country_code": "US",
     "airport": "Aeropuerto Internacional de Miami",
     "type": "international",
-    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
+    "image": "https://i.postimg.cc/MH575qWQ/miami.jpg"
   },
   {
     "city": "Madrid",
@@ -42,7 +42,7 @@
     "country_code": "ES",
     "airport": "Aeropuerto Adolfo Suárez Madrid-Barajas",
     "type": "international",
-    "image": "https://www.aerocivil.gov.co/Noticias/2018/PublishingImages/El%20Dorado%20Aeropuerto%20Internacional%20de%20Bogot%C3%A1.jpg"
+    "image": "https://i.postimg.cc/h4NQFXYt/madrid.jpg"
   },
   {
     "city": "Bogotá",
@@ -51,7 +51,7 @@
     "country_code": "CO",
     "airport": "El Dorado International Airport",
     "type": "national",
-    "image": "https://media.istockphoto.com/id/2148178476/es/foto/hispanic-woman-programmer-engaged-in-coding-at-desk.jpg"
+    "image": "https://i.postimg.cc/k40bnLDH/bogota.png"
   },
   {
     "city": "Cali",
@@ -60,7 +60,7 @@
     "country_code": "CO",
     "airport": "Alfonso Bonilla Aragon International Airport",
     "type": "national",
-    "image": "https://upload.wikimedia.org/wikipedia/commons/3/39/Aeropuerto_Alfonso_Bonilla_Arag%C3%B3n_%28CLO%29.jpg"
+    "image": "https://i.postimg.cc/SxMHRMZt/cali.png"
   },
   {
     "city": "Medellín",
@@ -69,7 +69,7 @@
     "country_code": "CO",
     "airport": "José María Córdova International Airport",
     "type": "national",
-    "image": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Aeropuerto_Jos%C3%A9_Mar%C3%ADa_C%C3%B3rdova_%28MDE%29.jpg"
+    "image": "https://i.postimg.cc/Nj6bZ7CY/medellin.jpg"
   },
   {
     "city": "Cartagena",
@@ -78,7 +78,7 @@
     "country_code": "CO",
     "airport": "Rafael Núñez International Airport",
     "type": "national",
-    "image": "https://upload.wikimedia.org/wikipedia/commons/0/04/Aeropuerto_Rafael_N%C3%BA%C3%B1ez_%28CTG%29.jpg"
+    "image": "https://i.postimg.cc/T3sm7yfG/cartagena.jpg"
   },
   {
     "city": "Pereira",
@@ -87,6 +87,6 @@
     "country_code": "CO",
     "airport": "Matecaña International Airport",
     "type": "national",
-    "image": "https://upload.wikimedia.org/wikipedia/commons/2/20/Aeropuerto_Ernesto_Cortissoz_%28BAQ%29.jpg"
+    "image": "https://i.postimg.cc/fT9JzHN4/pereira.png"
   }
 ]

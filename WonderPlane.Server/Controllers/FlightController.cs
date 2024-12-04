@@ -48,7 +48,13 @@ public class FlightController : ControllerBase
                 FlightCode = flightDTO.FlightCode,
                 Duration = flightDTO.Duration,
                 FirstClassPrice = flightDTO.FirstClassPrice,
-                EconomicClassPrice = flightDTO.EconomicClassPrice
+                FirstClassPricePromotion = flightDTO.FirstClassPricePromotion,
+                EconomicClassPrice = flightDTO.EconomicClassPrice,
+                EconomicClassPricePromotion = flightDTO.EconomicClassPricePromotion,
+                HasPromotion = flightDTO.HasPromotion,
+                CodePromotion = flightDTO.CodePromotion,
+                DiscountPercentage = flightDTO.DiscountPercentage,
+                PromotionDescription = flightDTO.PromotionDescription
             };
 
             _dbContext.Flights.Add(dbFlight);
@@ -139,8 +145,14 @@ public class FlightController : ControllerBase
             flight.FlightCode = flightDTO.FlightCode;
             flight.Duration = flightDTO.Duration;
             flight.FirstClassPrice = flightDTO.FirstClassPrice;
+            flight.FirstClassPricePromotion = flightDTO.FirstClassPricePromotion;
             flight.EconomicClassPrice = flightDTO.EconomicClassPrice;
+            flight.EconomicClassPricePromotion = flightDTO.EconomicClassPricePromotion;
             flight.FlightStatus = (FlightStatus)flightDTO.FlightStatus;
+            flight.HasPromotion = flightDTO.HasPromotion;
+            flight.CodePromotion = flightDTO.CodePromotion;
+            flight.DiscountPercentage = flightDTO.DiscountPercentage;
+            flight.PromotionDescription = flightDTO.PromotionDescription;
 
             await _dbContext.SaveChangesAsync();
 

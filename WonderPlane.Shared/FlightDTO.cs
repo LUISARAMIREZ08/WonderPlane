@@ -38,10 +38,17 @@ namespace WonderPlane.Shared
         [Required(ErrorMessage = "El precio de asientos de primera clase es obligatorio.")]
         [Range(1, int.MaxValue, ErrorMessage = "El precio de primera clase debe ser mayor que 0.")]
         public required int FirstClassPrice { get; set; }
+        public int FirstClassPricePromotion { get; set; }
 
         [Required(ErrorMessage = "El precio de asientos económicos es obligatorio.")]
         [Range(1, int.MaxValue, ErrorMessage = "El precio de clase económica debe ser mayor que 0.")]
         public required int EconomicClassPrice { get; set; }
+        public int EconomicClassPricePromotion { get; set; }
+        public bool HasPromotion { get; set; }
+        public string? CodePromotion { get; set; }
+        [Range(0, 100, ErrorMessage = "El porcentaje de descuento debe estar entre 0 y 100.")]
+        public int? DiscountPercentage { get; set; }
+        public string? PromotionDescription { get; set; }
     }
 }
 
