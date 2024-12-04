@@ -239,27 +239,37 @@ public class FlightController : ControllerBase
     }
 
     [HttpGet]
-    [Route("search/one-way")]
-    public async Task<IActionResult> GetOneWayFlight(
-    [FromQuery] string origin,
-    [FromQuery] string destination,
-    [FromQuery] DateTime departureDate,
-    [FromQuery] int passengers)
+    [Route("search/one-way-flexible")]
+    public async Task<IActionResult> GetOneWayFlightsFlexible(
+    [FromQuery] string? origin = null,
+    [FromQuery] string? destination = null,
+    [FromQuery] DateTime? departureDate = null,
+    [FromQuery] int passengers = 1)
     {
         var responseApi = new ResponseAPI<List<Flight>>();
         try
         {
-            var flights = await _dbContext.Flights
-            .Where(f => f.Origin == origin &&
-                        f.Destination == destination &&
-                        f.DepartureDate.Date == departureDate.Date &&
-                        f.AvailableSeats >= passengers)
-            .ToListAsync();
+            var currentDate = DateTime.UtcNow.Date;
 
-            if (flights.Count == 0)
+            var flightsQuery = _dbContext.Flights.AsQueryable();
+
+            if (!string.IsNullOrEmpty(origin))
+                flightsQuery = flightsQuery.Where(f => f.Origin == origin);
+            if (!string.IsNullOrEmpty(destination))
+                flightsQuery = flightsQuery.Where(f => f.Destination == destination);
+            if (departureDate.HasValue)
+                flightsQuery = flightsQuery.Where(f => f.DepartureDate.Date == departureDate.Value.Date);
+            else
+                flightsQuery = flightsQuery.Where(f => f.DepartureDate.Date >= currentDate);
+
+            flightsQuery = flightsQuery.Where(f => f.AvailableSeats >= passengers);
+
+            var flights = await flightsQuery.ToListAsync();
+
+            if (!flights.Any())
             {
                 responseApi.EsCorrecto = false;
-                responseApi.Mensaje = "No hay vuelos disponibles con los criterios solicitados.";
+                responseApi.Mensaje = "No hay vuelos disponibles con los criterios especificados.";
                 return NotFound(responseApi);
             }
 
@@ -276,58 +286,85 @@ public class FlightController : ControllerBase
         }
     }
 
+
     [HttpGet]
-    [Route("search/round-trip")]
-    public async Task<IActionResult> GetRoundTripFlight(
-    [FromQuery] string origin,
-    [FromQuery] string destination,
-    [FromQuery] DateTime departureDate,
-    [FromQuery] DateTime returnDate,
-    [FromQuery] int passengers)
+    [Route("search/round-trip-flexible")]
+    public async Task<IActionResult> GetRoundTripFlightsFlexible(
+    [FromQuery] string? origin = null,
+    [FromQuery] string? destination = null,
+    [FromQuery] DateTime? departureDate = null,
+    [FromQuery] DateTime? returnDate = null,
+    [FromQuery] int passengers = 1)
     {
         var responseApi = new ResponseAPI<List<object>>();
         try
         {
-            // Buscar vuelos de ida
-            var outboundFlights = await _dbContext.Flights
-                .Where(f => f.Origin == origin &&
-                            f.Destination == destination &&
-                            f.DepartureDate.Date == departureDate.Date &&
-                            f.AvailableSeats >= passengers)
-                .ToListAsync();
+            var currentDate = DateTime.UtcNow.Date;
 
-            // Buscar vuelos de vuelta
-            var returnFlights = await _dbContext.Flights
-                .Where(f => f.Origin == destination &&
-                            f.Destination == origin &&
-                            f.DepartureDate.Date == returnDate.Date &&
-                            f.AvailableSeats >= passengers)
-                .ToListAsync();
+            // Filtrar vuelos de ida
+            var outboundFlightsQuery = _dbContext.Flights.AsQueryable();
+            if (!string.IsNullOrEmpty(origin))
+                outboundFlightsQuery = outboundFlightsQuery.Where(f => f.Origin == origin);
+            if (!string.IsNullOrEmpty(destination))
+                outboundFlightsQuery = outboundFlightsQuery.Where(f => f.Destination == destination);
+            if (departureDate.HasValue)
+                outboundFlightsQuery = outboundFlightsQuery.Where(f => f.DepartureDate.Date == departureDate.Value.Date);
+            else
+                outboundFlightsQuery = outboundFlightsQuery.Where(f => f.DepartureDate.Date >= currentDate);
+            outboundFlightsQuery = outboundFlightsQuery.Where(f => f.AvailableSeats >= passengers);
+            var outboundFlights = await outboundFlightsQuery.ToListAsync();
 
-            if (outboundFlights.Count == 0 || returnFlights.Count == 0)
+            // Filtrar vuelos de vuelta
+            var returnFlightsQuery = _dbContext.Flights.AsQueryable();
+            if (!string.IsNullOrEmpty(destination))
+                returnFlightsQuery = returnFlightsQuery.Where(f => f.Origin == destination);
+            if (!string.IsNullOrEmpty(origin))
+                returnFlightsQuery = returnFlightsQuery.Where(f => f.Destination == origin);
+            if (returnDate.HasValue)
+                returnFlightsQuery = returnFlightsQuery.Where(f => f.DepartureDate.Date == returnDate.Value.Date);
+            else
+                returnFlightsQuery = returnFlightsQuery.Where(f => f.DepartureDate.Date >= currentDate);
+            returnFlightsQuery = returnFlightsQuery.Where(f => f.AvailableSeats >= passengers);
+            var returnFlights = await returnFlightsQuery.ToListAsync();
+
+            if (!outboundFlights.Any() || !returnFlights.Any())
             {
                 responseApi.EsCorrecto = false;
-                responseApi.Mensaje = "No hay vuelos disponibles para el ida y vuelta con los criterios solicitados.";
+                responseApi.Mensaje = "No hay vuelos disponibles con los criterios especificados.";
                 return NotFound(responseApi);
             }
 
-            // Generar combinaciones de ida y vuelta como objetos anónimos
+            // Generar combinaciones de vuelos de ida y vuelta
             var flightPackages = new List<object>();
             foreach (var outbound in outboundFlights)
             {
                 foreach (var returnFlight in returnFlights)
                 {
-                    flightPackages.Add(new
+                    // Validar que la fecha del vuelo de vuelta sea mayor a la del vuelo de ida
+                    if (returnFlight.DepartureDate > outbound.DepartureDate ||
+                        (returnFlight.DepartureDate == outbound.DepartureDate && returnFlight.DepartureTime > outbound.DepartureTime))
                     {
-                        OutboundFlight = outbound,
-                        ReturnFlight = returnFlight
-                    });
+                        flightPackages.Add(new
+                        {
+                            OutboundFlight = outbound,
+                            ReturnFlight = returnFlight
+                        });
+                    }
                 }
+            }
+
+
+            // Validar si no se generaron combinaciones válidas
+            if (!flightPackages.Any())
+            {
+                responseApi.EsCorrecto = false;
+                responseApi.Mensaje = "No hay combinaciones válidas de vuelos de ida y vuelta.";
+                return NotFound(responseApi);
             }
 
             responseApi.Data = flightPackages;
             responseApi.EsCorrecto = true;
-            responseApi.Mensaje = "Combinaciones de vuelos de ida y vuelta encontradas correctamente.";
+            responseApi.Mensaje = "Vuelos encontrados correctamente.";
             return Ok(responseApi);
         }
         catch (Exception ex)
@@ -337,6 +374,5 @@ public class FlightController : ControllerBase
             return StatusCode(500, responseApi);
         }
     }
-
 
 }
