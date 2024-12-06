@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WonderPlane.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -268,6 +268,31 @@ namespace WonderPlane.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Questions",
+                schema: "WonderPlane",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Content = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Theme = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    StateQuestion = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Questions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Questions_Users_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "WonderPlane",
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Recommendations",
                 schema: "WonderPlane",
                 columns: table => new
@@ -357,6 +382,37 @@ namespace WonderPlane.Server.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Messages_Users_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "WonderPlane",
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Responses",
+                schema: "WonderPlane",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Content = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    QuestionId = table.Column<int>(type: "int", nullable: true),
+                    AdminId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Responses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Responses_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalSchema: "WonderPlane",
+                        principalTable: "Questions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Responses_Users_UserId",
                         column: x => x.UserId,
                         principalSchema: "WonderPlane",
                         principalTable: "Users",
@@ -494,6 +550,12 @@ namespace WonderPlane.Server.Migrations
                 column: "RegisteredUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Questions_UserId",
+                schema: "WonderPlane",
+                table: "Questions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Recommendations_RegisteredUserId",
                 schema: "WonderPlane",
                 table: "Recommendations",
@@ -504,6 +566,18 @@ namespace WonderPlane.Server.Migrations
                 schema: "WonderPlane",
                 table: "Reservations",
                 column: "RegisteredUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Responses_QuestionId",
+                schema: "WonderPlane",
+                table: "Responses",
+                column: "QuestionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Responses_UserId",
+                schema: "WonderPlane",
+                table: "Responses",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Searches_RegisteredUserId",
@@ -584,6 +658,10 @@ namespace WonderPlane.Server.Migrations
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(
+                name: "Responses",
+                schema: "WonderPlane");
+
+            migrationBuilder.DropTable(
                 name: "Searches",
                 schema: "WonderPlane");
 
@@ -597,6 +675,10 @@ namespace WonderPlane.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "Forums",
+                schema: "WonderPlane");
+
+            migrationBuilder.DropTable(
+                name: "Questions",
                 schema: "WonderPlane");
 
             migrationBuilder.DropTable(

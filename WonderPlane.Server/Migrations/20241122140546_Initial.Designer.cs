@@ -12,13 +12,8 @@ using WonderPlane.Server.Models;
 namespace WonderPlane.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:WonderPlane.Server/Migrations/20241120222734_ImplementQuestionsAndResponses.Designer.cs
-    [Migration("20241120222734_ImplementQuestionsAndResponses")]
-    partial class ImplementQuestionsAndResponses
-========
-    [Migration("20241121103950_InitialCreate")]
-    partial class InitialCreate
->>>>>>>> master:WonderPlane.Server/Migrations/20241121103950_InitialCreate.Designer.cs
+    [Migration("20241122140546_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,7 +48,7 @@ namespace WonderPlane.Server.Migrations
                     b.Property<string>("Theme")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -71,7 +66,7 @@ namespace WonderPlane.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AdminId")
+                    b.Property<int>("AdminId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -701,7 +696,9 @@ namespace WonderPlane.Server.Migrations
                 {
                     b.HasOne("WonderPlane.Server.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

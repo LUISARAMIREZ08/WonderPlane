@@ -6,7 +6,7 @@
     "country_code": "CO",
     "airport": "El Dorado International Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/k40bnLDH/bogota.png"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866091/Bogot%C3%A1_fwia5t.jpg"
   },
   {
     "city": "Cali",
@@ -15,7 +15,7 @@
     "country_code": "CO",
     "airport": "Alfonso Bonilla Aragon International Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/SxMHRMZt/cali.png"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866092/Cali_rs1dse.jpg"
   },
   {
     "city": "Medellín",
@@ -24,7 +24,7 @@
     "country_code": "CO",
     "airport": "José María Córdova International Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/Nj6bZ7CY/medellin.jpg"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866099/Medellin_vbhi5o.jpg"
   },
   {
     "city": "Cartagena",
@@ -33,7 +33,7 @@
     "country_code": "CO",
     "airport": "Rafael Núñez International Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/T3sm7yfG/cartagena.jpg"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866093/Cartagena_xlpsws.jpg"
   },
   {
     "city": "Barranquilla",
@@ -42,7 +42,7 @@
     "country_code": "CO",
     "airport": "Ernesto Cortissoz International Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/CMWxQjfc/barranquilla.jpg"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866091/Barranquilla_uai7e5.jpg"
   },
   {
     "city": "Bucaramanga",
@@ -51,7 +51,7 @@
     "country_code": "CO",
     "airport": "Palonegro International Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/zfWjTwW4/bucaramanga.png"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866096/Bucaramanga_p1d5ya.jpg"
   },
   {
     "city": "Pereira",
@@ -60,7 +60,7 @@
     "country_code": "CO",
     "airport": "Matecaña International Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/fT9JzHN4/pereira.png"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866102/Pereira_adao06.jpg"
   },
   {
     "city": "Cúcuta",
@@ -69,7 +69,7 @@
     "country_code": "CO",
     "airport": "Camilo Daza International Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/zGLZZMZW/cucuta.jpg"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866094/Cucuta_fzdjth.jpg"
   },
   {
     "city": "Santa Marta",
@@ -78,7 +78,7 @@
     "country_code": "CO",
     "airport": "Simón Bolívar International Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/dtB7h51L/Santa-Marta.jpg"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866104/Santa_Marta_jw4qra.jpg"
   },
   {
     "city": "Manizales",
@@ -87,7 +87,7 @@
     "country_code": "CO",
     "airport": "La Nubia Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/85pZDJJ3/manizales.jpg"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866098/Manizales_zjmqf9.jpg"
   },
   {
     "city": "Ibagué",
@@ -96,7 +96,7 @@
     "country_code": "CO",
     "airport": "Perales Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/wj92DRFB/ibague.jpg"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866095/Ibagu%C3%A9_lymymo.jpg"
   },
   {
     "city": "Pasto",
@@ -105,7 +105,7 @@
     "country_code": "CO",
     "airport": "Antonio Nariño Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/X7LdSHcV/pasto.jpg"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866100/Pasto_lh04yh.jpg"
   },
   {
     "city": "Neiva",
@@ -114,7 +114,7 @@
     "country_code": "CO",
     "airport": "Benito Salas Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/W3ssvn7v/neiva.jpg"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866098/Neiva_r2c8lv.jpg"
   },
   {
     "city": "Sincelejo",
@@ -123,7 +123,7 @@
     "country_code": "CO",
     "airport": "Las Brujas Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/VNR3jcXx/sincelejo.jpg"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866104/Sincelejo_jsaqs8.jpg"
   },
   {
     "city": "Quibdó",
@@ -132,7 +132,7 @@
     "country_code": "CO",
     "airport": "El Caraño Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/ZK4sxQ5Z/quibdo.png"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866102/Quibd%C3%B3_rb5avp.jpg"
   },
   {
     "city": "Valledupar",
@@ -141,6 +141,6 @@
     "country_code": "CO",
     "airport": "Alfonso López Michelsen Airport",
     "type": "national",
-    "image": "https://i.postimg.cc/hjnVRHwt/Valledupar.jpg"
+    "image": "https://res.cloudinary.com/dkxobfsng/image/upload/v1731866103/Valledupar_lnltwa.jpg"
   }
 ]

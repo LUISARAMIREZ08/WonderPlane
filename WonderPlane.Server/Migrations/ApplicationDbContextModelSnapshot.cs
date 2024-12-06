@@ -45,7 +45,7 @@ namespace WonderPlane.Server.Migrations
                     b.Property<string>("Theme")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -63,7 +63,7 @@ namespace WonderPlane.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AdminId")
+                    b.Property<int>("AdminId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -693,7 +693,9 @@ namespace WonderPlane.Server.Migrations
                 {
                     b.HasOne("WonderPlane.Server.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

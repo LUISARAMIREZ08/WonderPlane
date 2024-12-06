@@ -88,6 +88,7 @@ h3 {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    margin:10px 50px;
 }
 .money-section p {
     width:200px;
