@@ -17,7 +17,7 @@ WonderPlane es una aplicación web para la gestión de vuelos, desarrollada con 
 
 # 🛠️ Tecnologías utilizadas
 * Frontend: Blazor WebAssembly, MudBlazor
-* Backend: .NET 6+, ASP.NET Web API
+* Backend: .NET, ASP.NET Web API
 * Base de datos: SQL Server
 * Seguridad: JWT (JSON Web Tokens)
 * Control de versiones: Git
